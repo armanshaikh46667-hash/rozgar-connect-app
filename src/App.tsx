@@ -12,6 +12,7 @@ import RegisterPage from "./pages/RegisterPage";
 import MapPage from "./pages/MapPage";
 import BookingHistoryPage from "./pages/BookingHistoryPage";
 import LocalBusinessPage from "./pages/LocalBusinessPage";
+import BusinessRegistrationPage from "./pages/BusinessRegistrationPage";
 import JobPostPage from "./pages/JobPostPage";
 import EarningsPage from "./pages/EarningsPage";
 import AboutPage from "./pages/AboutPage";
@@ -34,6 +35,7 @@ const AnimatedRoutes = () => {
         <Route path="/map" element={<MapPage />} />
         <Route path="/bookings" element={<BookingHistoryPage />} />
         <Route path="/businesses" element={<LocalBusinessPage />} />
+        <Route path="/business-register" element={<BusinessRegistrationPage />} />
         <Route path="/post-job" element={<JobPostPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/admin" element={<AdminPage />} />

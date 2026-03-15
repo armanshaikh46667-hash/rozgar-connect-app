@@ -74,6 +74,90 @@ export type Database = {
         }
         Relationships: []
       }
+      digital_services: {
+        Row: {
+          address: string | null
+          created_at: string
+          description: string | null
+          id: string
+          mobile: string
+          owner_name: string
+          photo: string | null
+          service_type: string
+          shop_name: string
+          village: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          mobile: string
+          owner_name: string
+          photo?: string | null
+          service_type: string
+          shop_name: string
+          village: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          mobile?: string
+          owner_name?: string
+          photo?: string | null
+          service_type?: string
+          shop_name?: string
+          village?: string
+        }
+        Relationships: []
+      }
+      education_coaching: {
+        Row: {
+          address: string | null
+          course_type: string
+          created_at: string
+          description: string | null
+          fees: string | null
+          id: string
+          institute_name: string
+          mobile: string
+          owner_name: string
+          photo: string | null
+          timing: string | null
+          village: string
+        }
+        Insert: {
+          address?: string | null
+          course_type: string
+          created_at?: string
+          description?: string | null
+          fees?: string | null
+          id?: string
+          institute_name: string
+          mobile: string
+          owner_name: string
+          photo?: string | null
+          timing?: string | null
+          village: string
+        }
+        Update: {
+          address?: string | null
+          course_type?: string
+          created_at?: string
+          description?: string | null
+          fees?: string | null
+          id?: string
+          institute_name?: string
+          mobile?: string
+          owner_name?: string
+          photo?: string | null
+          timing?: string | null
+          village?: string
+        }
+        Relationships: []
+      }
       local_businesses: {
         Row: {
           address: string | null
