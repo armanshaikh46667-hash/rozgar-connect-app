@@ -13,6 +13,8 @@ import MapPage from "./pages/MapPage";
 import BookingHistoryPage from "./pages/BookingHistoryPage";
 import LocalBusinessPage from "./pages/LocalBusinessPage";
 import BusinessRegistrationPage from "./pages/BusinessRegistrationPage";
+import ShopRegistrationPage from "./pages/ShopRegistrationPage";
+import CoachingRegistrationPage from "./pages/CoachingRegistrationPage";
 import JobPostPage from "./pages/JobPostPage";
 import EarningsPage from "./pages/EarningsPage";
 import AboutPage from "./pages/AboutPage";
