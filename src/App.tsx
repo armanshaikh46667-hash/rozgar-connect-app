@@ -18,6 +18,7 @@ import AboutPage from "./pages/AboutPage";
 import AdminPage from "./pages/AdminPage";
 import WorkerProfilePage from "./pages/WorkerProfilePage";
 import NotFound from "./pages/NotFound";
+import UpdatesPage from "./pages/UpdatesPage";
 import { useWorkerStore } from "./store/workerStore";
 
 const queryClient = new QueryClient();
