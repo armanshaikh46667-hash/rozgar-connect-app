@@ -9,10 +9,6 @@ export const CATEGORY_GROUPS = {
   "शिक्षा और प्रशिक्षण (Education & Training)": [
     "Computer Class", "Competitive Exam Coaching", "Driving School", "Skill Training",
   ],
-  "स्थानीय दुकानें (Local Shops & Suppliers)": [
-    "Kirana Store", "Hardware Store", "Medical Store",
-    "Cement / Sand Supplier", "Furniture Shop",
-  ],
   "डिजिटल सेवाएँ (Digital Services)": [
     "Online Form Filling", "Aadhaar Update", "PAN Card Apply",
     "Electricity Bill Payment", "Government Scheme Registration",
