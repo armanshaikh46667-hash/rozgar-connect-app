@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    --background: 140 20% 97%;
+    --foreground: 150 30% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 150 30% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 30% 10%;
+
+    --primary: 142 71% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 140 30% 94%;
+    --secondary-foreground: 150 30% 15%;
+
+    --muted: 140 15% 93%;
+    --muted-foreground: 150 10% 45%;
+
+    --accent: 142 60% 92%;
+    --accent-foreground: 142 71% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 140 20% 88%;
+    --input: 140 20% 88%;
+    --ring: 142 71% 40%;
+
+    --radius: 0.75rem;
+
+    --primary-glow: 142 71% 50%;
+    --hero-gradient: linear-gradient(135deg, hsl(142, 71%, 40%), hsl(142, 71%, 30%));
+    --card-shadow: 0 2px 12px -2px hsl(142 71% 40% / 0.12);
+    --card-shadow-hover: 0 8px 24px -4px hsl(142 71% 40% / 0.2);
+    --nav-height: 4rem;
+
+    --about-bg: 220 20% 8%;
+    --about-card: 220 15% 14%;
+    --about-glow: 210 100% 55%;
+    --about-text: 220 10% 80%;
+    --about-heading: 210 100% 60%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer utilities {
+  .glow-heading {
+    color: hsl(var(--about-heading));
+    text-shadow: 0 0 20px hsl(var(--about-glow) / 0.5), 0 0 40px hsl(var(--about-glow) / 0.2);
+  }
+
+  .bottom-nav-safe {
+    padding-bottom: calc(var(--nav-height) + 0.5rem);
+  }
+}
+
+@keyframes loading {
+  0% { width: 0; }
+  100% { width: 100%; }
+}

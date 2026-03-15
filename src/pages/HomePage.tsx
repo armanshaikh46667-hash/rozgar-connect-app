@@ -1,0 +1,366 @@
+import { Search, MapPin, Briefcase, Users, Shield, Heart, Share2, ChevronRight, Zap, AlertTriangle, Phone, Store, CalendarCheck, Navigation, Info, Map, TrendingUp, Camera, CheckCircle2, Star as StarIcon, Award, Filter, Image as ImageIcon, ClipboardList, KeyRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
+import HomeMap from '@/components/HomeMap';
+
+const HERO_CATEGORIES = [
+  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन" },
+  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर" },
+  { name: "Carpenter", emoji: "🪚", hindi: "कारपेंटर" },
+  { name: "Painter", emoji: "🎨", hindi: "पेंटर" },
+  { name: "General Labor", emoji: "👷", hindi: "मज़दूर" },
+  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक" },
+  { name: "Domestic Worker", emoji: "🏠", hindi: "घरेलू सहायक" },
+  { name: "Tractor Driver", emoji: "🌾", hindi: "कृषि कामगार" },
+];
+
+const EMERGENCY_CATEGORIES = [
+  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन", desc: "बिजली की समस्या" },
+  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर", desc: "पानी की समस्या" },
+  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक", desc: "गाड़ी खराब" },
+];
+
+const categoryEmojis: Record<string, string> = {
+  "Plumber": "🔧", "Electrician": "⚡", "Rajmistri": "🧱", "Painter": "🎨",
+  "Carpenter": "🪚", "Mobile Repair": "📱", "Bike Mechanic": "🏍️", "Domestic Worker": "🏠",
+  "Computer Class": "💻", "Competitive Exam Coaching": "📚", "Driving School": "🚗", "Skill Training": "🎯",
+  "Kirana Store": "🏪", "Hardware Store": "🔩", "Medical Store": "💊",
+  "Cement / Sand Supplier": "🏗️", "Furniture Shop": "🪑",
+  "Online Form Filling": "📝", "Aadhaar Update": "🆔", "PAN Card Apply": "💳",
+  "Electricity Bill Payment": "💡", "Government Scheme Registration": "🏛️",
+  "Tailoring / Boutique": "✂️", "Beauty Parlour": "💇", "Home Tutor": "👩‍🏫",
+  "Cook": "👨‍🍳", "Cleaning Worker": "🧹", "Gas Stove Repair": "🔥",
+  "Tractor Mechanic": "🚜", "JCB Operator": "⛏️", "Truck Driver": "🚛",
+  "Auto Driver": "🛺", "Tempo Service": "🚐", "Pickup Rental": "📦",
+  "General Labor": "👷", "Tiles Worker": "🧩", "Welding Worker": "⚙️",
+  "Iron Work": "🔨", "Roof Casting Worker": "🏗️", "Water Tank Installation": "🚰",
+  "Tractor Driver": "🌾", "Harvester / Thresher Service": "🌻", "Field Ploughing Service": "🌿",
+  "Pesticide Spraying Service": "🧪", "Dairy Worker": "🥛", "Animal Doctor": "🐄", "Animal Feed Supplier": "🌽",
+};
+
+const handleShare = async () => {
+  const shareData = {
+    title: 'Rozgar Sewa - रोज़गार सेवा',
+    text: 'गांव में रोजगार पाएं – Rozgar Sewa के साथ! मजदूर और काम देने वाले अब सीधे जुड़ें।',
+    url: window.location.origin,
+  };
+  try {
+    if (navigator.share) await navigator.share(shareData);
+    else { await navigator.clipboard.writeText(window.location.origin); alert('लिंक कॉपी हो गया!'); }
+  } catch { /* cancelled */ }
+};
+
+const HomePage = () => {
+  const navigate = useNavigate();
+  const workers = useWorkerStore(s => s.workers);
+
+  const getEmergencyWorker = (cat: string) => {
+    return workers.find(w => w.category === cat && w.status === 'available');
+  };
+
+  return (
+    <div className="min-h-screen bottom-nav-safe bg-background">
+      {/* Hero */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-12 pb-16 text-primary-foreground">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 right-4 w-32 h-32 rounded-full bg-primary-foreground/20 blur-3xl" />
+          <div className="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-primary-foreground/15 blur-2xl" />
+        </div>
+        <div className="max-w-lg mx-auto relative z-10">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
+              <Briefcase size={22} className="text-primary-foreground" />
+            </div>
+            <span className="text-lg font-bold tracking-tight">RozgarSewa</span>
+          </div>
+          <h1 className="text-2xl font-extrabold leading-tight mb-2">
+            गांव में रोजगार पाएं –<br />Rozgar Sewa के साथ
+          </h1>
+          <p className="text-primary-foreground/80 text-sm leading-relaxed mb-6">
+            मजदूर और काम देने वाले अब सीधे जुड़ें
+          </p>
+          <div className="flex gap-3">
+            <button onClick={() => navigate('/search')}
+              className="flex-1 bg-primary-foreground text-primary py-3.5 rounded-xl text-sm font-bold shadow-lg active:scale-[0.97] transition-transform flex items-center justify-center gap-2">
+              <Search size={18} /> काम ढूंढें
+            </button>
+            <button onClick={() => navigate('/post-job')}
+              className="flex-1 bg-primary-foreground/15 border border-primary-foreground/30 text-primary-foreground py-3.5 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform flex items-center justify-center gap-2">
+              <Briefcase size={18} /> काम पोस्ट करें
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Search */}
+      <div className="max-w-lg mx-auto px-4 -mt-6 relative z-20">
+        <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Search size={16} className="text-muted-foreground" />
+            <span className="text-sm font-semibold text-foreground">त्वरित खोज</span>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <button onClick={() => navigate('/search')}
+              className="flex items-center gap-2 bg-secondary rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
+              <Briefcase size={16} className="text-primary shrink-0" />
+              <span className="text-[10px] font-medium text-foreground">काम के प्रकार</span>
+            </button>
+            <button onClick={() => navigate('/search')}
+              className="flex items-center gap-2 bg-secondary rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
+              <MapPin size={16} className="text-primary shrink-0" />
+              <span className="text-[10px] font-medium text-foreground">गाँव / शहर</span>
+            </button>
+            <button onClick={() => navigate('/search?nearby=true')}
+              className="flex items-center gap-2 bg-accent rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
+              <Navigation size={16} className="text-accent-foreground shrink-0" />
+              <span className="text-[10px] font-medium text-accent-foreground">GPS नज़दीक</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* About Section */}
+      <div className="max-w-lg mx-auto px-4 mt-6">
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <div className="flex items-center gap-2 mb-2">
+            <Info size={18} className="text-primary" />
+            <h2 className="text-sm font-bold text-foreground">RozgarSewa के बारे में</h2>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            RozgarSewa एक मुफ्त डिजिटल प्लेटफॉर्म है जो ग्रामीण और छोटे शहरों में स्थानीय कामगारों और ग्राहकों को सीधे जोड़ता है। प्लम्बर, इलेक्ट्रीशियन, राजमिस्त्री, पेंटर — सभी एक जगह। बिना किसी बिचौलिए के, सीधा संपर्क करें।
+          </p>
+          <button onClick={() => navigate('/about')} className="mt-3 text-xs text-primary font-semibold flex items-center gap-1">
+            और जानें <ChevronRight size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* Emergency Section */}
+      <div className="max-w-lg mx-auto px-4 mt-6">
+        <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <AlertTriangle size={18} className="text-destructive" />
+            <h2 className="text-sm font-bold text-foreground">🚨 Emergency — 1 Click Call</h2>
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {EMERGENCY_CATEGORIES.map((cat) => {
+              const worker = getEmergencyWorker(cat.name);
+              return (
+                <div key={cat.name} className="flex flex-col items-center gap-1 p-3 bg-card rounded-xl border border-destructive/20">
+                  <span className="text-2xl">{cat.emoji}</span>
+                  <span className="text-[10px] font-bold text-foreground">{cat.hindi}</span>
+                  {worker ? (
+                    <a href={`tel:${worker.mobile}`}
+                      className="w-full mt-1 bg-destructive text-destructive-foreground py-1.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 active:scale-[0.96] transition-transform">
+                      <Phone size={10} /> कॉल
+                    </a>
+                  ) : (
+                    <button onClick={() => navigate(`/search?category=${encodeURIComponent(cat.name)}`)}
+                      className="w-full mt-1 bg-secondary text-secondary-foreground py-1.5 rounded-lg text-[10px] font-medium">
+                      खोजें
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="max-w-lg mx-auto px-4 mt-6">
+        <div className="grid grid-cols-4 gap-2">
+          <button onClick={() => navigate('/bookings')}
+            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
+            <CalendarCheck size={20} className="mx-auto text-primary mb-1" />
+            <span className="text-[10px] font-semibold text-foreground">बुकिंग</span>
+          </button>
+          <button onClick={() => navigate('/businesses')}
+            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
+            <Store size={20} className="mx-auto text-primary mb-1" />
+            <span className="text-[10px] font-semibold text-foreground">दुकानें</span>
+          </button>
+          <button onClick={() => navigate('/earnings')}
+            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
+            <TrendingUp size={20} className="mx-auto text-primary mb-1" />
+            <span className="text-[10px] font-semibold text-foreground">कमाई</span>
+          </button>
+          <button onClick={() => navigate('/post-job')}
+            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
+            <Briefcase size={20} className="mx-auto text-primary mb-1" />
+            <span className="text-[10px] font-semibold text-foreground">काम पोस्ट</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Live Map */}
+      <div className="max-w-lg mx-auto px-4 mt-6">
+        <div className="bg-card rounded-2xl border border-border p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Map size={18} className="text-primary" />
+            <h2 className="text-sm font-bold text-foreground">नज़दीकी कामगार — नक्शा</h2>
+          </div>
+          <HomeMap />
+        </div>
+      </div>
+
+      {/* Updates & Improvements */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <div className="mb-4">
+          <h2 className="text-base font-bold text-foreground">📢 Updates & Improvements</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">New features added in RozgarSewa platform</p>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { icon: <Camera size={16} className="text-primary" />, title: 'Worker Profile Photo', desc: 'प्रोफ़ाइल फोटो अपलोड करें।' },
+            { icon: <CheckCircle2 size={16} className="text-primary" />, title: 'Availability Status', desc: 'Available / Busy / Offline स्थिति।' },
+            { icon: <CalendarCheck size={16} className="text-primary" />, title: 'Simple Booking', desc: 'तारीख, समय से बुकिंग भेजें।' },
+            { icon: <StarIcon size={16} className="text-primary" />, title: 'Worker Reviews', desc: 'स्टार रेटिंग और समीक्षा दें।' },
+            { icon: <Award size={16} className="text-primary" />, title: 'Experience Badge', desc: '1+, 5+, 10+ वर्ष बैज।' },
+            { icon: <MapPin size={16} className="text-primary" />, title: 'Location Display', desc: 'गाँव / लोकेशन दिखता है।' },
+            { icon: <Filter size={16} className="text-primary" />, title: 'Advanced Search', desc: 'श्रेणी, गाँव, रेटिंग से खोजें।' },
+            { icon: <ImageIcon size={16} className="text-primary" />, title: 'Work Gallery', desc: 'पिछले काम की फोटो दिखाएँ।' },
+            { icon: <AlertTriangle size={16} className="text-primary" />, title: 'Emergency Worker', desc: '1-क्लिक कॉल सुविधा।' },
+            { icon: <Shield size={16} className="text-primary" />, title: 'Admin Panel', desc: 'फर्जी प्रोफाइल हटाएं।' },
+            { icon: <ClipboardList size={16} className="text-primary" />, title: 'Booking History', desc: 'पिछली बुकिंग देखें।' },
+            { icon: <Store size={16} className="text-primary" />, title: 'Shop Registration', desc: 'दुकानों का अलग फॉर्म।' },
+            { icon: <Share2 size={16} className="text-primary" />, title: 'Share Profile', desc: 'WhatsApp से शेयर करें।' },
+            { icon: <KeyRound size={16} className="text-primary" />, title: 'PIN Reset via OTP', desc: 'OTP से PIN रीसेट।' },
+            { icon: <TrendingUp size={16} className="text-primary" />, title: 'Earnings Dashboard', desc: 'कमाई और काम का विवरण।' },
+            { icon: <Map size={16} className="text-primary" />, title: 'Map & Nearby', desc: 'नज़दीकी कामगार नक्शे पर।' },
+          ].map((item, i) => (
+            <div key={i} className="bg-card rounded-xl border border-border p-3 flex items-start gap-2.5">
+              <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mt-0.5">{item.icon}</div>
+              <div className="min-w-0">
+                <p className="text-[11px] font-bold text-foreground leading-tight">{item.title}</p>
+                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Popular Categories */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-base font-bold text-foreground">लोकप्रिय सेवाएँ</h2>
+          <button onClick={() => navigate('/search')} className="text-xs text-primary font-semibold flex items-center gap-1">
+            सभी देखें <ChevronRight size={14} />
+          </button>
+        </div>
+        <div className="grid grid-cols-4 gap-3">
+          {HERO_CATEGORIES.map((cat) => (
+            <button key={cat.name}
+              onClick={() => navigate(`/search?category=${encodeURIComponent(cat.name)}`)}
+              className="flex flex-col items-center gap-1.5 p-3 bg-card rounded-2xl border border-border hover:border-primary/40 hover:shadow-md active:scale-[0.96] transition-all">
+              <span className="text-2xl">{cat.emoji}</span>
+              <span className="text-[10px] font-semibold text-foreground leading-tight text-center">{cat.hindi}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <div className="bg-gradient-to-r from-primary/10 to-accent rounded-2xl p-5 grid grid-cols-3 gap-4 text-center">
+          <div>
+            <p className="text-xl font-extrabold text-primary">{Object.values(CATEGORY_GROUPS).flat().length}+</p>
+            <p className="text-[10px] text-muted-foreground font-medium">श्रेणियाँ</p>
+          </div>
+          <div>
+            <p className="text-xl font-extrabold text-primary">100+</p>
+            <p className="text-[10px] text-muted-foreground font-medium">कामगार</p>
+          </div>
+          <div>
+            <p className="text-xl font-extrabold text-primary">मुफ्त</p>
+            <p className="text-[10px] text-muted-foreground font-medium">उपयोग</p>
+          </div>
+        </div>
+      </div>
+
+      {/* All Categories */}
+      <div className="max-w-lg mx-auto px-4 mt-8 space-y-6">
+        <h2 className="text-base font-bold text-foreground">सभी श्रेणियाँ</h2>
+        {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
+          <div key={group}>
+            <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">{group}</h3>
+            <div className="grid grid-cols-3 gap-2">
+              {cats.map((cat) => (
+                <button key={cat}
+                  onClick={() => navigate(`/search?category=${encodeURIComponent(cat)}`)}
+                  className="bg-card rounded-xl p-3 text-center border border-border hover:border-primary/40 hover:shadow-md active:scale-[0.97] transition-all">
+                  <span className="text-xl block">{categoryEmojis[cat] || '🔧'}</span>
+                  <p className="text-[10px] font-medium text-foreground mt-1.5 leading-tight">{cat}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <div className="bg-gradient-to-br from-primary to-accent-foreground rounded-2xl p-6 text-primary-foreground text-center">
+          <Zap size={28} className="mx-auto mb-2 opacity-80" />
+          <h3 className="text-lg font-bold mb-1">क्या आप कामगार हैं?</h3>
+          <p className="text-primary-foreground/80 text-sm mb-4">मुफ्त में रजिस्टर करें और स्थानीय काम पाएं</p>
+          <button onClick={() => navigate('/register')}
+            className="bg-primary-foreground text-primary px-8 py-3 rounded-xl text-sm font-bold shadow-lg active:scale-[0.97] transition-transform">
+            अभी रजिस्टर करें
+          </button>
+        </div>
+      </div>
+
+      {/* Trust */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <h2 className="text-base font-bold text-foreground mb-4 text-center">हम पर भरोसा करें</h2>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="bg-card rounded-2xl border border-border p-4 text-center">
+            <Shield size={24} className="mx-auto text-primary mb-2" />
+            <p className="text-xs font-bold text-foreground">Verified</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">सत्यापित कामगार</p>
+          </div>
+          <div className="bg-card rounded-2xl border border-border p-4 text-center">
+            <Heart size={24} className="mx-auto text-primary mb-2" />
+            <p className="text-xs font-bold text-foreground">100% मुफ्त</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">कोई शुल्क नहीं</p>
+          </div>
+          <div className="bg-card rounded-2xl border border-border p-4 text-center">
+            <Users size={24} className="mx-auto text-primary mb-2" />
+            <p className="text-xs font-bold text-foreground">No Middleman</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">सीधा संपर्क</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Share */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <button onClick={handleShare}
+          className="w-full bg-secondary rounded-2xl p-4 flex items-center justify-center gap-3 active:scale-[0.98] transition-transform border border-border">
+          <Share2 size={20} className="text-primary" />
+          <span className="text-sm font-semibold text-foreground">ऐप शेयर करें</span>
+        </button>
+      </div>
+
+      {/* Footer */}
+      <footer className="max-w-lg mx-auto px-4 mt-10 pb-4">
+        <div className="border-t border-border pt-6">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Briefcase size={18} className="text-primary" />
+            <span className="text-sm font-bold text-foreground">RozgarSewa</span>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground mb-4">
+            <button onClick={() => navigate('/about')} className="hover:text-primary transition-colors">About Us</button>
+            <span>•</span>
+            <button className="hover:text-primary transition-colors">Contact</button>
+            <span>•</span>
+            <button className="hover:text-primary transition-colors">Privacy Policy</button>
+          </div>
+          <p className="text-[10px] text-muted-foreground text-center">© 2025 RozgarSewa. Made with ❤️ for rural India.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default HomePage;
