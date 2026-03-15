@@ -1,4 +1,4 @@
-import { Home, Search, UserPlus, CalendarCheck, Store, Menu, X, Shield, Info, Map } from 'lucide-react';
+import { Home, Search, UserPlus, CalendarCheck, Sparkles, Menu, X, Shield, Info, Map } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ const mainTabs = [
 
 const moreTabs = [
   { label: 'नक्शा', icon: Map, path: '/map' },
-  { label: 'स्थानीय दुकानें', icon: Store, path: '/businesses' },
+  { label: 'Updates', icon: Sparkles, path: '/updates' },
   { label: 'About Us', icon: Info, path: '/about' },
   { label: 'Admin Panel', icon: Shield, path: '/admin' },
 ];

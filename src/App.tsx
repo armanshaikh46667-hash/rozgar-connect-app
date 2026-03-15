@@ -18,6 +18,7 @@ import AboutPage from "./pages/AboutPage";
 import AdminPage from "./pages/AdminPage";
 import WorkerProfilePage from "./pages/WorkerProfilePage";
 import NotFound from "./pages/NotFound";
+import UpdatesPage from "./pages/UpdatesPage";
 import { useWorkerStore } from "./store/workerStore";
 
 const queryClient = new QueryClient();
@@ -38,6 +39,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/earnings" element={<EarningsPage />} />
         <Route path="/worker/:id" element={<WorkerProfilePage />} />
+        <Route path="/updates" element={<UpdatesPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
