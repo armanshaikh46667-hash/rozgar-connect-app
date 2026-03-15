@@ -175,8 +175,8 @@ const HomePage = () => {
           </button>
           <button onClick={() => navigate('/business-register')}
             className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
-            <Store size={20} className="mx-auto text-primary mb-1" />
-            <span className="text-[10px] font-semibold text-foreground">दुकान रजिस्टर</span>
+            <Users size={20} className="mx-auto text-primary mb-1" />
+            <span className="text-[10px] font-semibold text-foreground">रजिस्टर</span>
           </button>
           <button onClick={() => navigate('/earnings')}
             className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
