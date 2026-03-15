@@ -1,39 +1,35 @@
-import { useState, useEffect } from 'react';
-import { Shield, Trash2, Users, Store, Loader2, Eye } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, Trash2, Users, Store, Loader2, KeyRound, CheckCircle2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-const ADMIN_PIN = '9999';
-
 interface Worker {
-  id: string;
-  name: string;
-  mobile: string;
-  village: string;
-  category: string;
-  status: string;
-  created_at: string;
+  id: string; name: string; mobile: string; village: string; category: string; status: string; created_at: string;
+}
+interface Business {
+  id: string; name: string; mobile: string; village: string; category: string; created_at: string;
 }
 
-interface Business {
-  id: string;
-  name: string;
-  mobile: string;
-  village: string;
-  category: string;
-  created_at: string;
-}
+const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
 const AdminPage = () => {
   const [pin, setPin] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
-  const [tab, setTab] = useState<'workers' | 'shops'>('workers');
+  const [tab, setTab] = useState<'workers' | 'shops' | 'settings'>('workers');
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    if (pin === ADMIN_PIN) {
+  // Change PIN state
+  const [currentPin, setCurrentPin] = useState('');
+  const [newPin, setNewPin] = useState('');
+  const [confirmPin, setConfirmPin] = useState('');
+  const [changingPin, setChangingPin] = useState(false);
+
+  const handleLogin = async () => {
+    const { data } = await supabase.from('app_settings').select('value').eq('key', 'admin_pin').single();
+    const savedPin = data?.value || '9999';
+    if (pin === savedPin) {
       setAuthenticated(true);
       loadData();
     } else {
@@ -68,7 +64,27 @@ const AdminPage = () => {
     toast.success('दुकान डिलीट हो गई');
   };
 
-  const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
+  const handleChangePin = async () => {
+    if (!currentPin || !newPin || !confirmPin) { toast.error('सभी फ़ील्ड भरें'); return; }
+    if (newPin.length !== 4) { toast.error('नया PIN 4 अंकों का होना चाहिए'); return; }
+    if (newPin !== confirmPin) { toast.error('नया PIN और Confirm PIN मेल नहीं खाते'); return; }
+
+    setChangingPin(true);
+    const { data } = await supabase.from('app_settings').select('value').eq('key', 'admin_pin').single();
+    const savedPin = data?.value || '9999';
+
+    if (currentPin !== savedPin) {
+      toast.error('वर्तमान PIN गलत है');
+      setChangingPin(false);
+      return;
+    }
+
+    const { error } = await supabase.from('app_settings').update({ value: newPin }).eq('key', 'admin_pin');
+    setChangingPin(false);
+    if (error) { toast.error('PIN बदलने में समस्या'); return; }
+    setCurrentPin(''); setNewPin(''); setConfirmPin('');
+    toast.success('Admin PIN सफलतापूर्वक बदल दिया गया! ✅');
+  };
 
   if (!authenticated) {
     return (
@@ -88,7 +104,6 @@ const AdminPage = () => {
               className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform">
               लॉगिन करें
             </button>
-            <p className="text-[10px] text-muted-foreground text-center">Default PIN: 9999</p>
           </div>
         </div>
       </div>
@@ -105,19 +120,23 @@ const AdminPage = () => {
       </div>
 
       <div className="max-w-lg mx-auto px-4 -mt-4 space-y-4">
-        {/* Tab */}
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-1.5 grid grid-cols-2 gap-1">
+        {/* Tabs */}
+        <div className="bg-card rounded-2xl shadow-lg border border-border p-1.5 grid grid-cols-3 gap-1">
           <button onClick={() => setTab('workers')}
-            className={`rounded-xl py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${tab === 'workers' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
-            <Users size={16} /> कामगार ({workers.length})
+            className={`rounded-xl py-2.5 text-xs font-semibold flex items-center justify-center gap-1 transition-colors ${tab === 'workers' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
+            <Users size={14} /> कामगार
           </button>
           <button onClick={() => setTab('shops')}
-            className={`rounded-xl py-2.5 text-sm font-semibold flex items-center justify-center gap-2 transition-colors ${tab === 'shops' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
-            <Store size={16} /> दुकानें ({businesses.length})
+            className={`rounded-xl py-2.5 text-xs font-semibold flex items-center justify-center gap-1 transition-colors ${tab === 'shops' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
+            <Store size={14} /> दुकानें
+          </button>
+          <button onClick={() => setTab('settings')}
+            className={`rounded-xl py-2.5 text-xs font-semibold flex items-center justify-center gap-1 transition-colors ${tab === 'settings' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>
+            <KeyRound size={14} /> सेटिंग्स
           </button>
         </div>
 
-        {loading ? (
+        {loading && tab !== 'settings' ? (
           <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary" size={32} /></div>
         ) : tab === 'workers' ? (
           <div className="space-y-2">
@@ -137,7 +156,7 @@ const AdminPage = () => {
               </div>
             ))}
           </div>
-        ) : (
+        ) : tab === 'shops' ? (
           <div className="space-y-2">
             {businesses.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">कोई दुकान नहीं</p>
@@ -154,6 +173,32 @@ const AdminPage = () => {
                 </button>
               </div>
             ))}
+          </div>
+        ) : (
+          /* Settings Tab - Change PIN */
+          <div className="bg-card rounded-2xl border border-border p-5 space-y-4">
+            <h2 className="font-bold text-foreground text-sm flex items-center gap-2">
+              <KeyRound size={18} className="text-primary" /> Admin PIN बदलें
+            </h2>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">वर्तमान PIN</label>
+              <input type="password" value={currentPin} onChange={e => setCurrentPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                placeholder="वर्तमान 4 अंकों का PIN" className={inputClass} maxLength={4} inputMode="numeric" />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">नया PIN</label>
+              <input type="password" value={newPin} onChange={e => setNewPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                placeholder="नया 4 अंकों का PIN" className={inputClass} maxLength={4} inputMode="numeric" />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground mb-1 block">नया PIN दोबारा डालें</label>
+              <input type="password" value={confirmPin} onChange={e => setConfirmPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                placeholder="नया PIN दोबारा डालें" className={inputClass} maxLength={4} inputMode="numeric" />
+            </div>
+            <button onClick={handleChangePin} disabled={changingPin}
+              className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold disabled:opacity-50 active:scale-[0.97] transition-transform">
+              {changingPin ? <Loader2 size={16} className="animate-spin mx-auto" /> : 'PIN बदलें'}
+            </button>
           </div>
         )}
       </div>
