@@ -25,7 +25,7 @@ const categoryEmojis: Record<string, string> = {
   "Carpenter": "🪚", "Mobile Repair": "📱", "Bike Mechanic": "🏍️", "Domestic Worker": "🏠",
   "Computer Class": "💻", "Competitive Exam Coaching": "📚", "Driving School": "🚗", "Skill Training": "🎯",
   "Online Form Filling": "📝", "Aadhaar Update": "🆔", "PAN Card Apply": "💳",
-  "Online Form Filling": "📝", "Aadhaar Update": "🆔", "PAN Card Apply": "💳",
+  "Electricity Bill Payment": "💡", "Government Scheme Registration": "🏛️",
   "Electricity Bill Payment": "💡", "Government Scheme Registration": "🏛️",
   "Tailoring / Boutique": "✂️", "Beauty Parlour": "💇", "Home Tutor": "👩‍🏫",
   "Cook": "👨‍🍳", "Cleaning Worker": "🧹", "Gas Stove Repair": "🔥",
