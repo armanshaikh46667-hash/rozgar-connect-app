@@ -11,7 +11,7 @@ const mainTabs = [
 
 const moreTabs = [
   { label: 'नक्शा', icon: Map, path: '/map' },
-  { label: 'स्थानीय दुकानें', icon: Store, path: '/businesses' },
+  { label: 'Updates', icon: Sparkles, path: '/updates' },
   { label: 'About Us', icon: Info, path: '/about' },
   { label: 'Admin Panel', icon: Shield, path: '/admin' },
 ];

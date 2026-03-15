@@ -203,40 +203,6 @@ const HomePage = () => {
       </div>
 
       {/* Updates & Improvements */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
-        <div className="mb-4">
-          <h2 className="text-base font-bold text-foreground">📢 Updates & Improvements</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">New features added in RozgarSewa platform</p>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { icon: <Camera size={16} className="text-primary" />, title: 'Worker Profile Photo', desc: 'प्रोफ़ाइल फोटो अपलोड करें।' },
-            { icon: <CheckCircle2 size={16} className="text-primary" />, title: 'Availability Status', desc: 'Available / Busy / Offline स्थिति।' },
-            { icon: <CalendarCheck size={16} className="text-primary" />, title: 'Simple Booking', desc: 'तारीख, समय से बुकिंग भेजें।' },
-            { icon: <StarIcon size={16} className="text-primary" />, title: 'Worker Reviews', desc: 'स्टार रेटिंग और समीक्षा दें।' },
-            { icon: <Award size={16} className="text-primary" />, title: 'Experience Badge', desc: '1+, 5+, 10+ वर्ष बैज।' },
-            { icon: <MapPin size={16} className="text-primary" />, title: 'Location Display', desc: 'गाँव / लोकेशन दिखता है।' },
-            { icon: <Filter size={16} className="text-primary" />, title: 'Advanced Search', desc: 'श्रेणी, गाँव, रेटिंग से खोजें।' },
-            { icon: <ImageIcon size={16} className="text-primary" />, title: 'Work Gallery', desc: 'पिछले काम की फोटो दिखाएँ।' },
-            { icon: <AlertTriangle size={16} className="text-primary" />, title: 'Emergency Worker', desc: '1-क्लिक कॉल सुविधा।' },
-            { icon: <Shield size={16} className="text-primary" />, title: 'Admin Panel', desc: 'फर्जी प्रोफाइल हटाएं।' },
-            { icon: <ClipboardList size={16} className="text-primary" />, title: 'Booking History', desc: 'पिछली बुकिंग देखें।' },
-            { icon: <Store size={16} className="text-primary" />, title: 'Shop Registration', desc: 'दुकानों का अलग फॉर्म।' },
-            { icon: <Share2 size={16} className="text-primary" />, title: 'Share Profile', desc: 'WhatsApp से शेयर करें।' },
-            { icon: <KeyRound size={16} className="text-primary" />, title: 'PIN Reset via OTP', desc: 'OTP से PIN रीसेट।' },
-            { icon: <TrendingUp size={16} className="text-primary" />, title: 'Earnings Dashboard', desc: 'कमाई और काम का विवरण।' },
-            { icon: <Map size={16} className="text-primary" />, title: 'Map & Nearby', desc: 'नज़दीकी कामगार नक्शे पर।' },
-          ].map((item, i) => (
-            <div key={i} className="bg-card rounded-xl border border-border p-3 flex items-start gap-2.5">
-              <div className="shrink-0 w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mt-0.5">{item.icon}</div>
-              <div className="min-w-0">
-                <p className="text-[11px] font-bold text-foreground leading-tight">{item.title}</p>
-                <p className="text-[10px] text-muted-foreground leading-snug mt-0.5">{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
 
       {/* Popular Categories */}
       <div className="max-w-lg mx-auto px-4 mt-8">
