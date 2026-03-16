@@ -117,65 +117,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* About Section */}
-      <div className="max-w-lg mx-auto px-4 mt-6">
-        <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <Info size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">RozgarSewa के बारे में</h2>
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            RozgarSewa एक मुफ्त डिजिटल प्लेटफॉर्म है जो ग्रामीण और छोटे शहरों में स्थानीय कामगारों और ग्राहकों को सीधे जोड़ता है। प्लम्बर, इलेक्ट्रीशियन, राजमिस्त्री, पेंटर — सभी एक जगह। बिना किसी बिचौलिए के, सीधा संपर्क करें।
-          </p>
-          <button onClick={() => navigate('/about')} className="mt-3 text-xs text-primary font-semibold flex items-center gap-1">
-            और जानें <ChevronRight size={14} />
-          </button>
-        </div>
-      </div>
-
-      {/* Emergency Section */}
-      <div className="max-w-lg mx-auto px-4 mt-6">
-        <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertTriangle size={18} className="text-destructive" />
-            <h2 className="text-sm font-bold text-foreground">🚨 Emergency — 1 Click Call</h2>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            {EMERGENCY_CATEGORIES.map((cat) => {
-              const worker = getEmergencyWorker(cat.name);
-              return (
-                <div key={cat.name} className="flex flex-col items-center gap-1 p-3 bg-card rounded-xl border border-destructive/20">
-                  <span className="text-2xl">{cat.emoji}</span>
-                  <span className="text-[10px] font-bold text-foreground">{cat.hindi}</span>
-                  {worker ? (
-                    <a href={`tel:${worker.mobile}`}
-                      className="w-full mt-1 bg-destructive text-destructive-foreground py-1.5 rounded-lg text-[10px] font-bold flex items-center justify-center gap-1 active:scale-[0.96] transition-transform">
-                      <Phone size={10} /> कॉल
-                    </a>
-                  ) : (
-                    <button onClick={() => navigate(`/search?category=${encodeURIComponent(cat.name)}`)}
-                      className="w-full mt-1 bg-secondary text-secondary-foreground py-1.5 rounded-lg text-[10px] font-medium">
-                      खोजें
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-
-      {/* Live Map */}
-      <div className="max-w-lg mx-auto px-4 mt-6">
-        <div className="bg-card rounded-2xl border border-border p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Map size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">नज़दीकी कामगार — नक्शा</h2>
-          </div>
-          <HomeMap />
-        </div>
-      </div>
 
       {/* Updates & Improvements */}
 
