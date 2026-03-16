@@ -1,4 +1,4 @@
-import { Search, MapPin, Briefcase, Users, Shield, Heart, Share2, ChevronRight, Zap, AlertTriangle, Phone, Store, CalendarCheck, Navigation, Info, Map, TrendingUp } from 'lucide-react';
+import { Search, MapPin, Briefcase, Users, Shield, Heart, Share2, ChevronRight, Zap, Phone, Store, CalendarCheck, Navigation, Info, Map, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
 import HomeMap from '@/components/HomeMap';
