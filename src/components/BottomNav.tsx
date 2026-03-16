@@ -7,7 +7,7 @@ const mainTabs = [
   { label: 'खोजें', icon: Search, path: '/search' },
   { label: 'रजिस्टर', icon: UserPlus, path: '/business-register' },
   { label: 'बुकिंग', icon: CalendarCheck, path: '/bookings' },
-  { label: 'कमाई', icon: Sparkles, path: '/earnings' },
+  { label: 'कमाई', icon: TrendingUp, path: '/earnings' },
 ];
 
 const moreTabs = [
