@@ -46,7 +46,6 @@ const handleShare = async () => {
 const HomePage = () => {
   const navigate = useNavigate();
   const workers = useWorkerStore(s => s.workers);
-  };
 
   return (
     <div className="min-h-screen bottom-nav-safe bg-background">
