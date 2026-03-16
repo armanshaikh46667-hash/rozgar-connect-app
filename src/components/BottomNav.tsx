@@ -1,12 +1,13 @@
-import { Home, Search, UserPlus, CalendarCheck, Sparkles, Menu, X, Shield, Info, Map } from 'lucide-react';
+import { Home, Search, UserPlus, CalendarCheck, TrendingUp, Menu, X, Shield, Info, Map, Sparkles } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const mainTabs = [
   { label: 'होम', icon: Home, path: '/' },
   { label: 'खोजें', icon: Search, path: '/search' },
-  { label: 'रजिस्टर', icon: UserPlus, path: '/register' },
+  { label: 'रजिस्टर', icon: UserPlus, path: '/business-register' },
   { label: 'बुकिंग', icon: CalendarCheck, path: '/bookings' },
+  { label: 'कमाई', icon: TrendingUp, path: '/earnings' },
 ];
 
 const moreTabs = [

@@ -1,4 +1,4 @@
-import { Store, GraduationCap, ArrowLeft, User, Monitor } from 'lucide-react';
+import { Store, GraduationCap, ArrowLeft, User, Monitor, Briefcase } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const options = [
@@ -6,6 +6,7 @@ const options = [
   { icon: Store, label: 'दुकान रजिस्टर', desc: 'हार्डवेयर, किराना, मेडिकल आदि', route: '/register-shop' },
   { icon: Monitor, label: 'डिजिटल सेवाएँ', desc: 'आधार, PAN, ऑनलाइन फॉर्म आदि', route: '/register-shop' },
   { icon: GraduationCap, label: 'शिक्षा और प्रशिक्षण', desc: 'कोचिंग, कंप्यूटर क्लास, ड्राइविंग स्कूल', route: '/register-coaching' },
+  { icon: Briefcase, label: 'काम पोस्ट करें', desc: 'अपना काम पोस्ट करें और कामगार खोजें', route: '/post-job' },
 ];
 
 const BusinessRegistrationPage = () => {

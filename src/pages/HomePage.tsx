@@ -165,31 +165,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="max-w-lg mx-auto px-4 mt-6">
-        <div className="grid grid-cols-4 gap-2">
-          <button onClick={() => navigate('/bookings')}
-            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
-            <CalendarCheck size={20} className="mx-auto text-primary mb-1" />
-            <span className="text-[10px] font-semibold text-foreground">बुकिंग</span>
-          </button>
-          <button onClick={() => navigate('/business-register')}
-            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
-            <Users size={20} className="mx-auto text-primary mb-1" />
-            <span className="text-[10px] font-semibold text-foreground">रजिस्टर</span>
-          </button>
-          <button onClick={() => navigate('/earnings')}
-            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
-            <TrendingUp size={20} className="mx-auto text-primary mb-1" />
-            <span className="text-[10px] font-semibold text-foreground">कमाई</span>
-          </button>
-          <button onClick={() => navigate('/post-job')}
-            className="bg-card rounded-xl border border-border p-3 text-center active:scale-[0.97] transition-transform">
-            <Briefcase size={20} className="mx-auto text-primary mb-1" />
-            <span className="text-[10px] font-semibold text-foreground">काम पोस्ट</span>
-          </button>
-        </div>
-      </div>
 
       {/* Live Map */}
       <div className="max-w-lg mx-auto px-4 mt-6">
