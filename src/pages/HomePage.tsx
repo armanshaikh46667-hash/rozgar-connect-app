@@ -14,11 +14,6 @@ const HERO_CATEGORIES = [
   { name: "Tractor Driver", emoji: "🌾", hindi: "कृषि कामगार" },
 ];
 
-const EMERGENCY_CATEGORIES = [
-  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन", desc: "बिजली की समस्या" },
-  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर", desc: "पानी की समस्या" },
-  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक", desc: "गाड़ी खराब" },
-];
 
 const categoryEmojis: Record<string, string> = {
   "Plumber": "🔧", "Electrician": "⚡", "Rajmistri": "🧱", "Painter": "🎨",
