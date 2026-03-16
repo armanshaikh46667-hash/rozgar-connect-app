@@ -5,8 +5,9 @@ import { useState } from 'react';
 const mainTabs = [
   { label: 'होम', icon: Home, path: '/' },
   { label: 'खोजें', icon: Search, path: '/search' },
-  { label: 'रजिस्टर', icon: UserPlus, path: '/register' },
+  { label: 'रजिस्टर', icon: UserPlus, path: '/business-register' },
   { label: 'बुकिंग', icon: CalendarCheck, path: '/bookings' },
+  { label: 'कमाई', icon: Sparkles, path: '/earnings' },
 ];
 
 const moreTabs = [
