@@ -46,9 +46,6 @@ const handleShare = async () => {
 const HomePage = () => {
   const navigate = useNavigate();
   const workers = useWorkerStore(s => s.workers);
-
-  const getEmergencyWorker = (cat: string) => {
-    return workers.find(w => w.category === cat && w.status === 'available');
   };
 
   return (
