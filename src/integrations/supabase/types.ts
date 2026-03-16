@@ -80,9 +80,12 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          lat: number | null
+          lng: number | null
           mobile: string
           owner_name: string
           photo: string | null
+          pin: string | null
           service_type: string
           shop_name: string
           village: string
@@ -92,9 +95,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          lat?: number | null
+          lng?: number | null
           mobile: string
           owner_name: string
           photo?: string | null
+          pin?: string | null
           service_type: string
           shop_name: string
           village: string
@@ -104,9 +110,12 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          lat?: number | null
+          lng?: number | null
           mobile?: string
           owner_name?: string
           photo?: string | null
+          pin?: string | null
           service_type?: string
           shop_name?: string
           village?: string
@@ -122,9 +131,12 @@ export type Database = {
           fees: string | null
           id: string
           institute_name: string
+          lat: number | null
+          lng: number | null
           mobile: string
           owner_name: string
           photo: string | null
+          pin: string | null
           timing: string | null
           village: string
         }
@@ -136,9 +148,12 @@ export type Database = {
           fees?: string | null
           id?: string
           institute_name: string
+          lat?: number | null
+          lng?: number | null
           mobile: string
           owner_name: string
           photo?: string | null
+          pin?: string | null
           timing?: string | null
           village: string
         }
@@ -150,9 +165,12 @@ export type Database = {
           fees?: string | null
           id?: string
           institute_name?: string
+          lat?: number | null
+          lng?: number | null
           mobile?: string
           owner_name?: string
           photo?: string | null
+          pin?: string | null
           timing?: string | null
           village?: string
         }
@@ -170,6 +188,7 @@ export type Database = {
           mobile: string
           name: string
           photo: string | null
+          pin: string | null
           village: string
         }
         Insert: {
@@ -183,6 +202,7 @@ export type Database = {
           mobile: string
           name: string
           photo?: string | null
+          pin?: string | null
           village: string
         }
         Update: {
@@ -196,6 +216,7 @@ export type Database = {
           mobile?: string
           name?: string
           photo?: string | null
+          pin?: string | null
           village?: string
         }
         Relationships: []

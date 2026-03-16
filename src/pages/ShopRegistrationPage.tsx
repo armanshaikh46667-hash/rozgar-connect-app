@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Store, ArrowLeft, CheckCircle, User } from 'lucide-react';
+import { Store, ArrowLeft, CheckCircle, User, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -25,6 +25,12 @@ const ShopRegistrationPage = () => {
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState('');
+  const [pin, setPin] = useState('');
+  const [confirmPin, setConfirmPin] = useState('');
+  const [pinError, setPinError] = useState('');
+  const [lat, setLat] = useState<number | undefined>();
+  const [lng, setLng] = useState<number | undefined>();
+  const [gpsLoading, setGpsLoading] = useState(false);
 
   const handlePhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -34,15 +40,29 @@ const ShopRegistrationPage = () => {
     reader.readAsDataURL(file);
   };
 
+  const getLocation = () => {
+    if (!navigator.geolocation) { toast.error('GPS उपलब्ध नहीं'); return; }
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { setLat(pos.coords.latitude); setLng(pos.coords.longitude); setGpsLoading(false); toast.success('लोकेशन प्राप्त हुई!'); },
+      () => { setGpsLoading(false); toast.error('लोकेशन नहीं मिली'); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!ownerName || !shopName || !mobile || !category || !village) return;
     if (mobile.length !== 10) { toast.error('10 अंकों का मोबाइल नंबर डालें'); return; }
+    if (pin.length !== 4 || !/^\d{4}$/.test(pin)) { setPinError('कृपया 4 अंकों का PIN डालें'); return; }
+    if (pin !== confirmPin) { setPinError('PIN मेल नहीं खाता'); return; }
+    setPinError('');
     setSubmitting(true);
-    const { error } = await supabase.from('local_businesses').insert({
+    const { error } = await supabase.from('local_businesses' as any).insert({
       name: shopName, category, mobile, village,
       address: address || null, description: description || null,
-      photo: photo || null,
+      photo: photo || null, lat: lat || null, lng: lng || null,
+      pin,
     });
     setSubmitting(false);
     if (error) { toast.error('कुछ गलत हो गया, दोबारा कोशिश करें'); return; }
@@ -119,6 +139,15 @@ const ShopRegistrationPage = () => {
               <label className="text-xs font-medium text-muted-foreground mb-1 block">गाँव / शहर *</label>
               <input type="text" value={village} onChange={e => setVillage(e.target.value)} placeholder="गाँव / शहर का नाम" className={inputClass} required maxLength={100} />
             </div>
+
+            <div>
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">📍 Live Location (वैकल्पिक)</label>
+              <button type="button" onClick={getLocation} disabled={gpsLoading}
+                className="w-full bg-accent text-accent-foreground py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 border border-border disabled:opacity-50">
+                <MapPin size={16} /> {gpsLoading ? 'लोकेशन ले रहे हैं...' : lat ? `✅ ${lat.toFixed(4)}, ${lng?.toFixed(4)}` : 'Live Location चुनें'}
+              </button>
+            </div>
+
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">पता (वैकल्पिक)</label>
               <input type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="पूरा पता लिखें" className={inputClass} maxLength={200} />
@@ -126,6 +155,18 @@ const ShopRegistrationPage = () => {
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">विवरण (वैकल्पिक)</label>
               <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="दुकान के बारे में संक्षिप्त विवरण" className={`${inputClass} resize-none h-20`} maxLength={300} />
+            </div>
+
+            <div className="border-t border-border pt-4">
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">🔒 Secret PIN बनाएं (4 अंक) *</label>
+              <p className="text-[10px] text-muted-foreground mb-2">प्रोफ़ाइल एडिट/डिलीट करने के लिए PIN ज़रूरी है</p>
+              <div className="grid grid-cols-2 gap-2">
+                <input type="password" value={pin} onChange={e => { setPin(e.target.value.replace(/\D/g, '').slice(0, 4)); setPinError(''); }}
+                  placeholder="PIN डालें" className={inputClass} required maxLength={4} inputMode="numeric" />
+                <input type="password" value={confirmPin} onChange={e => { setConfirmPin(e.target.value.replace(/\D/g, '').slice(0, 4)); setPinError(''); }}
+                  placeholder="PIN दोबारा डालें" className={inputClass} required maxLength={4} inputMode="numeric" />
+              </div>
+              {pinError && <p className="text-[11px] text-destructive mt-1">{pinError}</p>}
             </div>
 
             <button type="submit" disabled={submitting}
