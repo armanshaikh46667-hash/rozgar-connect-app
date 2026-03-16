@@ -169,6 +169,33 @@ const HomePage = () => {
         ))}
       </div>
 
+      {/* Live Map */}
+      <div className="max-w-lg mx-auto px-4 mt-8">
+        <div className="bg-card rounded-2xl border border-border p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Map size={18} className="text-primary" />
+            <h2 className="text-sm font-bold text-foreground">नज़दीकी कामगार — नक्शा</h2>
+          </div>
+          <HomeMap />
+        </div>
+      </div>
+
+      {/* About Section */}
+      <div className="max-w-lg mx-auto px-4 mt-6">
+        <div className="bg-card rounded-2xl border border-border p-5">
+          <div className="flex items-center gap-2 mb-2">
+            <Info size={18} className="text-primary" />
+            <h2 className="text-sm font-bold text-foreground">RozgarSewa के बारे में</h2>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            RozgarSewa एक मुफ्त डिजिटल प्लेटफॉर्म है जो ग्रामीण और छोटे शहरों में स्थानीय कामगारों और ग्राहकों को सीधे जोड़ता है। प्लम्बर, इलेक्ट्रीशियन, राजमिस्त्री, पेंटर — सभी एक जगह। बिना किसी बिचौलिए के, सीधा संपर्क करें।
+          </p>
+          <button onClick={() => navigate('/about')} className="mt-3 text-xs text-primary font-semibold flex items-center gap-1">
+            और जानें <ChevronRight size={14} />
+          </button>
+        </div>
+      </div>
+
       {/* CTA */}
       <div className="max-w-lg mx-auto px-4 mt-8">
         <div className="bg-gradient-to-br from-primary to-accent-foreground rounded-2xl p-6 text-primary-foreground text-center">
@@ -211,33 +238,6 @@ const HomePage = () => {
           <Share2 size={20} className="text-primary" />
           <span className="text-sm font-semibold text-foreground">ऐप शेयर करें</span>
         </button>
-      </div>
-
-      {/* Live Map */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
-        <div className="bg-card rounded-2xl border border-border p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Map size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">नज़दीकी कामगार — नक्शा</h2>
-          </div>
-          <HomeMap />
-        </div>
-      </div>
-
-      {/* About Section */}
-      <div className="max-w-lg mx-auto px-4 mt-6">
-        <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <Info size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">RozgarSewa के बारे में</h2>
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            RozgarSewa एक मुफ्त डिजिटल प्लेटफॉर्म है जो ग्रामीण और छोटे शहरों में स्थानीय कामगारों और ग्राहकों को सीधे जोड़ता है। प्लम्बर, इलेक्ट्रीशियन, राजमिस्त्री, पेंटर — सभी एक जगह। बिना किसी बिचौलिए के, सीधा संपर्क करें।
-          </p>
-          <button onClick={() => navigate('/about')} className="mt-3 text-xs text-primary font-semibold flex items-center gap-1">
-            और जानें <ChevronRight size={14} />
-          </button>
-        </div>
       </div>
 
       {/* Footer */}
