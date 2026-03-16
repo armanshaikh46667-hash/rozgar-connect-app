@@ -1,4 +1,4 @@
-import { Search, MapPin, Briefcase, Users, Shield, Heart, Share2, ChevronRight, Zap, Phone, Store, CalendarCheck, Navigation, Info, Map, TrendingUp } from 'lucide-react';
+import { Search, MapPin, Briefcase, UserPlus, Users, Shield, Heart, Share2, ChevronRight, Zap, Phone, Store, CalendarCheck, Navigation, Info, Map, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
 import HomeMap from '@/components/HomeMap';
@@ -73,9 +73,9 @@ const HomePage = () => {
               className="flex-1 bg-primary-foreground text-primary py-3.5 rounded-xl text-sm font-bold shadow-lg active:scale-[0.97] transition-transform flex items-center justify-center gap-2">
               <Search size={18} /> काम ढूंढें
             </button>
-            <button onClick={() => navigate('/post-job')}
+            <button onClick={() => navigate('/business-register')}
               className="flex-1 bg-primary-foreground/15 border border-primary-foreground/30 text-primary-foreground py-3.5 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform flex items-center justify-center gap-2">
-              <Briefcase size={18} /> काम पोस्ट करें
+              <UserPlus size={18} /> रजिस्टर करें
             </button>
           </div>
         </div>
