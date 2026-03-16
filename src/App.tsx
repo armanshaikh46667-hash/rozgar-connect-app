@@ -14,8 +14,8 @@ import BookingHistoryPage from "./pages/BookingHistoryPage";
 import LocalBusinessPage from "./pages/LocalBusinessPage";
 import BusinessRegistrationPage from "./pages/BusinessRegistrationPage";
 import ShopRegistrationPage from "./pages/ShopRegistrationPage";
+import DigitalServiceRegistrationPage from "./pages/DigitalServiceRegistrationPage";
 import CoachingRegistrationPage from "./pages/CoachingRegistrationPage";
-import JobPostPage from "./pages/JobPostPage";
 import EarningsPage from "./pages/EarningsPage";
 import AboutPage from "./pages/AboutPage";
 import AdminPage from "./pages/AdminPage";
@@ -39,8 +39,8 @@ const AnimatedRoutes = () => {
         <Route path="/businesses" element={<LocalBusinessPage />} />
         <Route path="/business-register" element={<BusinessRegistrationPage />} />
         <Route path="/register-shop" element={<ShopRegistrationPage />} />
+        <Route path="/register-digital" element={<DigitalServiceRegistrationPage />} />
         <Route path="/register-coaching" element={<CoachingRegistrationPage />} />
-        <Route path="/post-job" element={<JobPostPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/earnings" element={<EarningsPage />} />

@@ -1,26 +1,26 @@
 import { useState, useRef } from 'react';
-import { Store, ArrowLeft, CheckCircle, User } from 'lucide-react';
+import { Monitor, ArrowLeft, CheckCircle, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-const SHOP_CATEGORIES = [
-  'Kirana Store', 'Hardware Shop', 'Medical Store', 'Cement Supplier',
-  'Furniture Shop', 'Electric Shop', 'Paint Shop', 'Tiles Shop',
-  'Clothing Store', 'Mobile Shop', 'Stationery Shop', 'Other',
+const DIGITAL_SERVICES = [
+  'Aadhaar Update', 'PAN Card Apply', 'Online Form Filling',
+  'Bill Payment', 'Passport Apply', 'Voter ID', 'Driving License',
+  'Mobile Recharge', 'Insurance', 'Electricity Bill Payment',
+  'Government Scheme Registration', 'Other',
 ];
 
 const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
-const ShopRegistrationPage = () => {
+const DigitalServiceRegistrationPage = () => {
   const navigate = useNavigate();
   const fileRef = useRef<HTMLInputElement>(null);
   const [success, setSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [ownerName, setOwnerName] = useState('');
-  const [shopName, setShopName] = useState('');
+  const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
-  const [category, setCategory] = useState('');
+  const [serviceType, setServiceType] = useState('');
   const [village, setVillage] = useState('');
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
@@ -36,18 +36,18 @@ const ShopRegistrationPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ownerName || !shopName || !mobile || !category || !village) return;
+    if (!name || !mobile || !serviceType || !village) return;
     if (mobile.length !== 10) { toast.error('10 अंकों का मोबाइल नंबर डालें'); return; }
     setSubmitting(true);
-    const { error } = await supabase.from('local_businesses').insert({
-      name: shopName, category, mobile, village,
-      address: address || null, description: description || null,
-      photo: photo || null,
+    const { error } = await supabase.from('digital_services').insert({
+      owner_name: name, shop_name: name, mobile,
+      service_type: serviceType, village, address: address || null,
+      description: description || null, photo: photo || null,
     });
     setSubmitting(false);
     if (error) { toast.error('कुछ गलत हो गया, दोबारा कोशिश करें'); return; }
     setSuccess(true);
-    toast.success('दुकान सफलतापूर्वक रजिस्टर हो गई! 🎉');
+    toast.success('डिजिटल सेवा सफलतापूर्वक रजिस्टर हो गई! 🎉');
   };
 
   if (success) {
@@ -55,16 +55,16 @@ const ShopRegistrationPage = () => {
       <div className="min-h-screen bottom-nav-safe bg-background">
         <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
           <div className="max-w-lg mx-auto">
-            <h1 className="text-xl font-extrabold flex items-center gap-2"><Store size={22} /> दुकान रजिस्ट्रेशन</h1>
+            <h1 className="text-xl font-extrabold flex items-center gap-2"><Monitor size={22} /> डिजिटल सेवाएँ</h1>
           </div>
         </div>
         <div className="max-w-lg mx-auto px-4 -mt-4 relative z-10">
           <div className="bg-card rounded-2xl shadow-lg p-8 text-center animate-fade-in">
             <CheckCircle className="mx-auto text-primary mb-4" size={56} />
-            <h2 className="text-xl font-bold text-foreground mb-2">दुकान रजिस्टर हो गई!</h2>
-            <p className="text-sm text-muted-foreground mb-6">आपकी दुकान अब लाइव है।</p>
+            <h2 className="text-xl font-bold text-foreground mb-2">रजिस्ट्रेशन सफल!</h2>
+            <p className="text-sm text-muted-foreground mb-6">आपकी सेवा अब लाइव है।</p>
             <button onClick={() => navigate('/businesses')} className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold">
-              दुकानें देखें
+              सेवाएँ देखें
             </button>
           </div>
         </div>
@@ -79,8 +79,8 @@ const ShopRegistrationPage = () => {
           <button onClick={() => navigate('/business-register')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
             <ArrowLeft size={16} /> वापस जाएं
           </button>
-          <h1 className="text-xl font-extrabold flex items-center gap-2"><Store size={22} /> दुकान रजिस्ट्रेशन</h1>
-          <p className="text-primary-foreground/80 text-xs mt-1">अपनी दुकान रजिस्टर करें</p>
+          <h1 className="text-xl font-extrabold flex items-center gap-2"><Monitor size={22} /> डिजिटल सेवाएँ रजिस्ट्रेशन</h1>
+          <p className="text-primary-foreground/80 text-xs mt-1">अपनी डिजिटल सेवा रजिस्टर करें</p>
         </div>
       </div>
 
@@ -88,31 +88,27 @@ const ShopRegistrationPage = () => {
         <div className="bg-card rounded-2xl shadow-lg border border-border p-5">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col items-center gap-2">
-              <label className="text-xs font-medium text-muted-foreground block">दुकान फोटो (वैकल्पिक)</label>
+              <label className="text-xs font-medium text-muted-foreground block">प्रोफ़ाइल फोटो (वैकल्पिक)</label>
               <button type="button" onClick={() => fileRef.current?.click()}
                 className="w-24 h-24 rounded-2xl bg-secondary border-2 border-dashed border-border flex items-center justify-center overflow-hidden hover:border-primary transition-colors">
-                {photo ? <img src={photo} alt="Shop" className="w-full h-full object-cover" /> : <Store size={32} className="text-muted-foreground" />}
+                {photo ? <img src={photo} alt="Photo" className="w-full h-full object-cover" /> : <User size={32} className="text-muted-foreground" />}
               </button>
               <input ref={fileRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
             </div>
 
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">मालिक का नाम *</label>
-              <input type="text" value={ownerName} onChange={e => setOwnerName(e.target.value)} placeholder="मालिक का नाम लिखें" className={inputClass} required maxLength={100} />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">दुकान का नाम *</label>
-              <input type="text" value={shopName} onChange={e => setShopName(e.target.value)} placeholder="दुकान का नाम लिखें" className={inputClass} required maxLength={100} />
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">पूरा नाम *</label>
+              <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="अपना नाम लिखें" className={inputClass} required maxLength={100} />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">मोबाइल नंबर *</label>
               <input type="tel" value={mobile} onChange={e => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10 अंकों का मोबाइल नंबर" className={inputClass} required />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">दुकान श्रेणी *</label>
-              <select value={category} onChange={e => setCategory(e.target.value)} className={inputClass} required>
-                <option value="">श्रेणी चुनें</option>
-                {SHOP_CATEGORIES.map(s => <option key={s} value={s}>{s}</option>)}
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">सेवा प्रकार *</label>
+              <select value={serviceType} onChange={e => setServiceType(e.target.value)} className={inputClass} required>
+                <option value="">सेवा प्रकार चुनें</option>
+                {DIGITAL_SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
             <div>
@@ -125,12 +121,12 @@ const ShopRegistrationPage = () => {
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">विवरण (वैकल्पिक)</label>
-              <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="दुकान के बारे में संक्षिप्त विवरण" className={`${inputClass} resize-none h-20`} maxLength={300} />
+              <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="अपनी सेवाओं का संक्षिप्त विवरण" className={`${inputClass} resize-none h-20`} maxLength={300} />
             </div>
 
             <button type="submit" disabled={submitting}
               className="w-full bg-primary text-primary-foreground py-3.5 rounded-xl text-sm font-bold shadow-lg active:scale-[0.97] transition-transform disabled:opacity-60">
-              {submitting ? 'रजिस्टर हो रहा है...' : 'दुकान रजिस्टर करें'}
+              {submitting ? 'रजिस्टर हो रहा है...' : 'रजिस्टर करें'}
             </button>
           </form>
         </div>
@@ -139,4 +135,4 @@ const ShopRegistrationPage = () => {
   );
 };
 
-export default ShopRegistrationPage;
+export default DigitalServiceRegistrationPage;
