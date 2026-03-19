@@ -273,7 +273,6 @@ const SearchPage = () => {
   const [minRating, setMinRating] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [ratingOpenId, setRatingOpenId] = useState<string | null>(null);
-  const [reviewOpenId, setReviewOpenId] = useState<string | null>(null);
   const [editOpenId, setEditOpenId] = useState<string | null>(null);
   const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
   const [statusOpenId, setStatusOpenId] = useState<string | null>(null);
