@@ -180,21 +180,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* About Section */}
-      <div className="max-w-lg mx-auto px-4 mt-6">
-        <div className="bg-card rounded-2xl border border-border p-5">
-          <div className="flex items-center gap-2 mb-2">
-            <Info size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">RozgarSewa के बारे में</h2>
-          </div>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            RozgarSewa एक मुफ्त डिजिटल प्लेटफॉर्म है जो ग्रामीण और छोटे शहरों में स्थानीय कामगारों और ग्राहकों को सीधे जोड़ता है। प्लम्बर, इलेक्ट्रीशियन, राजमिस्त्री, पेंटर — सभी एक जगह। बिना किसी बिचौलिए के, सीधा संपर्क करें।
-          </p>
-          <button onClick={() => navigate('/about')} className="mt-3 text-xs text-primary font-semibold flex items-center gap-1">
-            और जानें <ChevronRight size={14} />
-          </button>
-        </div>
-      </div>
 
       {/* CTA */}
       <div className="max-w-lg mx-auto px-4 mt-8">
