@@ -508,11 +508,7 @@ const SearchPage = () => {
                   <div className="flex items-center gap-2 mt-2 flex-wrap">
                     <button onClick={() => setRatingOpenId(ratingOpenId === w.id ? null : w.id)}
                       className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Star size={13} /> रेटिंग
-                    </button>
-                    <button onClick={() => setReviewOpenId(reviewOpenId === w.id ? null : w.id)}
-                      className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <MessageSquare size={13} /> समीक्षा
+                      <Star size={13} /> ⭐ Rate & Review
                     </button>
                     <button onClick={() => setGalleryOpenId(w.id)}
                       className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
