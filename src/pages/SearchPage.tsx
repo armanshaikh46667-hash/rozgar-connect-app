@@ -120,43 +120,6 @@ const GalleryDialog = ({ workerId, onClose }: { workerId: string; onClose: () =>
   );
 };
 
-// --- Review Input ---
-const ReviewInput = ({ workerId, onClose }: { workerId: string; onClose: () => void }) => {
-  const [reviewerName, setReviewerName] = useState('');
-  const [reviewerMobile, setReviewerMobile] = useState('');
-  const [text, setText] = useState('');
-  const [saving, setSaving] = useState(false);
-  const reviewWorker = useWorkerStore((s) => s.reviewWorker);
-
-  const handleSubmit = async () => {
-    if (!reviewerName.trim()) { toast.error('कृपया अपना नाम डालें'); return; }
-    if (reviewerMobile.length !== 10) { toast.error('कृपया 10 अंकों का मोबाइल नंबर डालें'); return; }
-    if (!text.trim()) { toast.error('कृपया समीक्षा लिखें'); return; }
-    setSaving(true);
-    const success = await reviewWorker(workerId, reviewerName.trim(), reviewerMobile, text.trim());
-    setSaving(false);
-    if (success) { toast.success('समीक्षा सफलतापूर्वक दी गई!'); onClose(); }
-    else toast.error('आप पहले ही इस कामगार की समीक्षा कर चुके हैं');
-  };
-
-  const inputClass = "w-full bg-background text-foreground rounded-xl px-3 py-2 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
-
-  return (
-    <div className="bg-secondary rounded-xl p-3 mt-2 space-y-2 animate-fade-in">
-      <p className="text-xs font-semibold text-foreground">समीक्षा लिखें</p>
-      <input type="text" value={reviewerName} onChange={(e) => setReviewerName(e.target.value)} placeholder="आपका नाम" className={inputClass} maxLength={50} />
-      <input type="tel" value={reviewerMobile} onChange={(e) => setReviewerMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="आपका मोबाइल नंबर" className={inputClass} />
-      <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="अपनी समीक्षा लिखें..." className={`${inputClass} resize-none h-16`} maxLength={200} />
-      <div className="flex gap-2">
-        <button onClick={onClose} className="flex-1 py-2 text-sm text-muted-foreground rounded-xl border border-border">रद्द करें</button>
-        <button onClick={handleSubmit} disabled={saving} className="flex-1 py-2 text-sm bg-primary text-primary-foreground rounded-xl font-medium disabled:opacity-60">
-          {saving ? '...' : 'समीक्षा दें'}
-        </button>
-      </div>
-    </div>
-  );
-};
-
 // --- Edit Profile ---
 const EditProfileDialog = ({ workerId, onClose }: { workerId: string; onClose: () => void }) => {
   const worker = useWorkerStore((s) => s.workers.find((w) => w.id === workerId));
