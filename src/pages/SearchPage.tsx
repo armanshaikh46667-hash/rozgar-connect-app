@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound } from 'lucide-react';
 import { useWorkerStore, CATEGORY_GROUPS, getAverageRating, getExperienceBadge, getDistance, type WorkCategory, type Availability, type WorkerStatus } from '@/store/workerStore';
-import { RatingDisplay, RatingInput } from '@/components/RatingStars';
+import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import BookingDialog from '@/components/BookingDialog';
 import ForgotPinDialog from '@/components/ForgotPinDialog';
 import { toast } from 'sonner';
