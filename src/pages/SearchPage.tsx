@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound } from 'lucide-react';
 import { useWorkerStore, CATEGORY_GROUPS, getAverageRating, getExperienceBadge, getDistance, type WorkCategory, type Availability, type WorkerStatus } from '@/store/workerStore';
-import { RatingDisplay, RatingInput } from '@/components/RatingStars';
+import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import BookingDialog from '@/components/BookingDialog';
 import ForgotPinDialog from '@/components/ForgotPinDialog';
 import { toast } from 'sonner';
@@ -115,43 +115,6 @@ const GalleryDialog = ({ workerId, onClose }: { workerId: string; onClose: () =>
           </button>
           <input ref={fileRef} type="file" accept="image/*" onChange={handleAdd} className="hidden" />
         </div>
-      </div>
-    </div>
-  );
-};
-
-// --- Review Input ---
-const ReviewInput = ({ workerId, onClose }: { workerId: string; onClose: () => void }) => {
-  const [reviewerName, setReviewerName] = useState('');
-  const [reviewerMobile, setReviewerMobile] = useState('');
-  const [text, setText] = useState('');
-  const [saving, setSaving] = useState(false);
-  const reviewWorker = useWorkerStore((s) => s.reviewWorker);
-
-  const handleSubmit = async () => {
-    if (!reviewerName.trim()) { toast.error('कृपया अपना नाम डालें'); return; }
-    if (reviewerMobile.length !== 10) { toast.error('कृपया 10 अंकों का मोबाइल नंबर डालें'); return; }
-    if (!text.trim()) { toast.error('कृपया समीक्षा लिखें'); return; }
-    setSaving(true);
-    const success = await reviewWorker(workerId, reviewerName.trim(), reviewerMobile, text.trim());
-    setSaving(false);
-    if (success) { toast.success('समीक्षा सफलतापूर्वक दी गई!'); onClose(); }
-    else toast.error('आप पहले ही इस कामगार की समीक्षा कर चुके हैं');
-  };
-
-  const inputClass = "w-full bg-background text-foreground rounded-xl px-3 py-2 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
-
-  return (
-    <div className="bg-secondary rounded-xl p-3 mt-2 space-y-2 animate-fade-in">
-      <p className="text-xs font-semibold text-foreground">समीक्षा लिखें</p>
-      <input type="text" value={reviewerName} onChange={(e) => setReviewerName(e.target.value)} placeholder="आपका नाम" className={inputClass} maxLength={50} />
-      <input type="tel" value={reviewerMobile} onChange={(e) => setReviewerMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="आपका मोबाइल नंबर" className={inputClass} />
-      <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="अपनी समीक्षा लिखें..." className={`${inputClass} resize-none h-16`} maxLength={200} />
-      <div className="flex gap-2">
-        <button onClick={onClose} className="flex-1 py-2 text-sm text-muted-foreground rounded-xl border border-border">रद्द करें</button>
-        <button onClick={handleSubmit} disabled={saving} className="flex-1 py-2 text-sm bg-primary text-primary-foreground rounded-xl font-medium disabled:opacity-60">
-          {saving ? '...' : 'समीक्षा दें'}
-        </button>
       </div>
     </div>
   );
@@ -310,7 +273,6 @@ const SearchPage = () => {
   const [minRating, setMinRating] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [ratingOpenId, setRatingOpenId] = useState<string | null>(null);
-  const [reviewOpenId, setReviewOpenId] = useState<string | null>(null);
   const [editOpenId, setEditOpenId] = useState<string | null>(null);
   const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
   const [statusOpenId, setStatusOpenId] = useState<string | null>(null);
@@ -546,11 +508,7 @@ const SearchPage = () => {
                   <div className="flex items-center gap-2 mt-2 flex-wrap">
                     <button onClick={() => setRatingOpenId(ratingOpenId === w.id ? null : w.id)}
                       className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Star size={13} /> रेटिंग
-                    </button>
-                    <button onClick={() => setReviewOpenId(reviewOpenId === w.id ? null : w.id)}
-                      className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <MessageSquare size={13} /> समीक्षा
+                      <Star size={13} /> ⭐ Rate & Review
                     </button>
                     <button onClick={() => setGalleryOpenId(w.id)}
                       className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
@@ -573,8 +531,7 @@ const SearchPage = () => {
                     </button>
                   </div>
 
-                  {ratingOpenId === w.id && <RatingInput workerId={w.id} onClose={() => setRatingOpenId(null)} />}
-                  {reviewOpenId === w.id && <ReviewInput workerId={w.id} onClose={() => setReviewOpenId(null)} />}
+                  {ratingOpenId === w.id && <RateReviewInput workerId={w.id} onClose={() => setRatingOpenId(null)} />}
 
                   {w.reviews.length > 0 && (
                     <div className="mt-3 pt-2 border-t border-border space-y-2">
