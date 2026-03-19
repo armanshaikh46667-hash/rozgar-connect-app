@@ -531,8 +531,7 @@ const SearchPage = () => {
                     </button>
                   </div>
 
-                  {ratingOpenId === w.id && <RatingInput workerId={w.id} onClose={() => setRatingOpenId(null)} />}
-                  {reviewOpenId === w.id && <ReviewInput workerId={w.id} onClose={() => setReviewOpenId(null)} />}
+                  {ratingOpenId === w.id && <RateReviewInput workerId={w.id} onClose={() => setRatingOpenId(null)} />}
 
                   {w.reviews.length > 0 && (
                     <div className="mt-3 pt-2 border-t border-border space-y-2">
