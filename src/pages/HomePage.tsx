@@ -88,21 +88,26 @@ const HomePage = () => {
             <Search size={16} className="text-muted-foreground" />
             <span className="text-sm font-semibold text-foreground">त्वरित खोज</span>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             <button onClick={() => navigate('/search')}
-              className="flex items-center gap-2 bg-secondary rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
-              <Briefcase size={16} className="text-primary shrink-0" />
-              <span className="text-[10px] font-medium text-foreground">काम के प्रकार</span>
+              className="flex flex-col items-center gap-1 bg-secondary rounded-xl px-2 py-3 text-center active:scale-[0.98] transition-transform">
+              <Briefcase size={16} className="text-primary" />
+              <span className="text-[9px] font-medium text-foreground">काम के प्रकार</span>
             </button>
             <button onClick={() => navigate('/search')}
-              className="flex items-center gap-2 bg-secondary rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
-              <MapPin size={16} className="text-primary shrink-0" />
-              <span className="text-[10px] font-medium text-foreground">गाँव / शहर</span>
+              className="flex flex-col items-center gap-1 bg-secondary rounded-xl px-2 py-3 text-center active:scale-[0.98] transition-transform">
+              <MapPin size={16} className="text-primary" />
+              <span className="text-[9px] font-medium text-foreground">गाँव / शहर</span>
             </button>
             <button onClick={() => navigate('/search?nearby=true')}
-              className="flex items-center gap-2 bg-accent rounded-xl px-3 py-3 text-left active:scale-[0.98] transition-transform">
-              <Navigation size={16} className="text-accent-foreground shrink-0" />
-              <span className="text-[10px] font-medium text-accent-foreground">GPS नज़दीक</span>
+              className="flex flex-col items-center gap-1 bg-accent rounded-xl px-2 py-3 text-center active:scale-[0.98] transition-transform">
+              <Navigation size={16} className="text-accent-foreground" />
+              <span className="text-[9px] font-medium text-accent-foreground">GPS नज़दीक</span>
+            </button>
+            <button onClick={() => navigate('/map')}
+              className="flex flex-col items-center gap-1 bg-accent rounded-xl px-2 py-3 text-center active:scale-[0.98] transition-transform">
+              <Map size={16} className="text-accent-foreground" />
+              <span className="text-[9px] font-medium text-accent-foreground">नक्शा</span>
             </button>
           </div>
         </div>

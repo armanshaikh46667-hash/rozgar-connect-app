@@ -1,10 +1,11 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound, Store, Laptop, GraduationCap, ChevronRight } from 'lucide-react';
 import { useWorkerStore, CATEGORY_GROUPS, getAverageRating, getExperienceBadge, getDistance, type WorkCategory, type Availability, type WorkerStatus } from '@/store/workerStore';
 import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import BookingDialog from '@/components/BookingDialog';
 import ForgotPinDialog from '@/components/ForgotPinDialog';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const AVAILABILITY_HINDI: Record<string, string> = {
@@ -22,6 +23,29 @@ const WhatsAppIcon = ({ size = 18 }: { size?: number }) => (
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
   </svg>
 );
+
+// --- Business Entity ---
+interface BusinessEntity {
+  id: string;
+  name: string;
+  category: string;
+  village: string;
+  mobile: string;
+  type: 'shop' | 'digital' | 'coaching';
+  photo?: string | null;
+  description?: string | null;
+  lat?: number | null;
+  lng?: number | null;
+}
+
+const BUSINESS_ICONS: Record<string, React.ReactNode> = {
+  shop: <Store size={20} className="text-primary" />,
+  digital: <Laptop size={20} className="text-primary" />,
+  coaching: <GraduationCap size={20} className="text-primary" />,
+};
+const BUSINESS_LABELS: Record<string, string> = {
+  shop: 'दुकान', digital: 'डिजिटल सेवा', coaching: 'शिक्षा',
+};
 
 // --- Status Toggle Dialog ---
 const StatusToggleDialog = ({ workerId, onClose }: { workerId: string; onClose: () => void }) => {
@@ -260,9 +284,62 @@ const DeleteDialog = ({ workerId, onClose }: { workerId: string; onClose: () => 
   );
 };
 
+// --- Business Card (Clean compact card for shops/digital/coaching) ---
+const BusinessCard = ({ entity, userLat, userLng }: { entity: BusinessEntity; userLat: number | null; userLng: number | null }) => {
+  const dist = entity.lat && entity.lng && userLat && userLng
+    ? getDistance(userLat, userLng, entity.lat, entity.lng) : null;
+
+  return (
+    <div className="bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center shrink-0">
+          {BUSINESS_ICONS[entity.type]}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-foreground text-sm truncate">{entity.name}</h3>
+          <p className="text-xs text-muted-foreground truncate">{entity.category} · {entity.village}</p>
+          {dist !== null && (
+            <span className="inline-flex items-center text-[10px] text-primary font-semibold mt-0.5">
+              📍 {dist.toFixed(1)} km दूर
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <a href={`https://wa.me/91${entity.mobile}`} target="_blank" rel="noopener noreferrer"
+            className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground active:scale-[0.95] transition-transform">
+            <WhatsAppIcon size={18} />
+          </a>
+          <a href={`tel:${entity.mobile}`}
+            className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground active:scale-[0.95] transition-transform">
+            <Phone size={18} />
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Skeleton Loader ---
+const CardSkeleton = () => (
+  <div className="bg-card rounded-2xl border border-border p-4 animate-pulse">
+    <div className="flex items-center gap-3">
+      <div className="w-12 h-12 rounded-xl bg-secondary" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 bg-secondary rounded-lg w-3/4" />
+        <div className="h-3 bg-secondary rounded-lg w-1/2" />
+      </div>
+      <div className="flex gap-1.5">
+        <div className="w-10 h-10 rounded-xl bg-secondary" />
+        <div className="w-10 h-10 rounded-xl bg-secondary" />
+      </div>
+    </div>
+  </div>
+);
+
 // --- Main Search Page ---
 const SearchPage = () => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const workers = useWorkerStore((s) => s.workers);
   const loading = useWorkerStore((s) => s.loading);
 
@@ -280,10 +357,38 @@ const SearchPage = () => {
   const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
   const [showForgotPin, setShowForgotPin] = useState(false);
 
-  // Expose for dialogs
+  // Business entities
+  const [businesses, setBusinesses] = useState<BusinessEntity[]>([]);
+  const [businessLoading, setBusinessLoading] = useState(true);
+
   useEffect(() => {
     (window as any).__openForgotPin = () => setShowForgotPin(true);
     return () => { delete (window as any).__openForgotPin; };
+  }, []);
+
+  // Fetch businesses
+  useEffect(() => {
+    const fetchAll = async () => {
+      setBusinessLoading(true);
+      const [shopRes, digitalRes, coachingRes] = await Promise.all([
+        supabase.from('local_businesses').select('id, name, category, village, mobile, lat, lng, photo, description'),
+        supabase.from('digital_services').select('id, shop_name, service_type, village, mobile, lat, lng, photo, description'),
+        supabase.from('education_coaching').select('id, institute_name, course_type, village, mobile, lat, lng, photo, description'),
+      ]);
+      const entities: BusinessEntity[] = [];
+      (shopRes.data || []).forEach((s) => {
+        entities.push({ id: s.id, name: s.name, category: s.category, village: s.village, mobile: s.mobile, lat: s.lat, lng: s.lng, photo: s.photo, description: s.description, type: 'shop' });
+      });
+      (digitalRes.data || []).forEach((d) => {
+        entities.push({ id: d.id, name: d.shop_name, category: d.service_type, village: d.village, mobile: d.mobile, lat: d.lat, lng: d.lng, photo: d.photo, description: d.description, type: 'digital' });
+      });
+      (coachingRes.data || []).forEach((c) => {
+        entities.push({ id: c.id, name: c.institute_name, category: c.course_type, village: c.village, mobile: c.mobile, lat: c.lat, lng: c.lng, photo: c.photo, description: c.description, type: 'coaching' });
+      });
+      setBusinesses(entities);
+      setBusinessLoading(false);
+    };
+    fetchAll();
   }, []);
 
   const handleShareWorker = async (w: { id: string; name: string; category: string; village: string; mobile: string }) => {
@@ -339,6 +444,18 @@ const SearchPage = () => {
 
     return filtered;
   }, [workers, category, village, name, minExp, minRating, nearbyMode, userLat, userLng, maxDistance]);
+
+  // Filter businesses by village/name search
+  const filteredBusinesses = useMemo(() => {
+    return businesses.filter(b => {
+      const matchVillage = !village || b.village.toLowerCase().includes(village.toLowerCase());
+      const matchName = !name || b.name.toLowerCase().includes(name.toLowerCase()) || b.category.toLowerCase().includes(name.toLowerCase());
+      if (nearbyMode && userLat && userLng && b.lat && b.lng) {
+        return matchVillage && matchName && getDistance(userLat, userLng, b.lat, b.lng) <= parseInt(maxDistance);
+      }
+      return matchVillage && matchName;
+    });
+  }, [businesses, village, name, nearbyMode, userLat, userLng, maxDistance]);
 
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
@@ -419,141 +536,109 @@ const SearchPage = () => {
 
       <div className="max-w-lg mx-auto px-4 mt-6 space-y-3">
         {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary" size={32} /></div>
+          <div className="space-y-3">
+            <CardSkeleton />
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
         ) : (
           <>
-            <p className="text-sm text-muted-foreground">{results.length} कामगार मिले</p>
+            {/* Workers Section */}
+            <p className="text-sm text-muted-foreground font-medium">{results.length} कामगार · {filteredBusinesses.length} सेवा प्रदाता</p>
             {results.map((w) => {
               const statusCfg = STATUS_CONFIG[w.status];
               const dist = 'distance' in w ? (w as any).distance : null;
               return (
-                <div key={w.id} className="bg-card rounded-2xl border border-border p-4 shadow-sm animate-fade-in">
+                <div key={w.id} className="bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow">
                   <div className="flex items-start gap-3">
-                    <div className="w-16 h-16 rounded-2xl bg-secondary border border-border overflow-hidden shrink-0 flex items-center justify-center relative">
-                      {w.photo ? <img src={w.photo} alt={w.name} className="w-full h-full object-cover" /> : <User size={28} className="text-muted-foreground" />}
+                    <button onClick={() => navigate(`/worker/${w.id}`)} className="w-14 h-14 rounded-2xl bg-secondary border border-border overflow-hidden shrink-0 flex items-center justify-center relative">
+                      {w.photo ? <img src={w.photo} alt={w.name} className="w-full h-full object-cover" /> : <User size={24} className="text-muted-foreground" />}
                       <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full border-2 border-card ${statusCfg.dot}`} />
-                    </div>
+                    </button>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <h3 className="font-bold text-foreground text-sm truncate">{w.name}</h3>
+                      <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                        <button onClick={() => navigate(`/worker/${w.id}`)} className="font-bold text-foreground text-sm truncate hover:text-primary transition-colors">{w.name}</button>
                         <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${statusCfg.bg}`}>
                           {statusCfg.label}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="inline-flex items-center gap-1 bg-accent text-accent-foreground text-[10px] font-semibold px-2 py-0.5 rounded-full">
-                          <Award size={10} />{getExperienceBadge(w.experience)}
-                        </span>
+                      <p className="text-xs text-muted-foreground">{w.category} · {w.village}</p>
+                      <div className="flex items-center gap-2 mt-1">
                         <RatingDisplay ratings={w.ratings} />
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-0.5">
-                        <Briefcase size={12} className="shrink-0" /><span>{w.category}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground mb-0.5">
-                        <MapPin size={12} className="shrink-0" /><span>{w.village}</span>
                         {dist !== null && (
                           <span className="text-[10px] bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full font-semibold">
                             📍 {dist.toFixed(1)} km
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Clock size={12} className="shrink-0" />
-                        <span>{w.experience} वर्ष · {AVAILABILITY_HINDI[w.availability] || w.availability}</span>
-                      </div>
-                      {(w.priceMin || w.priceMax || w.serviceCharge) && (
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
-                          <IndianRupee size={12} className="shrink-0" />
-                          <span>
-                            {w.priceMin && w.priceMax ? `₹${w.priceMin} – ₹${w.priceMax}` : w.serviceCharge || ''}
-                            {w.priceMin && w.priceMax && w.serviceCharge ? ` (${w.serviceCharge})` : ''}
-                          </span>
-                        </div>
-                      )}
-                      <p className="text-xs text-muted-foreground leading-relaxed mt-1.5 line-clamp-2">{w.about}</p>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <a href={`https://wa.me/91${w.mobile}`} target="_blank" rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground active:scale-[0.95] transition-transform">
+                        <WhatsAppIcon size={18} />
+                      </a>
+                      <a href={`tel:${w.mobile}`}
+                        className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground active:scale-[0.95] transition-transform">
+                        <Phone size={18} />
+                      </a>
                     </div>
                   </div>
 
-                  {w.gallery.length > 0 && (
-                    <div className="flex gap-1.5 mt-3 overflow-x-auto">
-                      {w.gallery.slice(0, 4).map((p, i) => (
-                        <div key={i} className="w-14 h-14 rounded-lg overflow-hidden border border-border shrink-0">
-                          <img src={p} alt="" className="w-full h-full object-cover" />
-                        </div>
-                      ))}
-                      {w.gallery.length > 4 && (
-                        <div className="w-14 h-14 rounded-lg bg-secondary border border-border flex items-center justify-center shrink-0">
-                          <span className="text-xs text-muted-foreground font-bold">+{w.gallery.length - 4}</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
-                    <a href={`tel:${w.mobile}`} className="flex-1 bg-primary text-primary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
-                      <Phone size={14} /> कॉल
-                    </a>
-                    <a href={`https://wa.me/91${w.mobile}`} target="_blank" rel="noopener noreferrer"
-                      className="flex-1 bg-accent text-accent-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
-                      <WhatsAppIcon size={14} /> WhatsApp
-                    </a>
-                    <button
-                      onClick={() => setBookingWorker({ name: w.name, mobile: w.mobile, category: w.category })}
-                      className="flex-1 bg-secondary text-secondary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
-                      <CalendarCheck size={14} /> बुकिंग
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  {/* Expandable details */}
+                  <div className="flex items-center gap-3 mt-2 flex-wrap">
                     <button onClick={() => setRatingOpenId(ratingOpenId === w.id ? null : w.id)}
-                      className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Star size={13} /> ⭐ Rate & Review
+                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
+                      <Star size={11} /> Rate & Review
                     </button>
                     <button onClick={() => setGalleryOpenId(w.id)}
-                      className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Image size={13} /> पोर्टफोलियो
+                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
+                      <Image size={11} /> पोर्टफोलियो
                     </button>
                     <button onClick={() => setStatusOpenId(w.id)}
-                      className="text-xs text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <CheckCircle size={13} /> स्थिति
+                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
+                      <CheckCircle size={11} /> स्थिति
                     </button>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 mt-2">
-                    <button onClick={() => setEditOpenId(w.id)} className="text-xs text-foreground font-semibold py-2 rounded-xl bg-secondary border border-border flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
-                      <Pencil size={13} /> एडिट
+                    <button onClick={() => setEditOpenId(w.id)}
+                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
+                      <Pencil size={11} /> एडिट
                     </button>
-                    <button onClick={() => setDeleteOpenId(w.id)} className="text-xs text-destructive font-semibold py-2 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
-                      <Trash2 size={13} /> डिलीट
+                    <button onClick={() => setDeleteOpenId(w.id)}
+                      className="text-[10px] text-destructive flex items-center gap-1 hover:text-destructive/80 transition-colors">
+                      <Trash2 size={11} /> डिलीट
                     </button>
-                    <button onClick={() => handleShareWorker(w)} className="text-xs text-primary font-semibold py-2 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
-                      <Share2 size={13} /> शेयर
+                    <button onClick={() => handleShareWorker(w)}
+                      className="text-[10px] text-primary flex items-center gap-1">
+                      <Share2 size={11} /> शेयर
                     </button>
                   </div>
 
                   {ratingOpenId === w.id && <RateReviewInput workerId={w.id} onClose={() => setRatingOpenId(null)} />}
-
-                  {w.reviews.length > 0 && (
-                    <div className="mt-3 pt-2 border-t border-border space-y-2">
-                      <p className="text-xs font-semibold text-foreground flex items-center gap-1"><MessageSquare size={12} /> समीक्षाएं ({w.reviews.length})</p>
-                      {w.reviews.map((r, i) => (
-                        <div key={i} className="bg-secondary rounded-xl p-2.5">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs font-semibold text-foreground">{r.reviewerName}</span>
-                            <span className="text-[10px] text-muted-foreground">{r.date}</span>
-                          </div>
-                          <p className="text-xs text-muted-foreground">{r.text}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               );
             })}
-            {results.length === 0 && !loading && (
-              <div className="text-center py-12">
-                <Search className="mx-auto text-muted-foreground mb-3" size={40} />
-                <p className="text-muted-foreground text-sm">कोई कामगार नहीं मिला। अलग फ़िल्टर आज़माएं।</p>
+
+            {/* Businesses Section */}
+            {filteredBusinesses.length > 0 && (
+              <>
+                <div className="flex items-center gap-2 pt-4">
+                  <Store size={16} className="text-primary" />
+                  <h3 className="text-sm font-bold text-foreground">🏪 दुकानें, डिजिटल सेवाएँ, शिक्षा</h3>
+                </div>
+                {filteredBusinesses.map((b) => (
+                  <BusinessCard key={`${b.type}-${b.id}`} entity={b} userLat={userLat} userLng={userLng} />
+                ))}
+              </>
+            )}
+
+            {results.length === 0 && filteredBusinesses.length === 0 && !loading && (
+              <div className="text-center py-16">
+                <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                  <Search className="text-muted-foreground" size={32} />
+                </div>
+                <p className="text-foreground font-semibold mb-1">कोई परिणाम नहीं मिला</p>
+                <p className="text-muted-foreground text-sm">अलग फ़िल्टर आज़माएं या खोज बदलें</p>
               </div>
             )}
           </>
