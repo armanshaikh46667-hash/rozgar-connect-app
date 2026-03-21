@@ -45,26 +45,30 @@ const WorkerProfilePage = () => {
 
   return (
     <div className="min-h-screen bottom-nav-safe bg-background">
-      <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-16 text-primary-foreground">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-4">
+      <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-20 text-primary-foreground">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-6">
           <ChevronLeft size={18} /> वापस
         </button>
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-primary-foreground/20 border-2 border-primary-foreground/30 overflow-hidden flex items-center justify-center shrink-0">
-            {worker.photo ? <img src={worker.photo} alt={worker.name} className="w-full h-full object-cover" /> : <User size={32} className="text-primary-foreground/60" />}
+          <div className="w-24 h-24 rounded-2xl bg-primary-foreground/20 border-2 border-primary-foreground/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg">
+            {worker.photo ? <img src={worker.photo} alt={worker.name} className="w-full h-full object-cover" /> : <User size={36} className="text-primary-foreground/60" />}
           </div>
           <div>
             <h1 className="text-xl font-bold">{worker.name}</h1>
             <p className="text-primary-foreground/80 text-sm">{worker.category}</p>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="flex items-center gap-2 mt-1.5">
               <RatingDisplay ratings={worker.ratings} />
-              <span className="text-[10px] text-primary-foreground/60">({worker.ratings.length})</span>
+              <span className="text-[10px] text-primary-foreground/60">({worker.ratings.length} रेटिंग)</span>
+            </div>
+            <div className="flex items-center gap-1.5 mt-1">
+              <MapPin size={12} className="text-primary-foreground/70" />
+              <span className="text-xs text-primary-foreground/70">{worker.village}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-8 relative z-10 space-y-4">
+      <div className="max-w-lg mx-auto px-4 -mt-12 relative z-10 space-y-4">
         {/* Action buttons */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <div className="grid grid-cols-4 gap-2">
