@@ -68,7 +68,7 @@ const WorkerProfilePage = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-8 relative z-10 space-y-4">
+      <div className="max-w-lg mx-auto px-4 -mt-12 relative z-10 space-y-4">
         {/* Action buttons */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <div className="grid grid-cols-4 gap-2">
