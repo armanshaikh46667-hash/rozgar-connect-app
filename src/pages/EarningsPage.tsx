@@ -42,7 +42,7 @@ const EarningsPage = () => {
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-3">
           <ChevronLeft size={18} /> वापस

@@ -42,7 +42,7 @@ const BookingHistoryPage = () => {
 
   if (!submitted) {
     return (
-      <div className="min-h-screen bottom-nav-safe bg-background">
+      <div className="min-h-screen bg-background">
         <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
           <h1 className="text-2xl font-bold flex items-center gap-2"><CalendarCheck size={24} /> बुकिंग इतिहास</h1>
           <p className="text-primary-foreground/80 text-sm mt-1">अपनी पिछली बुकिंग देखें</p>
@@ -79,7 +79,7 @@ const BookingHistoryPage = () => {
   };
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <h1 className="text-2xl font-bold flex items-center gap-2"><CalendarCheck size={24} /> बुकिंग इतिहास</h1>
         <p className="text-primary-foreground/80 text-sm mt-1">{viewAs === 'customer' ? 'ग्राहक' : 'कामगार'}: {mobile}</p>

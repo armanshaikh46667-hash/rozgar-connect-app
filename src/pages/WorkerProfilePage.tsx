@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useWorkerStore, getAverageRating, getExperienceBadge } from '@/store/workerStore';
-import { Phone, MapPin, Briefcase, Clock, Star, Award, ChevronLeft, Share2, User, IndianRupee, CalendarCheck } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
+import { Phone, MapPin, Clock, Star, Award, ChevronLeft, Share2, User, IndianRupee, CalendarCheck, Edit, Trash2, Image, Activity } from 'lucide-react';
 import { RatingDisplay } from '@/components/RatingStars';
 import { useState } from 'react';
 import BookingDialog from '@/components/BookingDialog';
@@ -19,7 +20,12 @@ const WorkerProfilePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const worker = useWorkerStore((s) => s.workers.find((w) => w.id === id));
+  const authUser = useAuthStore((s) => s.user);
+  const { toggleStatus, deleteWorker } = useWorkerStore();
   const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const isOwner = authUser && worker && authUser.mobile === worker.mobile;
 
   if (!worker) {
     return (
@@ -43,8 +49,20 @@ const WorkerProfilePage = () => {
     } catch { /* cancelled */ }
   };
 
+  const handleDelete = async () => {
+    if (!worker) return;
+    const ok = await deleteWorker(worker.id, worker.pin);
+    if (ok) navigate('/search');
+  };
+
+  const handleToggleStatus = async () => {
+    if (!worker) return;
+    const newStatus = worker.status === 'available' ? 'busy' : worker.status === 'busy' ? 'offline' : 'available';
+    await toggleStatus(worker.id, worker.pin, newStatus);
+  };
+
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-20 text-primary-foreground">
         <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-6">
           <ChevronLeft size={18} /> वापस
@@ -68,8 +86,8 @@ const WorkerProfilePage = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-12 relative z-10 space-y-4">
-        {/* Action buttons */}
+      <div className="max-w-lg mx-auto px-4 -mt-12 relative z-10 space-y-4 pb-8">
+        {/* Public action buttons */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <div className="grid grid-cols-4 gap-2">
             <a href={`tel:${worker.mobile}`} className="flex flex-col items-center gap-1 p-2 bg-primary text-primary-foreground rounded-xl active:scale-[0.97] transition-transform">
@@ -93,6 +111,48 @@ const WorkerProfilePage = () => {
             </button>
           </div>
         </div>
+
+        {/* Owner-only actions */}
+        {isOwner && (
+          <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
+            <p className="text-xs font-semibold text-muted-foreground mb-3">👤 आपका प्रोफ़ाइल</p>
+            <div className="grid grid-cols-4 gap-2">
+              <button onClick={handleToggleStatus}
+                className="flex flex-col items-center gap-1 p-2 bg-secondary text-secondary-foreground rounded-xl border border-border active:scale-[0.97] transition-transform">
+                <Activity size={16} />
+                <span className="text-[10px] font-bold">स्थिति</span>
+                <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold ${worker.status === 'available' ? 'bg-primary/20 text-primary' : worker.status === 'busy' ? 'bg-yellow-500/20 text-yellow-700' : 'bg-muted text-muted-foreground'}`}>
+                  {worker.status === 'available' ? 'उपलब्ध' : worker.status === 'busy' ? 'व्यस्त' : 'ऑफलाइन'}
+                </span>
+              </button>
+              <button onClick={() => navigate(`/register?edit=${worker.id}`)}
+                className="flex flex-col items-center gap-1 p-2 bg-secondary text-secondary-foreground rounded-xl border border-border active:scale-[0.97] transition-transform">
+                <Edit size={16} />
+                <span className="text-[10px] font-bold">Edit</span>
+              </button>
+              <button onClick={() => setShowDeleteConfirm(true)}
+                className="flex flex-col items-center gap-1 p-2 bg-destructive/10 text-destructive rounded-xl border border-destructive/20 active:scale-[0.97] transition-transform">
+                <Trash2 size={16} />
+                <span className="text-[10px] font-bold">Delete</span>
+              </button>
+              <button className="flex flex-col items-center gap-1 p-2 bg-secondary text-secondary-foreground rounded-xl border border-border active:scale-[0.97] transition-transform">
+                <Image size={16} />
+                <span className="text-[10px] font-bold">Portfolio</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Delete confirmation */}
+        {showDeleteConfirm && (
+          <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-4">
+            <p className="text-sm font-semibold text-destructive mb-3">क्या आप प्रोफ़ाइल हटाना चाहते हैं?</p>
+            <div className="flex gap-2">
+              <button onClick={handleDelete} className="flex-1 bg-destructive text-destructive-foreground py-2.5 rounded-xl text-sm font-bold">हां, हटाएं</button>
+              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 bg-secondary text-secondary-foreground py-2.5 rounded-xl text-sm font-bold border border-border">रद्द करें</button>
+            </div>
+          </div>
+        )}
 
         {/* Details */}
         <div className="bg-card rounded-2xl border border-border p-4 space-y-3">

@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import BottomNav from "./components/BottomNav";
+import TopHeader from "./components/TopHeader";
 import SplashScreen from "./components/SplashScreen";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
@@ -22,6 +22,7 @@ import AdminPage from "./pages/AdminPage";
 import WorkerProfilePage from "./pages/WorkerProfilePage";
 import NotFound from "./pages/NotFound";
 import UpdatesPage from "./pages/UpdatesPage";
+import LoginPage from "./pages/LoginPage";
 import { useWorkerStore } from "./store/workerStore";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const AnimatedRoutes = () => {
         <Route path="/earnings" element={<EarningsPage />} />
         <Route path="/worker/:id" element={<WorkerProfilePage />} />
         <Route path="/updates" element={<UpdatesPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
@@ -70,8 +72,8 @@ const App = () => {
         <AppInit />
         {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
         <BrowserRouter>
+          <TopHeader />
           <AnimatedRoutes />
-          <BottomNav />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
