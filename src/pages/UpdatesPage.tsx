@@ -21,7 +21,7 @@ const FEATURES = [
 
 const UpdatesPage = () => {
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-10 pb-8 text-primary-foreground">
         <div className="max-w-lg mx-auto">

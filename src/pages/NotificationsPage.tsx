@@ -62,7 +62,7 @@ const NotificationsPage = () => {
 
   if (!submitted) {
     return (
-      <div className="min-h-screen bottom-nav-safe bg-background">
+      <div className="min-h-screen bg-background">
         <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
           <h1 className="text-2xl font-bold flex items-center gap-2"><Bell size={24} /> सूचनाएं</h1>
           <p className="text-primary-foreground/80 text-sm mt-1">अपनी बुकिंग अपडेट देखें</p>
@@ -91,7 +91,7 @@ const NotificationsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <h1 className="text-2xl font-bold flex items-center gap-2"><Bell size={24} /> सूचनाएं</h1>
         <p className="text-primary-foreground/80 text-sm mt-1">{mobile} के लिए</p>

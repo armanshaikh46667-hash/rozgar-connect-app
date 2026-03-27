@@ -12,7 +12,7 @@ const BusinessRegistrationPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <div className="max-w-lg mx-auto">
           <button onClick={() => navigate(-1)} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">

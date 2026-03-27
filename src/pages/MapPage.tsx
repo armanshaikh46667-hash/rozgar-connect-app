@@ -181,7 +181,7 @@ const MapPage = () => {
   const typeLabel: Record<string, string> = { worker: 'कामगार', shop: 'दुकान', digital: 'डिजिटल सेवा', coaching: 'कोचिंग' };
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <h1 className="text-2xl font-bold flex items-center gap-2"><MapPin size={24} /> नज़दीकी सेवाएँ</h1>

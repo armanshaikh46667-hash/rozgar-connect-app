@@ -88,7 +88,7 @@ const AdminPage = () => {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen bottom-nav-safe bg-background">
+      <div className="min-h-screen bg-background">
         <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
           <h1 className="text-2xl font-bold flex items-center gap-2"><Shield size={24} /> Admin Panel</h1>
           <p className="text-primary-foreground/80 text-sm mt-1">प्रबंधन के लिए लॉगिन करें</p>
@@ -111,7 +111,7 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <h1 className="text-2xl font-bold flex items-center gap-2"><Shield size={24} /> Admin Panel</h1>
         <p className="text-primary-foreground/80 text-sm mt-1">

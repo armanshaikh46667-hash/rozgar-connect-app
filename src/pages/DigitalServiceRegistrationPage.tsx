@@ -72,7 +72,7 @@ const DigitalServiceRegistrationPage = () => {
 
   if (success) {
     return (
-      <div className="min-h-screen bottom-nav-safe bg-background">
+      <div className="min-h-screen bg-background">
         <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
           <div className="max-w-lg mx-auto">
             <h1 className="text-xl font-extrabold flex items-center gap-2"><Monitor size={22} /> डिजिटल सेवाएँ</h1>
@@ -93,7 +93,7 @@ const DigitalServiceRegistrationPage = () => {
   }
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <div className="max-w-lg mx-auto">
           <button onClick={() => navigate('/business-register')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
