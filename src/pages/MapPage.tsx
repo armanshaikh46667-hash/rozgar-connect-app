@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, Store, Laptop, GraduationCap } from 'lucide-react';
+import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, Store, Laptop, GraduationCap, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkerStore, getDistance } from '@/store/workerStore';
 import { supabase } from '@/integrations/supabase/client';
@@ -184,8 +184,13 @@ const MapPage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
-        <h1 className="text-2xl font-bold flex items-center gap-2"><MapPin size={24} /> नज़दीकी सेवाएँ</h1>
-        <p className="text-primary-foreground/80 text-sm mt-1">कामगार, दुकानें, डिजिटल सेवाएँ — नक्शे पर देखें</p>
+        <div className="max-w-lg mx-auto">
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
+            <ArrowLeft size={16} /> होम पेज
+          </button>
+          <h1 className="text-2xl font-bold flex items-center gap-2"><MapPin size={24} /> नज़दीकी सेवाएँ</h1>
+          <p className="text-primary-foreground/80 text-sm mt-1">कामगार, दुकानें, डिजिटल सेवाएँ — नक्शे पर देखें</p>
+        </div>
       </div>
 
       {/* Type Filter */}

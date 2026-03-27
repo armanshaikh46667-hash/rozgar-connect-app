@@ -1,8 +1,13 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, User, MapPin, ArrowLeft } from 'lucide-react';
-import { useWorkerStore, CATEGORY_GROUPS, type WorkCategory, type Availability } from '@/store/workerStore';
+import { CheckCircle, User, MapPin, ArrowLeft, HardHat } from 'lucide-react';
+import { useWorkerStore, type WorkCategory, type Availability } from '@/store/workerStore';
 import { toast } from 'sonner';
+
+const CATEGORIES: WorkCategory[] = [
+  "General Labor", "Tiles Worker", "Welding Worker",
+  "Iron Work", "Roof Casting Worker", "Water Tank Installation",
+];
 
 const AVAILABILITY_OPTIONS: Availability[] = ['Morning', 'Afternoon', 'Evening', 'Full Day'];
 const AVAILABILITY_HINDI: Record<Availability, string> = {
@@ -11,7 +16,7 @@ const AVAILABILITY_HINDI: Record<Availability, string> = {
 
 const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
-const RegisterPage = () => {
+const ConstructionRegistrationPage = () => {
   const navigate = useNavigate();
   const addWorker = useWorkerStore((s) => s.addWorker);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -79,7 +84,7 @@ const RegisterPage = () => {
       <div className="min-h-screen bg-background">
         <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
           <div className="max-w-lg mx-auto">
-            <h1 className="text-xl font-extrabold flex items-center gap-2"><User size={22} /> कामगार रजिस्ट्रेशन</h1>
+            <h1 className="text-xl font-extrabold flex items-center gap-2"><HardHat size={22} /> निर्माण और श्रम</h1>
           </div>
         </div>
         <div className="max-w-lg mx-auto px-4 -mt-4 relative z-10">
@@ -87,8 +92,8 @@ const RegisterPage = () => {
             <CheckCircle className="mx-auto text-primary mb-4" size={56} />
             <h2 className="text-xl font-bold text-foreground mb-2">रजिस्ट्रेशन सफल!</h2>
             <p className="text-sm text-muted-foreground mb-6">आपकी प्रोफ़ाइल अब लाइव है।</p>
-            <button onClick={() => navigate('/search')} className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold">
-              कामगार देखें
+            <button onClick={() => navigate('/')} className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold">
+              होम पेज पर जाएं
             </button>
           </div>
         </div>
@@ -103,11 +108,10 @@ const RegisterPage = () => {
           <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
             <ArrowLeft size={16} /> होम पेज
           </button>
-          <h1 className="text-xl font-extrabold flex items-center gap-2"><User size={22} /> कामगार रजिस्ट्रेशन</h1>
-          <p className="text-primary-foreground/80 text-xs mt-1">कामगार के रूप में रजिस्टर करें</p>
+          <h1 className="text-xl font-extrabold flex items-center gap-2"><HardHat size={22} /> निर्माण और श्रम रजिस्ट्रेशन</h1>
+          <p className="text-primary-foreground/80 text-xs mt-1">मजदूर, टाइल्स, वेल्डिंग, लोहा कार्य आदि</p>
         </div>
       </div>
-
       <div className="max-w-lg mx-auto px-4 -mt-4 relative z-10">
         <div className="bg-card rounded-2xl shadow-lg border border-border p-5">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -119,7 +123,6 @@ const RegisterPage = () => {
               </button>
               <input ref={fileRef} type="file" accept="image/*" onChange={handlePhoto} className="hidden" />
             </div>
-
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">पूरा नाम *</label>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="अपना नाम लिखें" className={inputClass} required maxLength={100} />
@@ -129,14 +132,10 @@ const RegisterPage = () => {
               <input type="tel" value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10 अंकों का मोबाइल नंबर" className={inputClass} required />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">कार्य श्रेणी (Work Type) *</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">कार्य श्रेणी *</label>
               <select value={category} onChange={(e) => setCategory(e.target.value as WorkCategory)} className={inputClass} required>
                 <option value="">श्रेणी चुनें</option>
-                {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-                  <optgroup key={group} label={group}>
-                    {cats.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </optgroup>
-                ))}
+                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
@@ -147,17 +146,14 @@ const RegisterPage = () => {
               <label className="text-xs font-medium text-muted-foreground mb-1 block">अनुभव (वर्ष) *</label>
               <input type="number" value={experience} onChange={(e) => setExperience(e.target.value)} placeholder="कितने वर्षों का अनुभव" className={inputClass} required min={0} max={50} />
             </div>
-
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">सेवा शुल्क रेंज (₹) — वैकल्पिक</label>
+              <label className="text-xs font-medium text-muted-foreground mb-1 block">सेवा शुल्क (वैकल्पिक)</label>
               <div className="grid grid-cols-2 gap-2">
                 <input type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} placeholder="न्यूनतम ₹" className={inputClass} min={0} />
                 <input type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} placeholder="अधिकतम ₹" className={inputClass} min={0} />
               </div>
-              <p className="text-[10px] text-muted-foreground mt-1">या टेक्स्ट में लिखें:</p>
-              <input type="text" value={serviceCharge} onChange={(e) => setServiceCharge(e.target.value)} placeholder="जैसे: ₹300/दिन" className={inputClass} maxLength={50} />
+              <input type="text" value={serviceCharge} onChange={(e) => setServiceCharge(e.target.value)} placeholder="जैसे: ₹500/दिन" className={`${inputClass} mt-2`} maxLength={50} />
             </div>
-
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">उपलब्ध समय *</label>
               <div className="grid grid-cols-2 gap-2">
@@ -169,7 +165,6 @@ const RegisterPage = () => {
                 ))}
               </div>
             </div>
-
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">📍 GPS लोकेशन (वैकल्पिक)</label>
               <button type="button" onClick={getLocation} disabled={gpsLoading}
@@ -177,12 +172,10 @@ const RegisterPage = () => {
                 <MapPin size={16} /> {gpsLoading ? 'लोकेशन ले रहे हैं...' : lat ? `✅ ${lat.toFixed(4)}, ${lng?.toFixed(4)}` : 'अपनी लोकेशन जोड़ें'}
               </button>
             </div>
-
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">अपने बारे में *</label>
               <textarea value={about} onChange={(e) => setAbout(e.target.value)} placeholder="अपने कौशल का संक्षिप्त विवरण" className={`${inputClass} resize-none h-20`} required maxLength={300} />
             </div>
-
             <div className="border-t border-border pt-4">
               <label className="text-xs font-medium text-muted-foreground mb-1 block">🔒 सीक्रेट PIN बनाएं (4 अंक) *</label>
               <p className="text-[10px] text-muted-foreground mb-2">प्रोफ़ाइल एडिट/डिलीट करने के लिए PIN ज़रूरी है</p>
@@ -194,7 +187,6 @@ const RegisterPage = () => {
               </div>
               {pinError && <p className="text-[11px] text-destructive mt-1">{pinError}</p>}
             </div>
-
             <button type="submit" disabled={submitting}
               className="w-full bg-primary text-primary-foreground py-3.5 rounded-xl text-sm font-bold shadow-lg active:scale-[0.97] transition-transform disabled:opacity-60">
               {submitting ? 'रजिस्टर हो रहा है...' : 'रजिस्टर करें'}
@@ -206,4 +198,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
+export default ConstructionRegistrationPage;

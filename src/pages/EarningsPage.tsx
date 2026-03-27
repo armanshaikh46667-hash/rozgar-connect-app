@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { IndianRupee, Briefcase, CalendarDays, TrendingUp, Search, ChevronLeft } from 'lucide-react';
+import { IndianRupee, Briefcase, CalendarDays, TrendingUp, Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -44,8 +44,8 @@ const EarningsPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-3">
-          <ChevronLeft size={18} /> वापस
+        <button onClick={() => navigate('/')} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-3">
+          <ArrowLeft size={18} /> होम पेज
         </button>
         <h1 className="text-2xl font-bold flex items-center gap-2"><TrendingUp size={24} /> कमाई डैशबोर्ड</h1>
         <p className="text-primary-foreground/80 text-sm mt-1">अपनी बुकिंग और काम का विवरण देखें</p>

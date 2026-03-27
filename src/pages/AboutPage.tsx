@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { User, GraduationCap, MapPin, Heart, Code, Lightbulb, Briefcase, AlertTriangle, CheckCircle2, TrendingUp, Camera, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { User, GraduationCap, MapPin, Heart, Code, Lightbulb, Briefcase, AlertTriangle, CheckCircle2, TrendingUp, Camera, Loader2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface SectionProps {
@@ -21,6 +22,7 @@ const Section = ({ icon, title, children }: SectionProps) => (
 );
 
 const AboutPage = () => {
+  const navigate = useNavigate();
   const iconClass = "shrink-0" ;
   const iconStyle = { color: 'hsl(210, 100%, 55%)' };
   const [avatarImage, setAvatarImage] = useState<string>('');
@@ -68,8 +70,15 @@ const AboutPage = () => {
   };
 
   return (
-    <div className="min-h-screen bottom-nav-safe" style={{ backgroundColor: 'hsl(220, 20%, 8%)' }}>
-      <div className="px-6 pt-10 pb-6 text-center">
+    <div className="min-h-screen" style={{ backgroundColor: 'hsl(220, 20%, 8%)' }}>
+      <div className="px-6 pt-8 pb-6">
+        <div className="max-w-lg mx-auto">
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-xs" style={{ color: 'hsl(210, 100%, 55%)' }}>
+            <ArrowLeft size={16} /> होम पेज
+          </button>
+        </div>
+      </div>
+      <div className="px-6 pb-6 text-center">
         <div
           className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center border-2 relative cursor-pointer overflow-hidden group"
           style={{ backgroundColor: 'hsl(220, 15%, 14%)', borderColor: 'hsl(210, 100%, 55% / 0.3)' }}
