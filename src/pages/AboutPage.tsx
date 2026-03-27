@@ -22,6 +22,7 @@ const Section = ({ icon, title, children }: SectionProps) => (
 );
 
 const AboutPage = () => {
+  const navigate = useNavigate();
   const iconClass = "shrink-0" ;
   const iconStyle = { color: 'hsl(210, 100%, 55%)' };
   const [avatarImage, setAvatarImage] = useState<string>('');
