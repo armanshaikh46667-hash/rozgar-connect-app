@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Clock, CheckCircle, XCircle, Loader2, CalendarCheck, Phone, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuthStore } from '@/store/authStore';
 
 interface Booking {
   id: string;
@@ -26,11 +27,12 @@ const STATUS_MAP: Record<string, { label: string; icon: React.ReactNode; color: 
 
 const BookingHistoryPage = () => {
   const navigate = useNavigate();
-  const [mobile, setMobile] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const authUser = useAuthStore((s) => s.user);
+  const [mobile, setMobile] = useState(authUser?.mobile || '');
+  const [submitted, setSubmitted] = useState(!!authUser);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
-  const [viewAs, setViewAs] = useState<'customer' | 'worker'>('customer');
+  const [viewAs, setViewAs] = useState<'customer' | 'worker'>(authUser?.type === 'worker' ? 'worker' : 'customer');
 
   useEffect(() => {
     if (!submitted || mobile.length !== 10) return;
@@ -94,11 +96,14 @@ const BookingHistoryPage = () => {
           </button>
           <h1 className="text-2xl font-bold flex items-center gap-2"><CalendarCheck size={24} /> बुकिंग इतिहास</h1>
           <p className="text-primary-foreground/80 text-sm mt-1">{viewAs === 'customer' ? 'ग्राहक' : 'कामगार'}: {mobile}</p>
-          <button onClick={() => { setSubmitted(false); setBookings([]); }} className="text-primary-foreground/70 text-xs mt-1 underline">बदलें</button>
+          <div className="flex gap-2 mt-2">
+            <button onClick={() => setViewAs(viewAs === 'customer' ? 'worker' : 'customer')}
+              className="text-primary-foreground/70 text-xs underline">{viewAs === 'customer' ? 'कामगार के रूप में देखें' : 'ग्राहक के रूप में देखें'}</button>
+            {!authUser && <button onClick={() => { setSubmitted(false); setBookings([]); }} className="text-primary-foreground/70 text-xs underline">नंबर बदलें</button>}
+          </div>
         </div>
       </div>
 
-      {/* Stats */}
       <div className="max-w-lg mx-auto px-4 -mt-4">
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4 grid grid-cols-4 gap-2 text-center">
           <div><p className="text-lg font-extrabold text-primary">{stats.total}</p><p className="text-[10px] text-muted-foreground">कुल</p></div>
@@ -108,7 +113,7 @@ const BookingHistoryPage = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 mt-4 space-y-3">
+      <div className="max-w-lg mx-auto px-4 mt-4 space-y-3 pb-8">
         {loading ? (
           <div className="flex justify-center py-12"><Loader2 className="animate-spin text-primary" size={32} /></div>
         ) : bookings.length === 0 ? (
