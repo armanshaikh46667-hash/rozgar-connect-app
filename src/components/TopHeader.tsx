@@ -54,7 +54,15 @@ const TopHeader = () => {
             <Search size={18} />
           </button>
 
-          <button onClick={() => user ? navigate('/') : navigate('/login')}
+          <button onClick={() => {
+              if (user) {
+                // Navigate to user's own profile based on type
+                if (user.type === 'worker') navigate(`/worker/${user.id}`);
+                else navigate('/');
+              } else {
+                navigate('/login');
+              }
+            }}
             className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors ${user ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-secondary'}`}>
             {user ? <User size={18} /> : <LogIn size={18} />}
           </button>

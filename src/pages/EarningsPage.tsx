@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { IndianRupee, Briefcase, CalendarDays, TrendingUp, Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuthStore } from '@/store/authStore';
 import { toast } from 'sonner';
 
 interface BookingSummary {
@@ -13,14 +14,15 @@ interface BookingSummary {
 
 const EarningsPage = () => {
   const navigate = useNavigate();
-  const [mobile, setMobile] = useState('');
+  const authUser = useAuthStore((s) => s.user);
+  const [mobile, setMobile] = useState(authUser?.mobile || '');
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<BookingSummary | null>(null);
 
-  const handleSearch = async () => {
-    if (mobile.length !== 10) { toast.error('कृपया 10 अंकों का मोबाइल नंबर डालें'); return; }
+  const fetchData = async (num: string) => {
+    if (num.length !== 10) { toast.error('कृपया 10 अंकों का मोबाइल नंबर डालें'); return; }
     setLoading(true);
-    const { data, error } = await supabase.from('bookings').select('created_at, status').eq('worker_mobile', mobile);
+    const { data, error } = await supabase.from('bookings').select('created_at, status').eq('worker_mobile', num);
     setLoading(false);
     if (error) { toast.error('डेटा लोड नहीं हुआ'); return; }
     if (!data || data.length === 0) { toast.info('कोई बुकिंग नहीं मिली'); setSummary({ todayCount: 0, monthCount: 0, yearCount: 0, totalCount: 0 }); return; }
@@ -39,6 +41,13 @@ const EarningsPage = () => {
     });
   };
 
+  // Auto-fetch if logged in
+  useEffect(() => {
+    if (authUser?.mobile) {
+      fetchData(authUser.mobile);
+    }
+  }, [authUser?.mobile]);
+
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
   return (
@@ -48,19 +57,29 @@ const EarningsPage = () => {
           <ArrowLeft size={18} /> होम पेज
         </button>
         <h1 className="text-2xl font-bold flex items-center gap-2"><TrendingUp size={24} /> कमाई डैशबोर्ड</h1>
-        <p className="text-primary-foreground/80 text-sm mt-1">अपनी बुकिंग और काम का विवरण देखें</p>
+        <p className="text-primary-foreground/80 text-sm mt-1">
+          {authUser ? `${authUser.name} — ${authUser.mobile}` : 'अपनी बुकिंग और काम का विवरण देखें'}
+        </p>
       </div>
 
       <div className="max-w-lg mx-auto px-4 -mt-4 space-y-4">
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-4 space-y-3">
-          <label className="text-xs font-medium text-muted-foreground">📱 अपना मोबाइल नंबर डालें</label>
-          <input type="tel" value={mobile} onChange={e => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
-            placeholder="10 अंकों का मोबाइल नंबर" className={inputClass} maxLength={10} inputMode="numeric" />
-          <button onClick={handleSearch} disabled={loading}
-            className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform disabled:opacity-60 flex items-center justify-center gap-2">
-            <Search size={16} /> {loading ? 'खोज रहे हैं...' : 'डैशबोर्ड देखें'}
-          </button>
-        </div>
+        {!authUser && (
+          <div className="bg-card rounded-2xl shadow-lg border border-border p-4 space-y-3">
+            <label className="text-xs font-medium text-muted-foreground">📱 अपना मोबाइल नंबर डालें</label>
+            <input type="tel" value={mobile} onChange={e => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              placeholder="10 अंकों का मोबाइल नंबर" className={inputClass} maxLength={10} inputMode="numeric" />
+            <button onClick={() => fetchData(mobile)} disabled={loading}
+              className="w-full bg-primary text-primary-foreground py-3 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform disabled:opacity-60 flex items-center justify-center gap-2">
+              <Search size={16} /> {loading ? 'खोज रहे हैं...' : 'डैशबोर्ड देखें'}
+            </button>
+          </div>
+        )}
+
+        {loading && !summary && (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        )}
 
         {summary && (
           <div className="grid grid-cols-2 gap-3 animate-fade-in">
