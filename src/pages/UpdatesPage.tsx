@@ -21,11 +21,15 @@ const FEATURES = [
 ];
 
 const UpdatesPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-10 pb-8 text-primary-foreground">
+      <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-8 text-primary-foreground">
         <div className="max-w-lg mx-auto">
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
+            <ArrowLeft size={16} /> होम पेज
+          </button>
           <div className="flex items-center gap-2.5 mb-2">
             <div className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
               <Sparkles size={20} className="text-primary-foreground" />

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { IndianRupee, Briefcase, CalendarDays, TrendingUp, Search, ChevronLeft } from 'lucide-react';
+import { IndianRupee, Briefcase, CalendarDays, TrendingUp, Search, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
