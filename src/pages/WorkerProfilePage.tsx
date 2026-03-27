@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useWorkerStore, getAverageRating, getExperienceBadge } from '@/store/workerStore';
 import { useAuthStore } from '@/store/authStore';
-import { Phone, MapPin, Clock, Star, Award, ChevronLeft, Share2, User, IndianRupee, CalendarCheck, Edit, Trash2, Image, Activity } from 'lucide-react';
-import { RatingDisplay } from '@/components/RatingStars';
+import { Phone, MapPin, Clock, Star, Award, ArrowLeft, Share2, User, IndianRupee, CalendarCheck, Edit, Trash2, Image, Activity } from 'lucide-react';
+import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import { useState } from 'react';
 import BookingDialog from '@/components/BookingDialog';
 
@@ -24,6 +24,7 @@ const WorkerProfilePage = () => {
   const { toggleStatus, deleteWorker } = useWorkerStore();
   const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showRateReview, setShowRateReview] = useState(false);
 
   const isOwner = authUser && worker && authUser.mobile === worker.mobile;
 
@@ -31,7 +32,7 @@ const WorkerProfilePage = () => {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
         <p className="text-muted-foreground mb-4">कामगार नहीं मिला</p>
-        <button onClick={() => navigate('/search')} className="bg-primary text-primary-foreground px-6 py-2 rounded-xl text-sm font-bold">खोजें</button>
+        <button onClick={() => navigate('/')} className="bg-primary text-primary-foreground px-6 py-2 rounded-xl text-sm font-bold">होम पेज</button>
       </div>
     );
   }
@@ -52,7 +53,7 @@ const WorkerProfilePage = () => {
   const handleDelete = async () => {
     if (!worker) return;
     const ok = await deleteWorker(worker.id, worker.pin);
-    if (ok) navigate('/search');
+    if (ok) navigate('/');
   };
 
   const handleToggleStatus = async () => {
@@ -64,8 +65,8 @@ const WorkerProfilePage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-20 text-primary-foreground">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-6">
-          <ChevronLeft size={18} /> वापस
+        <button onClick={() => navigate('/')} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-6">
+          <ArrowLeft size={18} /> होम पेज
         </button>
         <div className="flex items-center gap-4">
           <div className="w-24 h-24 rounded-2xl bg-primary-foreground/20 border-2 border-primary-foreground/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg">
@@ -110,6 +111,20 @@ const WorkerProfilePage = () => {
               <span className="text-[10px] font-bold">शेयर</span>
             </button>
           </div>
+        </div>
+
+        {/* Rate & Review - visible to all */}
+        <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
+          <button onClick={() => setShowRateReview(!showRateReview)}
+            className="flex items-center gap-2 text-sm font-semibold text-foreground w-full">
+            <Star size={16} className="text-primary" />
+            रेटिंग और रिव्यू दें
+          </button>
+          {showRateReview && (
+            <div className="mt-3">
+              <RateReviewInput workerId={worker.id} onClose={() => setShowRateReview(false)} />
+            </div>
+          )}
         </div>
 
         {/* Owner-only actions */}
