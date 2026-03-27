@@ -70,8 +70,15 @@ const AboutPage = () => {
   };
 
   return (
-    <div className="min-h-screen bottom-nav-safe" style={{ backgroundColor: 'hsl(220, 20%, 8%)' }}>
-      <div className="px-6 pt-10 pb-6 text-center">
+    <div className="min-h-screen" style={{ backgroundColor: 'hsl(220, 20%, 8%)' }}>
+      <div className="px-6 pt-8 pb-6">
+        <div className="max-w-lg mx-auto">
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-xs" style={{ color: 'hsl(210, 100%, 55%)' }}>
+            <ArrowLeft size={16} /> होम पेज
+          </button>
+        </div>
+      </div>
+      <div className="px-6 pb-6 text-center">
         <div
           className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center border-2 relative cursor-pointer overflow-hidden group"
           style={{ backgroundColor: 'hsl(220, 15%, 14%)', borderColor: 'hsl(210, 100%, 55% / 0.3)' }}
