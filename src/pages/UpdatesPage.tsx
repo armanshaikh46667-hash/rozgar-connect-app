@@ -1,4 +1,5 @@
-import { Camera, CheckCircle2, CalendarCheck, Star, Award, MapPin, Filter, Image as ImageIcon, AlertTriangle, Shield, ClipboardList, Store, Share2, KeyRound, TrendingUp, Map, Sparkles } from 'lucide-react';
+import { Camera, CheckCircle2, CalendarCheck, Star, Award, MapPin, Filter, Image as ImageIcon, AlertTriangle, Shield, ClipboardList, Store, Share2, KeyRound, TrendingUp, Map, Sparkles, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const FEATURES = [
   { icon: Camera, title: 'Worker Profile Photo', desc: 'प्रोफ़ाइल फोटो अपलोड करें।' },
