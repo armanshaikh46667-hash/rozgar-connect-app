@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { User, GraduationCap, MapPin, Heart, Code, Lightbulb, Briefcase, AlertTriangle, CheckCircle2, TrendingUp, Camera, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { User, GraduationCap, MapPin, Heart, Code, Lightbulb, Briefcase, AlertTriangle, CheckCircle2, TrendingUp, Camera, Loader2, ArrowLeft } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface SectionProps {
