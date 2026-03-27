@@ -25,6 +25,7 @@ const STATUS_MAP: Record<string, { label: string; icon: React.ReactNode; color: 
 };
 
 const BookingHistoryPage = () => {
+  const navigate = useNavigate();
   const [mobile, setMobile] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
