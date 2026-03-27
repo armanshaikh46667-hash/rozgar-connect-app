@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, Store, Laptop, GraduationCap } from 'lucide-react';
+import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, Store, Laptop, GraduationCap, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkerStore, getDistance } from '@/store/workerStore';
 import { supabase } from '@/integrations/supabase/client';
