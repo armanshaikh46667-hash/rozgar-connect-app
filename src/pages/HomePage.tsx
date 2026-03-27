@@ -48,7 +48,7 @@ const HomePage = () => {
   const workers = useWorkerStore(s => s.workers);
 
   return (
-    <div className="min-h-screen bottom-nav-safe bg-background">
+    <div className="min-h-screen bg-background">
       {/* Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-12 pb-16 text-primary-foreground">
         <div className="absolute inset-0 opacity-10">
