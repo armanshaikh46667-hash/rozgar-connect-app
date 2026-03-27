@@ -109,9 +109,16 @@ const HomeMap = () => {
                 <h4 className="font-bold text-foreground text-xs">{selected.name}</h4>
                 <p className="text-[10px] text-muted-foreground">{selected.category} · {selected.village}</p>
                 {userLat && userLng && selected.lat && selected.lng && (
-                  <p className="text-[10px] text-primary font-semibold">
-                    📍 {getDistance(userLat, userLng, selected.lat, selected.lng).toFixed(1)} km
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] text-primary font-semibold">
+                      📍 {getDistance(userLat, userLng, selected.lat, selected.lng).toFixed(1)} km
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">
+                      🕐 {getDistance(userLat, userLng, selected.lat, selected.lng) <= 2
+                        ? `${Math.ceil(getDistance(userLat, userLng, selected.lat, selected.lng) / 5 * 60)} min पैदल`
+                        : `${Math.ceil(getDistance(userLat, userLng, selected.lat, selected.lng) / 25 * 60)} min बाइक`}
+                    </p>
+                  </div>
                 )}
               </div>
               <button onClick={() => setSelectedWorker(null)} className="text-muted-foreground"><X size={16} /></button>
