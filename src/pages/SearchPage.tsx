@@ -549,16 +549,17 @@ const SearchPage = () => {
               const statusCfg = STATUS_CONFIG[w.status];
               const dist = 'distance' in w ? (w as any).distance : null;
               return (
-                <div key={w.id} className="bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow">
+                <button key={w.id} onClick={() => navigate(`/worker/${w.id}`)}
+                  className="w-full bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow text-left">
                   <div className="flex items-start gap-3">
-                    <button onClick={() => navigate(`/worker/${w.id}`)} className="w-14 h-14 rounded-2xl bg-secondary border border-border overflow-hidden shrink-0 flex items-center justify-center relative">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary border border-border overflow-hidden shrink-0 flex items-center justify-center relative">
                       {w.photo ? <img src={w.photo} alt={w.name} className="w-full h-full object-cover" /> : <User size={24} className="text-muted-foreground" />}
                       <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full border-2 border-card ${statusCfg.dot}`} />
-                    </button>
+                    </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                        <button onClick={() => navigate(`/worker/${w.id}`)} className="font-bold text-foreground text-sm truncate hover:text-primary transition-colors">{w.name}</button>
+                        <span className="font-bold text-foreground text-sm truncate">{w.name}</span>
                         <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${statusCfg.bg}`}>
                           {statusCfg.label}
                         </span>
@@ -574,7 +575,7 @@ const SearchPage = () => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
                       <a href={`https://wa.me/91${w.mobile}`} target="_blank" rel="noopener noreferrer"
                         className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground active:scale-[0.95] transition-transform">
                         <WhatsAppIcon size={18} />
@@ -585,37 +586,7 @@ const SearchPage = () => {
                       </a>
                     </div>
                   </div>
-
-                  {/* Expandable details */}
-                  <div className="flex items-center gap-3 mt-2 flex-wrap">
-                    <button onClick={() => setRatingOpenId(ratingOpenId === w.id ? null : w.id)}
-                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Star size={11} /> Rate & Review
-                    </button>
-                    <button onClick={() => setGalleryOpenId(w.id)}
-                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Image size={11} /> पोर्टफोलियो
-                    </button>
-                    <button onClick={() => setStatusOpenId(w.id)}
-                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <CheckCircle size={11} /> स्थिति
-                    </button>
-                    <button onClick={() => setEditOpenId(w.id)}
-                      className="text-[10px] text-muted-foreground flex items-center gap-1 hover:text-primary transition-colors">
-                      <Pencil size={11} /> एडिट
-                    </button>
-                    <button onClick={() => setDeleteOpenId(w.id)}
-                      className="text-[10px] text-destructive flex items-center gap-1 hover:text-destructive/80 transition-colors">
-                      <Trash2 size={11} /> डिलीट
-                    </button>
-                    <button onClick={() => handleShareWorker(w)}
-                      className="text-[10px] text-primary flex items-center gap-1">
-                      <Share2 size={11} /> शेयर
-                    </button>
-                  </div>
-
-                  {ratingOpenId === w.id && <RateReviewInput workerId={w.id} onClose={() => setRatingOpenId(null)} />}
-                </div>
+                </button>
               );
             })}
 
