@@ -20,8 +20,8 @@ const TopHeader = () => {
   ];
 
   const loggedInExtras = [
-    { label: 'बुकिंग', path: '/bookings' },
-    { label: 'कमाई', path: '/earnings' },
+    { label: t('बुकिंग', lang), path: '/bookings' },
+    { label: t('कमाई', lang), path: '/earnings' },
   ];
 
   const menuItems = user ? [...publicMenuItems, ...loggedInExtras] : publicMenuItems;
