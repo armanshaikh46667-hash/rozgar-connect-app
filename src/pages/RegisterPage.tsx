@@ -126,7 +126,7 @@ const RegisterPage = () => {
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="अपना नाम लिखें" className={inputClass} required maxLength={100} />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">मोबाइल नंबर *</label>
+              <label className="text-xs font-bold text-muted-foreground mb-1 block">मोबाइल नंबर *</label>
               <input type="tel" value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10 अंकों का मोबाइल नंबर" className={inputClass} required />
             </div>
             <div>
