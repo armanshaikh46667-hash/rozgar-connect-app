@@ -122,7 +122,7 @@ const RegisterPage = () => {
             </div>
 
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">पूरा नाम *</label>
+              <label className="text-xs font-bold text-muted-foreground mb-1 block">पूरा नाम *</label>
               <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="अपना नाम लिखें" className={inputClass} required maxLength={100} />
             </div>
             <div>
