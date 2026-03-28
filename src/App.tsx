@@ -28,6 +28,7 @@ import NotFound from "./pages/NotFound";
 import UpdatesPage from "./pages/UpdatesPage";
 import LoginPage from "./pages/LoginPage";
 import { useWorkerStore } from "./store/workerStore";
+import LanguageToggle from "./components/LanguageToggle";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,7 @@ const App = () => {
         <BrowserRouter>
           <TopHeader />
           <AnimatedRoutes />
+          <LanguageToggle />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

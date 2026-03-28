@@ -2,25 +2,26 @@ import { Search, User, Menu, X, Briefcase, LogOut, LogIn } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import { useLanguageStore, t } from '@/store/languageStore';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 const TopHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuthStore();
+  const lang = useLanguageStore((s) => s.lang);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const publicMenuItems = [
-    { label: 'रजिस्टर करें', path: '/business-register' },
-    { label: 'नक्शा', path: '/map' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Updates', path: '/updates' },
-    { label: 'Admin Panel', path: '/admin' },
+    { label: t('रजिस्टर करें', lang), path: '/business-register' },
+    { label: t('नक्शा', lang), path: '/map' },
+    { label: t('About Us', lang), path: '/about' },
+    { label: t('Admin Panel', lang), path: '/admin' },
   ];
 
   const loggedInExtras = [
-    { label: 'बुकिंग', path: '/bookings' },
-    { label: 'कमाई', path: '/earnings' },
+    { label: t('बुकिंग', lang), path: '/bookings' },
+    { label: t('कमाई', lang), path: '/earnings' },
   ];
 
   const menuItems = user ? [...publicMenuItems, ...loggedInExtras] : publicMenuItems;
@@ -82,7 +83,7 @@ const TopHeader = () => {
                       <p className="text-xs text-muted-foreground font-normal">{user.mobile}</p>
                     </div>
                   ) : (
-                    <span className="text-foreground">मेनू</span>
+                    <span className="text-foreground font-bold">{t('मेनू', lang)}</span>
                   )}
                 </SheetTitle>
               </SheetHeader>
@@ -90,7 +91,7 @@ const TopHeader = () => {
               <div className="p-3 space-y-0.5">
                 {menuItems.map((item) => (
                   <button key={item.path} onClick={() => handleNav(item.path)}
-                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${location.pathname === item.path ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary border border-transparent hover:border-border'}`}>
+                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-colors ${location.pathname === item.path ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary border border-transparent hover:border-border'}`}>
                     {item.label}
                   </button>
                 ))}
@@ -101,13 +102,13 @@ const TopHeader = () => {
                   <button onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors">
                     <LogOut size={16} />
-                    लॉगआउट
+                    {t('लॉगआउट', lang)}
                   </button>
                 ) : (
                   <button onClick={() => handleNav('/login')}
                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-primary hover:bg-primary/10 transition-colors">
                     <LogIn size={16} />
-                    लॉगिन करें
+                    {t('लॉगिन करें', lang)}
                   </button>
                 )}
               </div>
