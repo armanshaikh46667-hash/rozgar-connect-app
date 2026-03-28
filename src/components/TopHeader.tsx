@@ -11,16 +11,16 @@ const TopHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const publicMenuItems = [
-    { label: 'रजिस्टर करें', path: '/business-register', emoji: '📝' },
-    { label: 'नक्शा', path: '/map', emoji: '🗺️' },
-    { label: 'About Us', path: '/about', emoji: 'ℹ️' },
-    { label: 'Updates', path: '/updates', emoji: '✨' },
-    { label: 'Admin Panel', path: '/admin', emoji: '🛡️' },
+    { label: 'रजिस्टर करें', path: '/business-register' },
+    { label: 'नक्शा', path: '/map' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Updates', path: '/updates' },
+    { label: 'Admin Panel', path: '/admin' },
   ];
 
   const loggedInExtras = [
-    { label: 'बुकिंग', path: '/bookings', emoji: '📅' },
-    { label: 'कमाई', path: '/earnings', emoji: '💰' },
+    { label: 'बुकिंग', path: '/bookings' },
+    { label: 'कमाई', path: '/earnings' },
   ];
 
   const menuItems = user ? [...publicMenuItems, ...loggedInExtras] : publicMenuItems;
