@@ -2,20 +2,21 @@ import { Search, User, Menu, X, Briefcase, LogOut, LogIn } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
+import { useLanguageStore, t } from '@/store/languageStore';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 const TopHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuthStore();
+  const lang = useLanguageStore((s) => s.lang);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const publicMenuItems = [
-    { label: 'रजिस्टर करें', path: '/business-register' },
-    { label: 'नक्शा', path: '/map' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Updates', path: '/updates' },
-    { label: 'Admin Panel', path: '/admin' },
+    { label: t('रजिस्टर करें', lang), path: '/business-register' },
+    { label: t('नक्शा', lang), path: '/map' },
+    { label: t('About Us', lang), path: '/about' },
+    { label: t('Admin Panel', lang), path: '/admin' },
   ];
 
   const loggedInExtras = [
