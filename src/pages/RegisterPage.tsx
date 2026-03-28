@@ -55,7 +55,8 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !mobile || !village || !category || !experience || !about) return;
+    const finalCategory = useCustom ? customCategory : category;
+    if (!name || !mobile || !village || !finalCategory || !experience || !about) return;
     if (mobile.length !== 10) return;
     if (pin.length !== 4 || !/^\d{4}$/.test(pin)) { setPinError('कृपया 4 अंकों का PIN डालें'); return; }
     if (pin !== confirmPin) { setPinError('PIN मेल नहीं खाता'); return; }
