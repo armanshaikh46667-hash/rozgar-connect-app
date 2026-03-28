@@ -83,7 +83,7 @@ const TopHeader = () => {
                       <p className="text-xs text-muted-foreground font-normal">{user.mobile}</p>
                     </div>
                   ) : (
-                    <span className="text-foreground">मेनू</span>
+                    <span className="text-foreground font-bold">{t('मेनू', lang)}</span>
                   )}
                 </SheetTitle>
               </SheetHeader>
