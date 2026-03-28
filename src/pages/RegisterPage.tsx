@@ -20,7 +20,9 @@ const RegisterPage = () => {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [village, setVillage] = useState('');
-  const [category, setCategory] = useState<WorkCategory | ''>('');
+  const [category, setCategory] = useState<string>('');
+  const [customCategory, setCustomCategory] = useState('');
+  const [useCustom, setUseCustom] = useState(false);
   const [experience, setExperience] = useState('');
   const [about, setAbout] = useState('');
   const [photo, setPhoto] = useState('');
