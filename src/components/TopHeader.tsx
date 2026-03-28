@@ -91,7 +91,7 @@ const TopHeader = () => {
               <div className="p-3 space-y-0.5">
                 {menuItems.map((item) => (
                   <button key={item.path} onClick={() => handleNav(item.path)}
-                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${location.pathname === item.path ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary border border-transparent hover:border-border'}`}>
+                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-colors ${location.pathname === item.path ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary border border-transparent hover:border-border'}`}>
                     {item.label}
                   </button>
                 ))}
