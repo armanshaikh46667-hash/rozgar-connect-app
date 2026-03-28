@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, ArrowLeft, Clock, Route } from 'lucide-react';
+import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, ArrowLeft, Clock, Route, Locate } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkerStore, getDistance } from '@/store/workerStore';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,11 +31,11 @@ const RADIUS_OPTIONS = [
 ];
 
 const TYPE_FILTERS = [
-  { value: 'all', label: 'सभी', icon: '📍' },
-  { value: 'worker', label: 'कामगार', icon: '🔧' },
-  { value: 'shop', label: 'दुकान', icon: '🏪' },
-  { value: 'digital', label: 'डिजिटल', icon: '💻' },
-  { value: 'coaching', label: 'कोचिंग', icon: '📚' },
+  { value: 'all', label: 'सभी' },
+  { value: 'worker', label: 'कामगार' },
+  { value: 'shop', label: 'दुकान' },
+  { value: 'digital', label: 'डिजिटल' },
+  { value: 'coaching', label: 'कोचिंग' },
 ];
 
 const MARKER_COLORS: Record<string, string> = {
@@ -53,7 +53,6 @@ const MARKER_EMOJIS: Record<string, string> = {
 };
 
 const estimateTravelTime = (distKm: number): string => {
-  // Approx: walking 5km/h, bike 25km/h, car 40km/h
   if (distKm <= 2) return `${Math.ceil(distKm / 5 * 60)} min पैदल`;
   if (distKm <= 10) return `${Math.ceil(distKm / 25 * 60)} min बाइक`;
   return `${Math.ceil(distKm / 40 * 60)} min गाड़ी`;
@@ -111,15 +110,16 @@ const MapPage = () => {
     if (mapInstanceRef.current) return;
     const lat = userLat || 26.8;
     const lng = userLng || 80.9;
-    const map = L.map(mapRef.current).setView([lat, lng], 13);
+    const map = L.map(mapRef.current, { zoomControl: false }).setView([lat, lng], 14);
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap',
+      attribution: '© OSM',
       maxZoom: 18,
     }).addTo(map);
     if (userLat && userLng) {
       const userIcon = L.divIcon({
-        html: '<div style="width:16px;height:16px;background:hsl(217,91%,60%);border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>',
-        iconSize: [16, 16], iconAnchor: [8, 8], className: '',
+        html: '<div style="width:18px;height:18px;background:hsl(217,91%,60%);border:3px solid white;border-radius:50%;box-shadow:0 0 0 2px hsl(217,91%,60%,0.3),0 2px 8px rgba(0,0,0,0.3)"></div>',
+        iconSize: [18, 18], iconAnchor: [9, 9], className: '',
       });
       L.marker([userLat, userLng], { icon: userIcon }).addTo(map).bindPopup('📍 आपकी लोकेशन');
     }
@@ -145,8 +145,8 @@ const MapPage = () => {
       const color = MARKER_COLORS[e.type];
       const emoji = MARKER_EMOJIS[e.type];
       const icon = L.divIcon({
-        html: `<div style="width:28px;height:28px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:14px">${emoji}</div>`,
-        iconSize: [28, 28], iconAnchor: [14, 14], className: '',
+        html: `<div style="width:32px;height:32px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer">${emoji}</div>`,
+        iconSize: [32, 32], iconAnchor: [16, 16], className: '',
       });
       const marker = L.marker([e.lat, e.lng], { icon });
       marker.on('click', () => setSelectedEntity(e));
@@ -154,7 +154,6 @@ const MapPage = () => {
     });
   }, [workers, businesses, radius, typeFilter, userLat, userLng]);
 
-  // Show route line when entity selected
   useEffect(() => {
     if (routeLayerRef.current && mapInstanceRef.current) {
       mapInstanceRef.current.removeLayer(routeLayerRef.current);
@@ -166,9 +165,15 @@ const MapPage = () => {
         { color: 'hsl(217,91%,60%)', weight: 3, dashArray: '8, 8', opacity: 0.7 }
       ).addTo(mapInstanceRef.current);
       routeLayerRef.current = line;
-      mapInstanceRef.current.fitBounds(line.getBounds(), { padding: [50, 50] });
+      mapInstanceRef.current.fitBounds(line.getBounds(), { padding: [60, 60] });
     }
   }, [selectedEntity, userLat, userLng]);
+
+  const recenterMap = () => {
+    if (userLat && userLng && mapInstanceRef.current) {
+      mapInstanceRef.current.setView([userLat, userLng], 14);
+    }
+  };
 
   const nearbyCount = (() => {
     const workerEntities: MapEntity[] = workers
@@ -192,110 +197,116 @@ const MapPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-4 sm:px-6 pt-8 pb-6 text-primary-foreground">
-        <div className="max-w-4xl mx-auto">
-          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
-            <ArrowLeft size={16} /> होम पेज
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Top bar - compact */}
+      <div className="bg-card border-b border-border px-3 py-2 flex items-center gap-2 shrink-0 z-30">
+        <button onClick={() => navigate('/')} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors">
+          <ArrowLeft size={18} />
+        </button>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-sm font-bold text-foreground truncate">नज़दीकी सेवाएँ</h1>
+          <p className="text-[10px] text-muted-foreground">{nearbyCount} सेवाएँ {radius} km में</p>
+        </div>
+        {userLat && userLng && (
+          <button onClick={recenterMap} className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+            <Locate size={16} />
           </button>
-          <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2"><MapPin size={24} /> नज़दीकी सेवाएँ</h1>
-          <p className="text-primary-foreground/80 text-sm mt-1">कामगार, दुकानें, डिजिटल सेवाएँ — नक्शे पर देखें</p>
+        )}
+      </div>
+
+      {/* Filters - horizontal scroll */}
+      <div className="bg-card/80 backdrop-blur-sm border-b border-border px-3 py-2 shrink-0 z-20 space-y-1.5">
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+          {TYPE_FILTERS.map((f) => (
+            <button key={f.value} onClick={() => setTypeFilter(f.value)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${typeFilter === f.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+              {f.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1.5">
+          {RADIUS_OPTIONS.map((opt) => (
+            <button key={opt.value} onClick={() => setRadius(opt.value)}
+              className={`flex-1 py-1 rounded-full text-[10px] font-semibold transition-colors ${radius === opt.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+              {opt.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto w-full px-4 -mt-4 relative z-20">
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-3 space-y-2">
-          <div className="flex gap-1.5 overflow-x-auto">
-            {TYPE_FILTERS.map((f) => (
-              <button key={f.value} onClick={() => setTypeFilter(f.value)}
-                className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1 ${typeFilter === f.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-                <span>{f.icon}</span> {f.label}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-2">
-            <Navigation size={14} className="text-primary shrink-0" />
-            <span className="text-[10px] font-semibold text-foreground shrink-0">दूरी:</span>
-            <div className="flex gap-1.5 flex-1">
-              {RADIUS_OPTIONS.map((opt) => (
-                <button key={opt.value} onClick={() => setRadius(opt.value)}
-                  className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-colors ${radius === opt.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-            <span className="text-[10px] text-muted-foreground shrink-0">{nearbyCount} मिले</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex-1 max-w-4xl mx-auto w-full px-4 mt-3">
+      {/* Map - fills remaining space */}
+      <div className="flex-1 relative">
         {gpsLoading ? (
-          <div className="flex flex-col items-center justify-center py-20">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background">
             <Loader2 className="animate-spin text-primary mb-3" size={32} />
             <p className="text-sm text-muted-foreground">लोकेशन ले रहे हैं...</p>
           </div>
         ) : (
-          <div ref={mapRef} className="w-full rounded-2xl border border-border overflow-hidden" style={{ height: 'clamp(300px, 55vh, 600px)' }} />
+          <div ref={mapRef} className="absolute inset-0" />
         )}
-      </div>
 
-      <div className="max-w-4xl mx-auto w-full px-4 mt-2 mb-4">
-        <div className="flex items-center justify-center gap-4 text-[10px] text-muted-foreground">
-          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: MARKER_COLORS.worker }} /> कामगार</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: MARKER_COLORS.shop }} /> दुकान</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: MARKER_COLORS.digital }} /> डिजिटल</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-full" style={{ background: MARKER_COLORS.coaching }} /> कोचिंग</span>
+        {/* Legend overlay */}
+        <div className="absolute bottom-3 left-3 z-[500] bg-card/90 backdrop-blur-sm rounded-xl px-3 py-2 border border-border shadow-md">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.worker }} /> कामगार</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.shop }} /> दुकान</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.digital }} /> डिजिटल</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.coaching }} /> कोचिंग</span>
+          </div>
         </div>
       </div>
 
+      {/* Selected entity card */}
       {selectedEntity && (
-        <div className="fixed inset-x-0 bottom-4 z-50 px-4 max-w-4xl mx-auto animate-fade-in">
-          <div className="bg-card rounded-2xl shadow-xl border border-border p-4">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <div className="flex items-center gap-1.5 mb-0.5">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-semibold">
-                    {MARKER_EMOJIS[selectedEntity.type]} {typeLabel[selectedEntity.type]}
-                  </span>
-                </div>
-                <h3 className="font-bold text-foreground text-sm">{selectedEntity.name}</h3>
+        <div className="absolute inset-x-0 bottom-0 z-[600] p-3 sm:p-4 animate-fade-in" style={{ maxWidth: '480px', margin: '0 auto' }}>
+          <div className="bg-card rounded-2xl shadow-2xl border border-border p-4">
+            <div className="flex items-start justify-between mb-3">
+              <div className="min-w-0 flex-1">
+                <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-semibold mb-1">
+                  {MARKER_EMOJIS[selectedEntity.type]} {typeLabel[selectedEntity.type]}
+                </span>
+                <h3 className="font-bold text-foreground text-sm truncate">{selectedEntity.name}</h3>
                 <p className="text-xs text-muted-foreground">{selectedEntity.category} · {selectedEntity.village}</p>
                 {selectedDist !== null && (
-                  <div className="flex items-center gap-3 mt-1">
-                    <p className="text-[10px] text-primary font-semibold flex items-center gap-1">
-                      <MapPin size={10} /> {selectedDist.toFixed(1)} km
-                    </p>
-                    <p className="text-[10px] text-muted-foreground flex items-center gap-1">
-                      <Clock size={10} /> {estimateTravelTime(selectedDist)}
-                    </p>
+                  <div className="flex items-center gap-3 mt-1.5">
+                    <span className="text-xs text-primary font-bold flex items-center gap-1">
+                      <MapPin size={12} /> {selectedDist.toFixed(1)} km
+                    </span>
+                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Clock size={12} /> {estimateTravelTime(selectedDist)}
+                    </span>
                   </div>
                 )}
               </div>
-              <button onClick={() => setSelectedEntity(null)} className="text-muted-foreground p-1"><X size={18} /></button>
+              <button onClick={() => setSelectedEntity(null)} className="text-muted-foreground p-1 hover:bg-secondary rounded-lg transition-colors"><X size={18} /></button>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <a href={`tel:${selectedEntity.mobile}`}
-                className="flex-1 bg-primary text-primary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
+                className="bg-primary text-primary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
                 <Phone size={14} /> कॉल
               </a>
               <a href={`https://wa.me/91${selectedEntity.mobile}`} target="_blank" rel="noopener noreferrer"
-                className="flex-1 bg-accent text-accent-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
+                className="bg-accent text-accent-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
                 <WhatsAppIcon size={14} /> WhatsApp
               </a>
-              {userLat && userLng && (
+              {userLat && userLng ? (
                 <button onClick={() => openGoogleMapsRoute(selectedEntity)}
-                  className="flex-1 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
+                  className="bg-secondary text-secondary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
                   <Route size={14} /> रास्ता
                 </button>
-              )}
-              {selectedEntity.type === 'worker' && (
+              ) : selectedEntity.type === 'worker' ? (
                 <button onClick={() => { setSelectedEntity(null); navigate(`/worker/${selectedEntity.id}`); }}
-                  className="flex-1 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
+                  className="bg-secondary text-secondary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
                   प्रोफ़ाइल <ChevronRight size={14} />
                 </button>
-              )}
+              ) : null}
             </div>
+            {userLat && userLng && selectedEntity.type === 'worker' && (
+              <button onClick={() => { setSelectedEntity(null); navigate(`/worker/${selectedEntity.id}`); }}
+                className="w-full mt-2 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-border active:scale-[0.97] transition-transform">
+                प्रोफ़ाइल देखें <ChevronRight size={14} />
+              </button>
+            )}
           </div>
         </div>
       )}

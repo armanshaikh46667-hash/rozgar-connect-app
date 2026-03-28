@@ -1,7 +1,6 @@
-import { Search, MapPin, Briefcase, UserPlus, Users, Shield, Heart, Share2, ChevronRight, Zap, Phone, Store, CalendarCheck, Navigation, Map } from 'lucide-react';
+import { Search, MapPin, Briefcase, UserPlus, Users, Shield, Heart, Share2, ChevronRight, Zap, Navigation, Map } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
-import HomeMap from '@/components/HomeMap';
 
 const HERO_CATEGORIES = [
   { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन" },
@@ -114,8 +113,6 @@ const HomePage = () => {
       </div>
 
 
-      {/* Updates & Improvements */}
-
       {/* Popular Categories */}
       <div className="max-w-lg mx-auto px-4 mt-8">
         <div className="flex items-center justify-between mb-4">
@@ -173,18 +170,6 @@ const HomePage = () => {
           </div>
         ))}
       </div>
-
-      {/* Live Map */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
-        <div className="bg-card rounded-2xl border border-border p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Map size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">नज़दीकी कामगार — नक्शा</h2>
-          </div>
-          <HomeMap />
-        </div>
-      </div>
-
 
       {/* CTA */}
       <div className="max-w-lg mx-auto px-4 mt-8">

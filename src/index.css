@@ -75,6 +75,8 @@
     color: hsl(var(--about-heading));
     text-shadow: 0 0 20px hsl(var(--about-glow) / 0.5), 0 0 40px hsl(var(--about-glow) / 0.2);
   }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
 
 @keyframes loading {

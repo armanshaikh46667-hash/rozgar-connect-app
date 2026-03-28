@@ -11,16 +11,16 @@ const TopHeader = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const publicMenuItems = [
-    { label: 'रजिस्टर करें', path: '/business-register', emoji: '📝' },
-    { label: 'नक्शा', path: '/map', emoji: '🗺️' },
-    { label: 'About Us', path: '/about', emoji: 'ℹ️' },
-    { label: 'Updates', path: '/updates', emoji: '✨' },
-    { label: 'Admin Panel', path: '/admin', emoji: '🛡️' },
+    { label: 'रजिस्टर करें', path: '/business-register' },
+    { label: 'नक्शा', path: '/map' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Updates', path: '/updates' },
+    { label: 'Admin Panel', path: '/admin' },
   ];
 
   const loggedInExtras = [
-    { label: 'बुकिंग', path: '/bookings', emoji: '📅' },
-    { label: 'कमाई', path: '/earnings', emoji: '💰' },
+    { label: 'बुकिंग', path: '/bookings' },
+    { label: 'कमाई', path: '/earnings' },
   ];
 
   const menuItems = user ? [...publicMenuItems, ...loggedInExtras] : publicMenuItems;
@@ -87,11 +87,10 @@ const TopHeader = () => {
                 </SheetTitle>
               </SheetHeader>
 
-              <div className="p-3 space-y-1">
+              <div className="p-3 space-y-0.5">
                 {menuItems.map((item) => (
                   <button key={item.path} onClick={() => handleNav(item.path)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${location.pathname === item.path ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary'}`}>
-                    <span className="text-base">{item.emoji}</span>
+                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-colors ${location.pathname === item.path ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-secondary border border-transparent hover:border-border'}`}>
                     {item.label}
                   </button>
                 ))}
