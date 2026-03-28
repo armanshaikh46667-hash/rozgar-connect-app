@@ -171,18 +171,6 @@ const HomePage = () => {
         ))}
       </div>
 
-      {/* Live Map */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
-        <div className="bg-card rounded-2xl border border-border p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Map size={18} className="text-primary" />
-            <h2 className="text-sm font-bold text-foreground">नज़दीकी कामगार — नक्शा</h2>
-          </div>
-          <HomeMap />
-        </div>
-      </div>
-
-
       {/* CTA */}
       <div className="max-w-lg mx-auto px-4 mt-8">
         <div className="bg-gradient-to-br from-primary to-accent-foreground rounded-2xl p-6 text-primary-foreground text-center">
