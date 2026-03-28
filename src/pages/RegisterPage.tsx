@@ -130,15 +130,30 @@ const RegisterPage = () => {
               <input type="tel" value={mobile} onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="10 अंकों का मोबाइल नंबर" className={inputClass} required />
             </div>
             <div>
-              <label className="text-xs font-medium text-muted-foreground mb-1 block">कार्य श्रेणी (Work Type) *</label>
-              <select value={category} onChange={(e) => setCategory(e.target.value as WorkCategory)} className={inputClass} required>
-                <option value="">श्रेणी चुनें</option>
-                {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-                  <optgroup key={group} label={group}>
-                    {cats.map((c) => <option key={c} value={c}>{c}</option>)}
-                  </optgroup>
-                ))}
-              </select>
+              <label className="text-xs font-bold text-muted-foreground mb-1 block">कार्य श्रेणी (Work Type) *</label>
+              {!useCustom ? (
+                <>
+                  <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputClass} required={!useCustom}>
+                    <option value="">श्रेणी चुनें</option>
+                    {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
+                      <optgroup key={group} label={group}>
+                        {cats.map((c) => <option key={c} value={c}>{c}</option>)}
+                      </optgroup>
+                    ))}
+                  </select>
+                  <button type="button" onClick={() => setUseCustom(true)} className="text-[10px] text-primary font-bold mt-1">
+                    + अपनी श्रेणी लिखें (Custom)
+                  </button>
+                </>
+              ) : (
+                <>
+                  <input type="text" value={customCategory} onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="अपनी कार्य श्रेणी लिखें" className={inputClass} required={useCustom} maxLength={50} />
+                  <button type="button" onClick={() => setUseCustom(false)} className="text-[10px] text-primary font-bold mt-1">
+                    ← सूची में से चुनें
+                  </button>
+                </>
+              )}
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1 block">गाँव / शहर *</label>
