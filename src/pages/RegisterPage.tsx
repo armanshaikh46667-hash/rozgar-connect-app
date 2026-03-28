@@ -63,7 +63,7 @@ const RegisterPage = () => {
     setPinError('');
     setSubmitting(true);
     const ok = await addWorker({
-      name, mobile, village, category: category as WorkCategory,
+      name, mobile, village, category: finalCategory as WorkCategory,
       experience: parseInt(experience), about, photo,
       serviceCharge: serviceCharge || undefined,
       priceMin: priceMin ? parseInt(priceMin) : undefined,
