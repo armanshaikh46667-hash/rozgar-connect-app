@@ -113,8 +113,6 @@ const HomePage = () => {
       </div>
 
 
-      {/* Updates & Improvements */}
-
       {/* Popular Categories */}
       <div className="max-w-lg mx-auto px-4 mt-8">
         <div className="flex items-center justify-between mb-4">
