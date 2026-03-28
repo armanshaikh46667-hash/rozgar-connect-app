@@ -83,6 +83,7 @@ const App = () => {
         <BrowserRouter>
           <TopHeader />
           <AnimatedRoutes />
+          <LanguageToggle />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

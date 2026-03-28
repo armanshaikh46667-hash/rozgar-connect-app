@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, ArrowLeft, Clock, Route, Locate } from 'lucide-react';
+import { MapPin, Phone, Navigation, Loader2, X, ChevronRight, ArrowLeft, Clock, Route, Locate, Crosshair } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useWorkerStore, getDistance } from '@/store/workerStore';
+import { useLanguageStore, t } from '@/store/languageStore';
 import { supabase } from '@/integrations/supabase/client';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -28,14 +29,15 @@ const RADIUS_OPTIONS = [
   { value: 5, label: '5 km' },
   { value: 10, label: '10 km' },
   { value: 25, label: '25 km' },
+  { value: 50, label: '50 km' },
 ];
 
 const TYPE_FILTERS = [
-  { value: 'all', label: 'सभी' },
-  { value: 'worker', label: 'कामगार' },
-  { value: 'shop', label: 'दुकान' },
-  { value: 'digital', label: 'डिजिटल' },
-  { value: 'coaching', label: 'कोचिंग' },
+  { value: 'all', label: 'सभी', labelEn: 'All' },
+  { value: 'worker', label: 'कामगार', labelEn: 'Workers' },
+  { value: 'shop', label: 'दुकान', labelEn: 'Shops' },
+  { value: 'digital', label: 'डिजिटल', labelEn: 'Digital' },
+  { value: 'coaching', label: 'कोचिंग', labelEn: 'Coaching' },
 ];
 
 const MARKER_COLORS: Record<string, string> = {
@@ -52,24 +54,30 @@ const MARKER_EMOJIS: Record<string, string> = {
   coaching: '📚',
 };
 
-const estimateTravelTime = (distKm: number): string => {
-  if (distKm <= 2) return `${Math.ceil(distKm / 5 * 60)} min पैदल`;
-  if (distKm <= 10) return `${Math.ceil(distKm / 25 * 60)} min बाइक`;
-  return `${Math.ceil(distKm / 40 * 60)} min गाड़ी`;
+const estimateTravelTime = (distKm: number, lang: 'hi' | 'en'): string => {
+  if (distKm <= 2) return `${Math.ceil(distKm / 5 * 60)} min ${lang === 'hi' ? 'पैदल' : 'walk'}`;
+  if (distKm <= 10) return `${Math.ceil(distKm / 25 * 60)} min ${lang === 'hi' ? 'बाइक' : 'bike'}`;
+  return `${Math.ceil(distKm / 40 * 60)} min ${lang === 'hi' ? 'गाड़ी' : 'car'}`;
 };
+
+// India center coordinates
+const INDIA_CENTER: [number, number] = [22.5, 82.0];
+const INDIA_ZOOM = 5;
 
 const MapPage = () => {
   const navigate = useNavigate();
+  const lang = useLanguageStore((s) => s.lang);
   const workers = useWorkerStore((s) => s.workers);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<L.LayerGroup | null>(null);
   const routeLayerRef = useRef<L.Polyline | null>(null);
+  const userMarkerRef = useRef<L.Marker | null>(null);
 
   const [userLat, setUserLat] = useState<number | null>(null);
   const [userLng, setUserLng] = useState<number | null>(null);
-  const [gpsLoading, setGpsLoading] = useState(true);
-  const [radius, setRadius] = useState(5);
+  const [gpsLoading, setGpsLoading] = useState(false);
+  const [radius, setRadius] = useState(25);
   const [typeFilter, setTypeFilter] = useState('all');
   const [selectedEntity, setSelectedEntity] = useState<MapEntity | null>(null);
   const [businesses, setBusinesses] = useState<MapEntity[]>([]);
@@ -96,38 +104,52 @@ const MapPage = () => {
     fetchAll();
   }, []);
 
+  // Initialize map with India view (no GPS wait)
   useEffect(() => {
-    if (!navigator.geolocation) { setGpsLoading(false); return; }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => { setUserLat(pos.coords.latitude); setUserLng(pos.coords.longitude); setGpsLoading(false); },
-      () => { setGpsLoading(false); },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  }, []);
-
-  useEffect(() => {
-    if (!mapRef.current || gpsLoading) return;
+    if (!mapRef.current) return;
     if (mapInstanceRef.current) return;
-    const lat = userLat || 26.8;
-    const lng = userLng || 80.9;
-    const map = L.map(mapRef.current, { zoomControl: false }).setView([lat, lng], 14);
+    const map = L.map(mapRef.current, { zoomControl: false }).setView(INDIA_CENTER, INDIA_ZOOM);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OSM',
       maxZoom: 18,
     }).addTo(map);
-    if (userLat && userLng) {
-      const userIcon = L.divIcon({
-        html: '<div style="width:18px;height:18px;background:hsl(217,91%,60%);border:3px solid white;border-radius:50%;box-shadow:0 0 0 2px hsl(217,91%,60%,0.3),0 2px 8px rgba(0,0,0,0.3)"></div>',
-        iconSize: [18, 18], iconAnchor: [9, 9], className: '',
-      });
-      L.marker([userLat, userLng], { icon: userIcon }).addTo(map).bindPopup('📍 आपकी लोकेशन');
-    }
     markersRef.current = L.layerGroup().addTo(map);
     mapInstanceRef.current = map;
     return () => { map.remove(); mapInstanceRef.current = null; };
-  }, [gpsLoading, userLat, userLng]);
+  }, []);
 
+  // Live location function
+  const goToMyLocation = () => {
+    if (!navigator.geolocation) return;
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        setUserLat(lat);
+        setUserLng(lng);
+        setGpsLoading(false);
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.setView([lat, lng], 14);
+          // Add/update user marker
+          if (userMarkerRef.current) {
+            userMarkerRef.current.setLatLng([lat, lng]);
+          } else {
+            const userIcon = L.divIcon({
+              html: '<div style="width:18px;height:18px;background:hsl(217,91%,60%);border:3px solid white;border-radius:50%;box-shadow:0 0 0 2px hsl(217,91%,60%,0.3),0 2px 8px rgba(0,0,0,0.3)"></div>',
+              iconSize: [18, 18], iconAnchor: [9, 9], className: '',
+            });
+            userMarkerRef.current = L.marker([lat, lng], { icon: userIcon }).addTo(mapInstanceRef.current!).bindPopup('📍 My Location');
+          }
+        }
+      },
+      () => { setGpsLoading(false); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
+
+  // Update markers when data/filters change
   useEffect(() => {
     if (!markersRef.current || !mapInstanceRef.current) return;
     markersRef.current.clearLayers();
@@ -144,6 +166,7 @@ const MapPage = () => {
     filtered.forEach((e) => {
       const color = MARKER_COLORS[e.type];
       const emoji = MARKER_EMOJIS[e.type];
+      const distText = userLat && userLng ? ` · ${getDistance(userLat, userLng, e.lat, e.lng).toFixed(1)} km` : '';
       const icon = L.divIcon({
         html: `<div style="width:32px;height:32px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer">${emoji}</div>`,
         iconSize: [32, 32], iconAnchor: [16, 16], className: '',
@@ -154,6 +177,7 @@ const MapPage = () => {
     });
   }, [workers, businesses, radius, typeFilter, userLat, userLng]);
 
+  // Route line
   useEffect(() => {
     if (routeLayerRef.current && mapInstanceRef.current) {
       mapInstanceRef.current.removeLayer(routeLayerRef.current);
@@ -169,22 +193,14 @@ const MapPage = () => {
     }
   }, [selectedEntity, userLat, userLng]);
 
-  const recenterMap = () => {
-    if (userLat && userLng && mapInstanceRef.current) {
-      mapInstanceRef.current.setView([userLat, userLng], 14);
-    }
-  };
-
-  const nearbyCount = (() => {
-    const workerEntities: MapEntity[] = workers
-      .filter((w) => w.lat && w.lng)
-      .map((w) => ({ id: w.id, name: w.name, category: w.category, village: w.village, mobile: w.mobile, lat: w.lat!, lng: w.lng!, type: 'worker' as const }));
-    const all = [...workerEntities, ...businesses];
-    return all
-      .filter((e) => typeFilter === 'all' || e.type === typeFilter)
-      .filter((e) => userLat && userLng ? getDistance(userLat, userLng, e.lat, e.lng) <= radius : true)
-      .length;
-  })();
+  const allEntities = [
+    ...workers.filter((w) => w.lat && w.lng).map((w) => ({ id: w.id, name: w.name, category: w.category, village: w.village, mobile: w.mobile, lat: w.lat!, lng: w.lng!, type: 'worker' as const })),
+    ...businesses,
+  ];
+  const nearbyCount = allEntities
+    .filter((e) => typeFilter === 'all' || e.type === typeFilter)
+    .filter((e) => userLat && userLng ? getDistance(userLat, userLng, e.lat, e.lng) <= radius : true)
+    .length;
 
   const typeLabel: Record<string, string> = { worker: 'कामगार', shop: 'दुकान', digital: 'डिजिटल सेवा', coaching: 'कोचिंग' };
 
@@ -192,66 +208,65 @@ const MapPage = () => {
     ? getDistance(userLat, userLng, selectedEntity.lat, selectedEntity.lng) : null;
 
   const openGoogleMapsRoute = (entity: MapEntity) => {
-    if (!userLat || !userLng) return;
-    window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${entity.lat},${entity.lng}`, '_blank');
+    if (userLat && userLng) {
+      window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${entity.lat},${entity.lng}`, '_blank');
+    } else {
+      window.open(`https://www.google.com/maps?q=${entity.lat},${entity.lng}`, '_blank');
+    }
   };
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      {/* Top bar - compact */}
+      {/* Top bar */}
       <div className="bg-card border-b border-border px-3 py-2 flex items-center gap-2 shrink-0 z-30">
         <button onClick={() => navigate('/')} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors">
           <ArrowLeft size={18} />
         </button>
         <div className="flex-1 min-w-0">
-          <h1 className="text-sm font-bold text-foreground truncate">नज़दीकी सेवाएँ</h1>
-          <p className="text-[10px] text-muted-foreground">{nearbyCount} सेवाएँ {radius} km में</p>
+          <h1 className="text-sm font-extrabold text-foreground truncate">{t('नज़दीकी सेवाएँ', lang)}</h1>
+          <p className="text-[10px] text-muted-foreground">{nearbyCount} {t('सेवाएँ', lang)} {userLat ? `${radius} km` : lang === 'hi' ? 'भारत' : 'India'}</p>
         </div>
-        {userLat && userLng && (
-          <button onClick={recenterMap} className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-            <Locate size={16} />
-          </button>
-        )}
+        <button
+          onClick={goToMyLocation}
+          disabled={gpsLoading}
+          className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 shadow-md"
+          title={lang === 'hi' ? 'मेरी लोकेशन' : 'My Location'}
+        >
+          {gpsLoading ? <Loader2 size={16} className="animate-spin" /> : <Crosshair size={16} />}
+        </button>
       </div>
 
-      {/* Filters - horizontal scroll */}
+      {/* Filters */}
       <div className="bg-card/80 backdrop-blur-sm border-b border-border px-3 py-2 shrink-0 z-20 space-y-1.5">
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
           {TYPE_FILTERS.map((f) => (
             <button key={f.value} onClick={() => setTypeFilter(f.value)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${typeFilter === f.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-              {f.label}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${typeFilter === f.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+              {lang === 'hi' ? f.label : f.labelEn}
             </button>
           ))}
         </div>
         <div className="flex gap-1.5">
           {RADIUS_OPTIONS.map((opt) => (
             <button key={opt.value} onClick={() => setRadius(opt.value)}
-              className={`flex-1 py-1 rounded-full text-[10px] font-semibold transition-colors ${radius === opt.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+              className={`flex-1 py-1 rounded-full text-[10px] font-bold transition-colors ${radius === opt.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
               {opt.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Map - fills remaining space */}
+      {/* Map */}
       <div className="flex-1 relative">
-        {gpsLoading ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-background">
-            <Loader2 className="animate-spin text-primary mb-3" size={32} />
-            <p className="text-sm text-muted-foreground">लोकेशन ले रहे हैं...</p>
-          </div>
-        ) : (
-          <div ref={mapRef} className="absolute inset-0" />
-        )}
+        <div ref={mapRef} className="absolute inset-0" />
 
-        {/* Legend overlay */}
+        {/* Legend */}
         <div className="absolute bottom-3 left-3 z-[500] bg-card/90 backdrop-blur-sm rounded-xl px-3 py-2 border border-border shadow-md">
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.worker }} /> कामगार</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.shop }} /> दुकान</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.digital }} /> डिजिटल</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.coaching }} /> कोचिंग</span>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] font-bold text-muted-foreground">
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.worker }} /> {lang === 'hi' ? 'कामगार' : 'Worker'}</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.shop }} /> {lang === 'hi' ? 'दुकान' : 'Shop'}</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.digital }} /> {lang === 'hi' ? 'डिजिटल' : 'Digital'}</span>
+            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.coaching }} /> {lang === 'hi' ? 'कोचिंग' : 'Coaching'}</span>
           </div>
         </div>
       </div>
@@ -262,18 +277,18 @@ const MapPage = () => {
           <div className="bg-card rounded-2xl shadow-2xl border border-border p-4">
             <div className="flex items-start justify-between mb-3">
               <div className="min-w-0 flex-1">
-                <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-semibold mb-1">
+                <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground font-bold mb-1">
                   {MARKER_EMOJIS[selectedEntity.type]} {typeLabel[selectedEntity.type]}
                 </span>
-                <h3 className="font-bold text-foreground text-sm truncate">{selectedEntity.name}</h3>
-                <p className="text-xs text-muted-foreground">{selectedEntity.category} · {selectedEntity.village}</p>
+                <h3 className="font-extrabold text-foreground text-sm truncate">{selectedEntity.name}</h3>
+                <p className="text-xs text-muted-foreground font-medium">{selectedEntity.category} · {selectedEntity.village}</p>
                 {selectedDist !== null && (
                   <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-xs text-primary font-bold flex items-center gap-1">
+                    <span className="text-xs text-primary font-extrabold flex items-center gap-1">
                       <MapPin size={12} /> {selectedDist.toFixed(1)} km
                     </span>
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock size={12} /> {estimateTravelTime(selectedDist)}
+                    <span className="text-xs text-muted-foreground font-bold flex items-center gap-1">
+                      <Clock size={12} /> {estimateTravelTime(selectedDist, lang)}
                     </span>
                   </div>
                 )}
@@ -283,28 +298,21 @@ const MapPage = () => {
             <div className="grid grid-cols-3 gap-2">
               <a href={`tel:${selectedEntity.mobile}`}
                 className="bg-primary text-primary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
-                <Phone size={14} /> कॉल
+                <Phone size={14} /> {t('कॉल', lang)}
               </a>
               <a href={`https://wa.me/91${selectedEntity.mobile}`} target="_blank" rel="noopener noreferrer"
                 className="bg-accent text-accent-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
                 <WhatsAppIcon size={14} /> WhatsApp
               </a>
-              {userLat && userLng ? (
-                <button onClick={() => openGoogleMapsRoute(selectedEntity)}
-                  className="bg-secondary text-secondary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
-                  <Route size={14} /> रास्ता
-                </button>
-              ) : selectedEntity.type === 'worker' ? (
-                <button onClick={() => { setSelectedEntity(null); navigate(`/worker/${selectedEntity.id}`); }}
-                  className="bg-secondary text-secondary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
-                  प्रोफ़ाइल <ChevronRight size={14} />
-                </button>
-              ) : null}
+              <button onClick={() => openGoogleMapsRoute(selectedEntity)}
+                className="bg-secondary text-secondary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 border border-border active:scale-[0.97] transition-transform">
+                <Route size={14} /> {t('रास्ता', lang)}
+              </button>
             </div>
-            {userLat && userLng && selectedEntity.type === 'worker' && (
+            {selectedEntity.type === 'worker' && (
               <button onClick={() => { setSelectedEntity(null); navigate(`/worker/${selectedEntity.id}`); }}
                 className="w-full mt-2 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-border active:scale-[0.97] transition-transform">
-                प्रोफ़ाइल देखें <ChevronRight size={14} />
+                {t('प्रोफ़ाइल देखें', lang)} <ChevronRight size={14} />
               </button>
             )}
           </div>
