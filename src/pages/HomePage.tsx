@@ -172,7 +172,7 @@ const HomePage = () => {
       </div>
 
       {/* CTA */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
+      <div className="max-w-4xl mx-auto px-4 mt-8">
         <div className="bg-gradient-to-br from-primary to-accent-foreground rounded-2xl p-6 text-primary-foreground text-center">
           <Zap size={28} className="mx-auto mb-2 opacity-80" />
           <h3 className="text-lg font-bold mb-1">क्या आप कामगार हैं?</h3>
