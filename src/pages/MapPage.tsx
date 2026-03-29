@@ -309,12 +309,14 @@ const MapPage = () => {
                 <Route size={14} /> {t('रास्ता', lang)}
               </button>
             </div>
-            {selectedEntity.type === 'worker' && (
-              <button onClick={() => { setSelectedEntity(null); navigate(`/worker/${selectedEntity.id}`); }}
-                className="w-full mt-2 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-border active:scale-[0.97] transition-transform">
-                {t('प्रोफ़ाइल देखें', lang)} <ChevronRight size={14} />
-              </button>
-            )}
+            <button onClick={() => {
+                setSelectedEntity(null);
+                if (selectedEntity.type === 'worker') navigate(`/worker/${selectedEntity.id}`);
+                else navigate(`/business/${selectedEntity.type}/${selectedEntity.id}`);
+              }}
+              className="w-full mt-2 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-border active:scale-[0.97] transition-transform">
+              {t('प्रोफ़ाइल देखें', lang)} <ChevronRight size={14} />
+            </button>
           </div>
         </div>
       )}

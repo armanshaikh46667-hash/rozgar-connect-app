@@ -24,11 +24,11 @@ import EarningsPage from "./pages/EarningsPage";
 import AboutPage from "./pages/AboutPage";
 import AdminPage from "./pages/AdminPage";
 import WorkerProfilePage from "./pages/WorkerProfilePage";
+import BusinessProfilePage from "./pages/BusinessProfilePage";
 import NotFound from "./pages/NotFound";
 import UpdatesPage from "./pages/UpdatesPage";
 import LoginPage from "./pages/LoginPage";
 import { useWorkerStore } from "./store/workerStore";
-import LanguageToggle from "./components/LanguageToggle";
 import AIChatbot from "./components/AIChatbot";
 
 const queryClient = new QueryClient();
@@ -56,6 +56,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/earnings" element={<EarningsPage />} />
         <Route path="/worker/:id" element={<WorkerProfilePage />} />
+        <Route path="/business/:type/:id" element={<BusinessProfilePage />} />
         <Route path="/updates" element={<UpdatesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFound />} />
@@ -84,7 +85,6 @@ const App = () => {
         <BrowserRouter>
           <TopHeader />
           <AnimatedRoutes />
-          <LanguageToggle />
           <AIChatbot />
         </BrowserRouter>
       </TooltipProvider>
