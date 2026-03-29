@@ -29,6 +29,7 @@ import UpdatesPage from "./pages/UpdatesPage";
 import LoginPage from "./pages/LoginPage";
 import { useWorkerStore } from "./store/workerStore";
 import LanguageToggle from "./components/LanguageToggle";
+import AIChatbot from "./components/AIChatbot";
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ const App = () => {
           <TopHeader />
           <AnimatedRoutes />
           <LanguageToggle />
+          <AIChatbot />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
