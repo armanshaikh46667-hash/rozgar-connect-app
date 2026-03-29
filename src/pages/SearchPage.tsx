@@ -539,7 +539,7 @@ const SearchPage = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 mt-6 space-y-3">
+      <div className="max-w-4xl mx-auto px-4 mt-6 space-y-3">
         {loading ? (
           <div className="space-y-3">
             <CardSkeleton />
