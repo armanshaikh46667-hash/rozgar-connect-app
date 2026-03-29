@@ -207,7 +207,7 @@ const HomePage = () => {
       </div>
 
       {/* Share */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
+      <div className="max-w-4xl mx-auto px-4 mt-8">
         <button onClick={handleShare}
           className="w-full bg-secondary rounded-2xl p-4 flex items-center justify-center gap-3 active:scale-[0.98] transition-transform border border-border">
           <Share2 size={20} className="text-primary" />
