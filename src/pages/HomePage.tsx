@@ -152,7 +152,7 @@ const HomePage = () => {
       </div>
 
       {/* All Categories */}
-      <div className="max-w-lg mx-auto px-4 mt-8 space-y-6">
+      <div className="max-w-4xl mx-auto px-4 mt-8 space-y-6">
         <h2 className="text-base font-bold text-foreground">सभी श्रेणियाँ</h2>
         {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
           <div key={group}>
