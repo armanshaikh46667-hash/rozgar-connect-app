@@ -85,6 +85,7 @@ const App = () => {
           <TopHeader />
           <AnimatedRoutes />
           <LanguageToggle />
+          <AIChatbot />
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
