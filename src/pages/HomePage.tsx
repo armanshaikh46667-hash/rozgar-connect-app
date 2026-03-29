@@ -54,7 +54,7 @@ const HomePage = () => {
           <div className="absolute top-4 right-4 w-32 h-32 rounded-full bg-primary-foreground/20 blur-3xl" />
           <div className="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-primary-foreground/15 blur-2xl" />
         </div>
-        <div className="max-w-lg mx-auto relative z-10">
+        <div className="max-w-4xl mx-auto relative z-10">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
               <Briefcase size={22} className="text-primary-foreground" />
