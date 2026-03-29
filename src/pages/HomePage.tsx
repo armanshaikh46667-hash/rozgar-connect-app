@@ -216,7 +216,7 @@ const HomePage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="max-w-lg mx-auto px-4 mt-10 pb-4">
+      <footer className="max-w-4xl mx-auto px-4 mt-10 pb-4">
         <div className="border-t border-border pt-6">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Briefcase size={18} className="text-primary" />

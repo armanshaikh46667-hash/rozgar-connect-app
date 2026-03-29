@@ -29,6 +29,7 @@ const translations: Record<string, Record<Lang, string>> = {
   'लॉगिन करें': { hi: 'लॉगिन करें', en: 'Login' },
   'होम पेज': { hi: 'होम पेज', en: 'Home' },
   'काम ढूंढें': { hi: 'काम ढूंढें', en: 'Find Work' },
+  'खोज': { hi: 'खोज', en: 'Search' },
   'त्वरित खोज': { hi: 'त्वरित खोज', en: 'Quick Search' },
   'काम के प्रकार': { hi: 'काम के प्रकार', en: 'Work Types' },
   'गाँव / शहर': { hi: 'गाँव / शहर', en: 'Village / City' },
