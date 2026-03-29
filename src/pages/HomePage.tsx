@@ -185,7 +185,7 @@ const HomePage = () => {
       </div>
 
       {/* Trust */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
+      <div className="max-w-4xl mx-auto px-4 mt-8">
         <h2 className="text-base font-bold text-foreground mb-4 text-center">हम पर भरोसा करें</h2>
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-card rounded-2xl border border-border p-4 text-center">
