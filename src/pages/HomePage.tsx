@@ -114,7 +114,7 @@ const HomePage = () => {
 
 
       {/* Popular Categories */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
+      <div className="max-w-4xl mx-auto px-4 mt-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-foreground">लोकप्रिय सेवाएँ</h2>
           <button onClick={() => navigate('/search')} className="text-xs text-primary font-semibold flex items-center gap-1">
