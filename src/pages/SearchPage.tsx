@@ -286,11 +286,13 @@ const DeleteDialog = ({ workerId, onClose }: { workerId: string; onClose: () => 
 
 // --- Business Card (Clean compact card for shops/digital/coaching) ---
 const BusinessCard = ({ entity, userLat, userLng }: { entity: BusinessEntity; userLat: number | null; userLng: number | null }) => {
+  const navigate = useNavigate();
   const dist = entity.lat && entity.lng && userLat && userLng
     ? getDistance(userLat, userLng, entity.lat, entity.lng) : null;
 
   return (
-    <div className="bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div onClick={() => navigate(`/business/${entity.type}/${entity.id}`)}
+      className="bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl bg-secondary border border-border flex items-center justify-center shrink-0">
           {BUSINESS_ICONS[entity.type]}
@@ -306,10 +308,12 @@ const BusinessCard = ({ entity, userLat, userLng }: { entity: BusinessEntity; us
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <a href={`https://wa.me/91${entity.mobile}`} target="_blank" rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
             className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground active:scale-[0.95] transition-transform">
             <WhatsAppIcon size={18} />
           </a>
           <a href={`tel:${entity.mobile}`}
+            onClick={(e) => e.stopPropagation()}
             className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground active:scale-[0.95] transition-transform">
             <Phone size={18} />
           </a>

@@ -65,8 +65,8 @@ const WorkerProfilePage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-20 text-primary-foreground">
-        <button onClick={() => navigate('/')} className="flex items-center gap-1 text-primary-foreground/80 text-sm mb-6">
-          <ArrowLeft size={18} /> होम पेज
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-primary-foreground text-sm mb-6 bg-primary-foreground/20 px-4 py-2 rounded-xl font-bold backdrop-blur-sm hover:bg-primary-foreground/30 transition-colors">
+          <ArrowLeft size={18} /> वापस
         </button>
         <div className="flex items-center gap-4">
           <div className="w-24 h-24 rounded-2xl bg-primary-foreground/20 border-2 border-primary-foreground/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg">
