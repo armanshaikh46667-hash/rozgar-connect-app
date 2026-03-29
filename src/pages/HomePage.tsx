@@ -81,7 +81,7 @@ const HomePage = () => {
       </div>
 
       {/* Quick Search */}
-      <div className="max-w-lg mx-auto px-4 -mt-6 relative z-20">
+      <div className="max-w-4xl mx-auto px-4 -mt-6 relative z-20">
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <div className="flex items-center gap-2 mb-3">
             <Search size={16} className="text-muted-foreground" />
