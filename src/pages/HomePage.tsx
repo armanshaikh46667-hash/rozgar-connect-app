@@ -121,7 +121,7 @@ const HomePage = () => {
             सभी देखें <ChevronRight size={14} />
           </button>
         </div>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3">
           {HERO_CATEGORIES.map((cat) => (
             <button key={cat.name}
               onClick={() => navigate(`/search?category=${encodeURIComponent(cat.name)}`)}
