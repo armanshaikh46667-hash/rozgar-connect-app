@@ -462,8 +462,8 @@ const SearchPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
-        <div className="max-w-lg mx-auto">
-          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
+        <div className="max-w-4xl mx-auto">
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1.5 bg-primary-foreground/20 text-primary-foreground px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-primary-foreground/30 transition-colors w-fit">
             <ArrowLeft size={16} /> होम पेज
           </button>
           <h1 className="text-2xl font-bold">कामगार खोजें</h1>
