@@ -134,7 +134,7 @@ const HomePage = () => {
       </div>
 
       {/* Stats */}
-      <div className="max-w-lg mx-auto px-4 mt-8">
+      <div className="max-w-4xl mx-auto px-4 mt-8">
         <div className="bg-gradient-to-r from-primary/10 to-accent rounded-2xl p-5 grid grid-cols-3 gap-4 text-center">
           <div>
             <p className="text-xl font-extrabold text-primary">{Object.values(CATEGORY_GROUPS).flat().length}+</p>
