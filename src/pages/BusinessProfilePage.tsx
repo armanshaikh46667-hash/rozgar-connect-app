@@ -23,15 +23,14 @@ interface BusinessData {
   lat: number | null;
   lng: number | null;
   created_at: string;
-  // coaching specific
   timing?: string | null;
   fees?: string | null;
 }
 
-const TYPE_CONFIG: Record<string, { icon: React.ReactNode; label: string; labelEn: string; gradient: string }> = {
-  shop: { icon: <Store size={28} className="text-primary-foreground/80" />, label: 'दुकान', labelEn: 'Shop', gradient: 'from-orange-500 via-orange-600 to-amber-600' },
-  digital: { icon: <Laptop size={28} className="text-primary-foreground/80" />, label: 'डिजिटल सेवा', labelEn: 'Digital Service', gradient: 'from-blue-500 via-blue-600 to-indigo-600' },
-  coaching: { icon: <GraduationCap size={28} className="text-primary-foreground/80" />, label: 'शिक्षा / कोचिंग', labelEn: 'Education', gradient: 'from-purple-500 via-purple-600 to-violet-600' },
+const TYPE_CONFIG: Record<string, { icon: React.ReactNode; label: string; labelEn: string }> = {
+  shop: { icon: <Store size={28} className="text-primary-foreground/80" />, label: 'दुकान', labelEn: 'Shop' },
+  digital: { icon: <Laptop size={28} className="text-primary-foreground/80" />, label: 'डिजिटल सेवा', labelEn: 'Digital Service' },
+  coaching: { icon: <GraduationCap size={28} className="text-primary-foreground/80" />, label: 'शिक्षा / कोचिंग', labelEn: 'Education' },
 };
 
 const BusinessProfilePage = () => {
@@ -45,7 +44,8 @@ const BusinessProfilePage = () => {
   const [showReview, setShowReview] = useState(false);
   const [reviewName, setReviewName] = useState('');
   const [reviewText, setReviewText] = useState('');
-  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
     navigator.geolocation?.getCurrentPosition(
@@ -85,19 +85,16 @@ const BusinessProfilePage = () => {
     const text = `RozgarSewa: ${data.name} – ${data.category}, ${data.village}. ${url}`;
     try {
       if (navigator.share) await navigator.share({ title: data.name, text, url });
-      else { await navigator.clipboard.writeText(text); alert('लिंक कॉपी हो गया!'); }
+      else { await navigator.clipboard.writeText(text); alert(lang === 'hi' ? 'लिंक कॉपी हो गया!' : 'Link copied!'); }
     } catch {}
   };
 
   const openGoogleMaps = () => {
-    if (!data) return;
-    if (data.lat && data.lng) {
-      if (userLat && userLng) window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${data.lat},${data.lng}`, '_blank');
-      else window.open(`https://www.google.com/maps?q=${data.lat},${data.lng}`, '_blank');
-    }
+    if (!data?.lat || !data?.lng) return;
+    if (userLat && userLng) window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${data.lat},${data.lng}`, '_blank');
+    else window.open(`https://www.google.com/maps?q=${data.lat},${data.lng}`, '_blank');
   };
 
-  // Determine open/close based on time (simple: 8 AM - 8 PM = open)
   const currentHour = new Date().getHours();
   const isOpen = currentHour >= 8 && currentHour < 20;
 
@@ -114,29 +111,31 @@ const BusinessProfilePage = () => {
       <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6">
         <p className="text-muted-foreground mb-4">{lang === 'hi' ? 'जानकारी नहीं मिली' : 'Not found'}</p>
         <button onClick={() => navigate('/')} className="bg-primary text-primary-foreground px-6 py-2.5 rounded-xl text-sm font-bold">
-          {lang === 'hi' ? 'होम पेज' : 'Home'}
+          {t('होम पेज', lang)}
         </button>
       </div>
     );
   }
 
+  const displayRating = hoverRating || reviewRating;
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Header */}
-      <div className={`bg-gradient-to-br ${config.gradient} px-6 pt-8 pb-20 text-white`}>
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/80 text-sm mb-6 bg-white/20 px-4 py-2 rounded-xl font-bold backdrop-blur-sm hover:bg-white/30 transition-colors">
+      {/* Hero Header - uses design system colors */}
+      <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-20 text-primary-foreground">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-primary-foreground/90 text-sm mb-6 bg-primary-foreground/20 px-4 py-2 rounded-xl font-bold backdrop-blur-sm hover:bg-primary-foreground/30 transition-colors">
           <ArrowLeft size={18} /> {lang === 'hi' ? 'वापस' : 'Back'}
         </button>
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 rounded-2xl bg-white/20 border-2 border-white/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg">
+          <div className="w-20 h-20 rounded-2xl bg-primary-foreground/20 border-2 border-primary-foreground/30 overflow-hidden flex items-center justify-center shrink-0 shadow-lg">
             {data.photo ? <img src={data.photo} alt={data.name} className="w-full h-full object-cover" /> : config.icon}
           </div>
           <div className="min-w-0">
             <h1 className="text-xl font-extrabold truncate">{data.name}</h1>
-            <p className="text-white/80 text-sm">{data.category}</p>
+            <p className="text-primary-foreground/80 text-sm">{data.category}</p>
             <div className="flex items-center gap-2 mt-1.5">
-              <MapPin size={12} className="text-white/70" />
-              <span className="text-xs text-white/70">{data.village}</span>
+              <MapPin size={12} className="text-primary-foreground/70" />
+              <span className="text-xs text-primary-foreground/70">{data.village}</span>
             </div>
             <div className="flex items-center gap-2 mt-1">
               <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${isOpen ? 'bg-green-400/30 text-green-100' : 'bg-red-400/30 text-red-100'}`}>
@@ -144,7 +143,7 @@ const BusinessProfilePage = () => {
                 {isOpen ? (lang === 'hi' ? 'खुला है' : 'Open') : (lang === 'hi' ? 'बंद है' : 'Closed')}
               </span>
               {dist !== null && (
-                <span className="text-[10px] font-bold text-white/80">📍 {dist.toFixed(1)} km</span>
+                <span className="text-[10px] font-bold text-primary-foreground/80">📍 {dist.toFixed(1)} km</span>
               )}
             </div>
           </div>
@@ -157,7 +156,7 @@ const BusinessProfilePage = () => {
           <div className="grid grid-cols-4 gap-2">
             <a href={`tel:${data.mobile}`} className="flex flex-col items-center gap-1.5 p-3 bg-primary text-primary-foreground rounded-xl active:scale-[0.97] transition-transform">
               <Phone size={20} />
-              <span className="text-[10px] font-bold">{lang === 'hi' ? 'कॉल' : 'Call'}</span>
+              <span className="text-[10px] font-bold">{t('कॉल', lang)}</span>
             </a>
             <a href={`https://wa.me/91${data.mobile}`} target="_blank" rel="noopener noreferrer"
               className="flex flex-col items-center gap-1.5 p-3 bg-accent text-accent-foreground rounded-xl active:scale-[0.97] transition-transform">
@@ -173,7 +172,7 @@ const BusinessProfilePage = () => {
               <button onClick={openGoogleMaps}
                 className="flex flex-col items-center gap-1.5 p-3 bg-secondary text-secondary-foreground rounded-xl border border-border active:scale-[0.97] transition-transform">
                 <MapPin size={20} />
-                <span className="text-[10px] font-bold">{lang === 'hi' ? 'रास्ता' : 'Route'}</span>
+                <span className="text-[10px] font-bold">{t('रास्ता', lang)}</span>
               </button>
             ) : (
               <div className="flex flex-col items-center gap-1.5 p-3 bg-muted text-muted-foreground rounded-xl">
@@ -184,28 +183,38 @@ const BusinessProfilePage = () => {
           </div>
         </div>
 
-        {/* Rate & Review */}
+        {/* Rate & Review - Fixed stars */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <button onClick={() => setShowReview(!showReview)}
             className="flex items-center gap-2 text-sm font-bold text-foreground w-full">
-            <Star size={16} className="text-primary" />
+            <Star size={16} className="text-yellow-500 fill-yellow-500" />
             {lang === 'hi' ? 'रेटिंग और रिव्यू दें' : 'Rate & Review'}
           </button>
           {showReview && (
-            <div className="mt-3 space-y-2">
+            <div className="mt-3 space-y-3">
               <input value={reviewName} onChange={(e) => setReviewName(e.target.value)}
                 placeholder={lang === 'hi' ? 'आपका नाम' : 'Your name'}
-                className="w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring" />
-              <div className="flex gap-1">
+                className="w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring" />
+              
+              {/* Proper star rating */}
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-muted-foreground mr-2">{lang === 'hi' ? 'रेटिंग:' : 'Rating:'}</span>
                 {[1, 2, 3, 4, 5].map((s) => (
-                  <button key={s} onClick={() => setReviewRating(s)}
-                    className={`text-lg ${s <= reviewRating ? 'text-yellow-500' : 'text-muted-foreground/30'}`}>⭐</button>
+                  <button key={s} type="button"
+                    onMouseEnter={() => setHoverRating(s)}
+                    onMouseLeave={() => setHoverRating(0)}
+                    onClick={() => setReviewRating(s)}
+                    className="transition-transform hover:scale-110 active:scale-95 p-0.5">
+                    <Star size={24} className={`${s <= displayRating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground/30'} transition-colors`} />
+                  </button>
                 ))}
+                {displayRating > 0 && <span className="text-sm font-bold text-foreground ml-2">{displayRating}/5</span>}
               </div>
+
               <textarea value={reviewText} onChange={(e) => setReviewText(e.target.value)}
                 placeholder={lang === 'hi' ? 'अपना अनुभव बताएं...' : 'Share your experience...'}
-                className="w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring resize-none h-16" />
-              <button className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-bold">
+                className="w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring resize-none h-20" />
+              <button className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform">
                 {lang === 'hi' ? 'रिव्यू भेजें' : 'Submit Review'}
               </button>
             </div>
@@ -237,7 +246,7 @@ const BusinessProfilePage = () => {
           )}
           {data.fees && (
             <div className="flex items-center gap-2 text-sm text-foreground">
-              <span className="text-primary shrink-0">₹</span>
+              <span className="text-primary shrink-0 font-bold">₹</span>
               <span>{data.fees}</span>
             </div>
           )}
@@ -246,16 +255,16 @@ const BusinessProfilePage = () => {
           )}
         </div>
 
-        {/* Open/Close Status Card */}
+        {/* Status */}
         <div className="bg-card rounded-2xl border border-border p-4">
           <h3 className="text-sm font-bold text-foreground mb-2">{lang === 'hi' ? 'स्थिति' : 'Status'}</h3>
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold ${isOpen ? 'bg-green-500/10 text-green-700' : 'bg-red-500/10 text-red-700'}`}>
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold ${isOpen ? 'bg-green-500/10 text-green-700 dark:text-green-400' : 'bg-red-500/10 text-red-700 dark:text-red-400'}`}>
             <span className={`w-2.5 h-2.5 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`} />
             {isOpen ? (lang === 'hi' ? 'अभी खुला है (8 AM – 8 PM)' : 'Currently Open (8 AM – 8 PM)') : (lang === 'hi' ? 'अभी बंद है' : 'Currently Closed')}
           </div>
         </div>
 
-        {/* Category Info */}
+        {/* Registered */}
         <div className="bg-card rounded-2xl border border-border p-4 text-center">
           <span className="text-xs text-muted-foreground">{lang === 'hi' ? config.label : config.labelEn}</span>
           <p className="text-[10px] text-muted-foreground mt-1">
