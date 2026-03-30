@@ -21,7 +21,7 @@ interface MapEntity {
   mobile: string;
   lat: number;
   lng: number;
-  type: 'worker' | 'shop' | 'digital' | 'coaching';
+  type: 'worker' | 'shop' | 'digital' | 'coaching' | 'home' | 'vehicle' | 'agriculture' | 'construction';
 }
 
 const RADIUS_OPTIONS = [
@@ -32,12 +32,30 @@ const RADIUS_OPTIONS = [
   { value: 50, label: '50 km' },
 ];
 
+// Worker sub-categories for type mapping
+const HOME_CATS = ['Tailoring / Boutique', 'Beauty Parlour', 'Home Tutor', 'Cook', 'Cleaning Worker', 'Gas Stove Repair'];
+const VEHICLE_CATS = ['Tractor Mechanic', 'JCB Operator', 'Truck Driver', 'Auto Driver', 'Tempo Service', 'Pickup Rental'];
+const AGRI_CATS = ['Tractor Driver', 'Harvester / Thresher Service', 'Field Ploughing Service', 'Pesticide Spraying Service', 'Dairy Worker', 'Animal Doctor', 'Animal Feed Supplier'];
+const CONSTRUCTION_CATS = ['General Labor', 'Tiles Worker', 'Welding Worker', 'Iron Work', 'Roof Casting Worker', 'Water Tank Installation'];
+
+const getWorkerType = (category: string): MapEntity['type'] => {
+  if (HOME_CATS.includes(category)) return 'home';
+  if (VEHICLE_CATS.includes(category)) return 'vehicle';
+  if (AGRI_CATS.includes(category)) return 'agriculture';
+  if (CONSTRUCTION_CATS.includes(category)) return 'construction';
+  return 'worker';
+};
+
 const TYPE_FILTERS = [
   { value: 'all', label: 'सभी', labelEn: 'All' },
   { value: 'worker', label: 'कामगार', labelEn: 'Workers' },
   { value: 'shop', label: 'दुकान', labelEn: 'Shops' },
   { value: 'digital', label: 'डिजिटल', labelEn: 'Digital' },
   { value: 'coaching', label: 'कोचिंग', labelEn: 'Coaching' },
+  { value: 'home', label: 'घरेलू', labelEn: 'Home' },
+  { value: 'vehicle', label: 'वाहन', labelEn: 'Vehicle' },
+  { value: 'agriculture', label: 'कृषि', labelEn: 'Agri' },
+  { value: 'construction', label: 'निर्माण', labelEn: 'Build' },
 ];
 
 const MARKER_COLORS: Record<string, string> = {
@@ -45,6 +63,10 @@ const MARKER_COLORS: Record<string, string> = {
   shop: 'hsl(25,95%,53%)',
   digital: 'hsl(217,91%,60%)',
   coaching: 'hsl(280,65%,60%)',
+  home: 'hsl(340,70%,55%)',
+  vehicle: 'hsl(45,90%,50%)',
+  agriculture: 'hsl(100,60%,40%)',
+  construction: 'hsl(15,70%,50%)',
 };
 
 const MARKER_EMOJIS: Record<string, string> = {
@@ -52,6 +74,10 @@ const MARKER_EMOJIS: Record<string, string> = {
   shop: '🏪',
   digital: '💻',
   coaching: '📚',
+  home: '🏠',
+  vehicle: '🚗',
+  agriculture: '🌾',
+  construction: '🏗️',
 };
 
 const estimateTravelTime = (distKm: number, lang: 'hi' | 'en'): string => {
@@ -60,7 +86,6 @@ const estimateTravelTime = (distKm: number, lang: 'hi' | 'en'): string => {
   return `${Math.ceil(distKm / 40 * 60)} min ${lang === 'hi' ? 'गाड़ी' : 'car'}`;
 };
 
-// India center coordinates
 const INDIA_CENTER: [number, number] = [22.5, 82.0];
 const INDIA_ZOOM = 5;
 
@@ -104,22 +129,16 @@ const MapPage = () => {
     fetchAll();
   }, []);
 
-  // Initialize map with India view (no GPS wait)
   useEffect(() => {
-    if (!mapRef.current) return;
-    if (mapInstanceRef.current) return;
+    if (!mapRef.current || mapInstanceRef.current) return;
     const map = L.map(mapRef.current, { zoomControl: false }).setView(INDIA_CENTER, INDIA_ZOOM);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OSM',
-      maxZoom: 18,
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OSM', maxZoom: 18 }).addTo(map);
     markersRef.current = L.layerGroup().addTo(map);
     mapInstanceRef.current = map;
     return () => { map.remove(); mapInstanceRef.current = null; };
   }, []);
 
-  // Live location function
   const goToMyLocation = () => {
     if (!navigator.geolocation) return;
     setGpsLoading(true);
@@ -127,15 +146,11 @@ const MapPage = () => {
       (pos) => {
         const lat = pos.coords.latitude;
         const lng = pos.coords.longitude;
-        setUserLat(lat);
-        setUserLng(lng);
-        setGpsLoading(false);
+        setUserLat(lat); setUserLng(lng); setGpsLoading(false);
         if (mapInstanceRef.current) {
           mapInstanceRef.current.setView([lat, lng], 14);
-          // Add/update user marker
-          if (userMarkerRef.current) {
-            userMarkerRef.current.setLatLng([lat, lng]);
-          } else {
+          if (userMarkerRef.current) userMarkerRef.current.setLatLng([lat, lng]);
+          else {
             const userIcon = L.divIcon({
               html: '<div style="width:18px;height:18px;background:hsl(217,91%,60%);border:3px solid white;border-radius:50%;box-shadow:0 0 0 2px hsl(217,91%,60%,0.3),0 2px 8px rgba(0,0,0,0.3)"></div>',
               iconSize: [18, 18], iconAnchor: [9, 9], className: '',
@@ -144,19 +159,23 @@ const MapPage = () => {
           }
         }
       },
-      () => { setGpsLoading(false); },
+      () => setGpsLoading(false),
       { enableHighAccuracy: true, timeout: 10000 }
     );
   };
 
-  // Update markers when data/filters change
+  // Build all entities including worker sub-types
+  const buildAllEntities = () => {
+    const workerEntities: MapEntity[] = workers
+      .filter((w) => w.lat && w.lng)
+      .map((w) => ({ id: w.id, name: w.name, category: w.category, village: w.village, mobile: w.mobile, lat: w.lat!, lng: w.lng!, type: getWorkerType(w.category) }));
+    return [...workerEntities, ...businesses];
+  };
+
   useEffect(() => {
     if (!markersRef.current || !mapInstanceRef.current) return;
     markersRef.current.clearLayers();
-    const workerEntities: MapEntity[] = workers
-      .filter((w) => w.lat && w.lng)
-      .map((w) => ({ id: w.id, name: w.name, category: w.category, village: w.village, mobile: w.mobile, lat: w.lat!, lng: w.lng!, type: 'worker' as const }));
-    const allEntities = [...workerEntities, ...businesses];
+    const allEntities = buildAllEntities();
     const filtered = allEntities
       .filter((e) => typeFilter === 'all' || e.type === typeFilter)
       .filter((e) => {
@@ -166,7 +185,6 @@ const MapPage = () => {
     filtered.forEach((e) => {
       const color = MARKER_COLORS[e.type];
       const emoji = MARKER_EMOJIS[e.type];
-      const distText = userLat && userLng ? ` · ${getDistance(userLat, userLng, e.lat, e.lng).toFixed(1)} km` : '';
       const icon = L.divIcon({
         html: `<div style="width:32px;height:32px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer">${emoji}</div>`,
         iconSize: [32, 32], iconAnchor: [16, 16], className: '',
@@ -177,47 +195,37 @@ const MapPage = () => {
     });
   }, [workers, businesses, radius, typeFilter, userLat, userLng]);
 
-  // Route line
   useEffect(() => {
     if (routeLayerRef.current && mapInstanceRef.current) {
       mapInstanceRef.current.removeLayer(routeLayerRef.current);
       routeLayerRef.current = null;
     }
     if (selectedEntity && userLat && userLng && mapInstanceRef.current) {
-      const line = L.polyline(
-        [[userLat, userLng], [selectedEntity.lat, selectedEntity.lng]],
-        { color: 'hsl(217,91%,60%)', weight: 3, dashArray: '8, 8', opacity: 0.7 }
-      ).addTo(mapInstanceRef.current);
+      const line = L.polyline([[userLat, userLng], [selectedEntity.lat, selectedEntity.lng]], { color: 'hsl(217,91%,60%)', weight: 3, dashArray: '8, 8', opacity: 0.7 }).addTo(mapInstanceRef.current);
       routeLayerRef.current = line;
       mapInstanceRef.current.fitBounds(line.getBounds(), { padding: [60, 60] });
     }
   }, [selectedEntity, userLat, userLng]);
 
-  const allEntities = [
-    ...workers.filter((w) => w.lat && w.lng).map((w) => ({ id: w.id, name: w.name, category: w.category, village: w.village, mobile: w.mobile, lat: w.lat!, lng: w.lng!, type: 'worker' as const })),
-    ...businesses,
-  ];
+  const allEntities = buildAllEntities();
   const nearbyCount = allEntities
     .filter((e) => typeFilter === 'all' || e.type === typeFilter)
     .filter((e) => userLat && userLng ? getDistance(userLat, userLng, e.lat, e.lng) <= radius : true)
     .length;
 
-  const typeLabel: Record<string, string> = { worker: 'कामगार', shop: 'दुकान', digital: 'डिजिटल सेवा', coaching: 'कोचिंग' };
+  const typeLabel: Record<string, string> = { worker: 'कामगार', shop: 'दुकान', digital: 'डिजिटल सेवा', coaching: 'कोचिंग', home: 'घरेलू सेवा', vehicle: 'वाहन सेवा', agriculture: 'कृषि सेवा', construction: 'निर्माण' };
 
-  const selectedDist = selectedEntity && userLat && userLng
-    ? getDistance(userLat, userLng, selectedEntity.lat, selectedEntity.lng) : null;
+  const selectedDist = selectedEntity && userLat && userLng ? getDistance(userLat, userLng, selectedEntity.lat, selectedEntity.lng) : null;
 
   const openGoogleMapsRoute = (entity: MapEntity) => {
-    if (userLat && userLng) {
-      window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${entity.lat},${entity.lng}`, '_blank');
-    } else {
-      window.open(`https://www.google.com/maps?q=${entity.lat},${entity.lng}`, '_blank');
-    }
+    if (userLat && userLng) window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${entity.lat},${entity.lng}`, '_blank');
+    else window.open(`https://www.google.com/maps?q=${entity.lat},${entity.lng}`, '_blank');
   };
+
+  const isWorkerType = (type: string) => ['worker', 'home', 'vehicle', 'agriculture', 'construction'].includes(type);
 
   return (
     <div className="h-screen flex flex-col bg-background overflow-hidden">
-      {/* Top bar */}
       <div className="bg-card border-b border-border px-3 py-2 flex items-center gap-2 shrink-0 z-30">
         <button onClick={() => navigate('/')} className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm">
           <ArrowLeft size={18} />
@@ -226,23 +234,18 @@ const MapPage = () => {
           <h1 className="text-sm font-extrabold text-foreground truncate">{t('नज़दीकी सेवाएँ', lang)}</h1>
           <p className="text-[10px] text-muted-foreground">{nearbyCount} {t('सेवाएँ', lang)} {userLat ? `${radius} km` : lang === 'hi' ? 'भारत' : 'India'}</p>
         </div>
-        <button
-          onClick={goToMyLocation}
-          disabled={gpsLoading}
-          className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 shadow-md"
-          title={lang === 'hi' ? 'मेरी लोकेशन' : 'My Location'}
-        >
+        <button onClick={goToMyLocation} disabled={gpsLoading}
+          className="w-9 h-9 rounded-xl flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 shadow-md">
           {gpsLoading ? <Loader2 size={16} className="animate-spin" /> : <Crosshair size={16} />}
         </button>
       </div>
 
-      {/* Filters */}
       <div className="bg-card/80 backdrop-blur-sm border-b border-border px-3 py-2 shrink-0 z-20 space-y-1.5">
         <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
           {TYPE_FILTERS.map((f) => (
             <button key={f.value} onClick={() => setTypeFilter(f.value)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${typeFilter === f.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-              {lang === 'hi' ? f.label : f.labelEn}
+              className={`shrink-0 px-2.5 py-1.5 rounded-full text-[10px] font-bold transition-colors ${typeFilter === f.value ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+              {MARKER_EMOJIS[f.value] || ''} {lang === 'hi' ? f.label : f.labelEn}
             </button>
           ))}
         </div>
@@ -256,22 +259,20 @@ const MapPage = () => {
         </div>
       </div>
 
-      {/* Map */}
       <div className="flex-1 relative">
         <div ref={mapRef} className="absolute inset-0" />
-
-        {/* Legend */}
         <div className="absolute bottom-3 left-3 z-[500] bg-card/90 backdrop-blur-sm rounded-xl px-3 py-2 border border-border shadow-md">
           <div className="flex flex-wrap gap-x-3 gap-y-1 text-[10px] font-bold text-muted-foreground">
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.worker }} /> {lang === 'hi' ? 'कामगार' : 'Worker'}</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.shop }} /> {lang === 'hi' ? 'दुकान' : 'Shop'}</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.digital }} /> {lang === 'hi' ? 'डिजिटल' : 'Digital'}</span>
-            <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: MARKER_COLORS.coaching }} /> {lang === 'hi' ? 'कोचिंग' : 'Coaching'}</span>
+            {Object.entries(MARKER_COLORS).map(([key, color]) => (
+              <span key={key} className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full" style={{ background: color }} />
+                {MARKER_EMOJIS[key]} {typeLabel[key] || key}
+              </span>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Selected entity card */}
       {selectedEntity && (
         <div className="absolute inset-x-0 bottom-0 z-[600] p-3 sm:p-4 animate-fade-in" style={{ maxWidth: '480px', margin: '0 auto' }}>
           <div className="bg-card rounded-2xl shadow-2xl border border-border p-4">
@@ -284,20 +285,15 @@ const MapPage = () => {
                 <p className="text-xs text-muted-foreground font-medium">{selectedEntity.category} · {selectedEntity.village}</p>
                 {selectedDist !== null && (
                   <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-xs text-primary font-extrabold flex items-center gap-1">
-                      <MapPin size={12} /> {selectedDist.toFixed(1)} km
-                    </span>
-                    <span className="text-xs text-muted-foreground font-bold flex items-center gap-1">
-                      <Clock size={12} /> {estimateTravelTime(selectedDist, lang)}
-                    </span>
+                    <span className="text-xs text-primary font-extrabold flex items-center gap-1"><MapPin size={12} /> {selectedDist.toFixed(1)} km</span>
+                    <span className="text-xs text-muted-foreground font-bold flex items-center gap-1"><Clock size={12} /> {estimateTravelTime(selectedDist, lang)}</span>
                   </div>
                 )}
               </div>
-              <button onClick={() => setSelectedEntity(null)} className="text-muted-foreground p-1 hover:bg-secondary rounded-lg transition-colors"><X size={18} /></button>
+              <button onClick={() => setSelectedEntity(null)} className="text-muted-foreground p-1 hover:bg-secondary rounded-lg"><X size={18} /></button>
             </div>
             <div className="grid grid-cols-3 gap-2">
-              <a href={`tel:${selectedEntity.mobile}`}
-                className="bg-primary text-primary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
+              <a href={`tel:${selectedEntity.mobile}`} className="bg-primary text-primary-foreground py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.97] transition-transform">
                 <Phone size={14} /> {t('कॉल', lang)}
               </a>
               <a href={`https://wa.me/91${selectedEntity.mobile}`} target="_blank" rel="noopener noreferrer"
@@ -311,7 +307,7 @@ const MapPage = () => {
             </div>
             <button onClick={() => {
                 setSelectedEntity(null);
-                if (selectedEntity.type === 'worker') navigate(`/worker/${selectedEntity.id}`);
+                if (isWorkerType(selectedEntity.type)) navigate(`/worker/${selectedEntity.id}`);
                 else navigate(`/business/${selectedEntity.type}/${selectedEntity.id}`);
               }}
               className="w-full mt-2 bg-secondary text-secondary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 border border-border active:scale-[0.97] transition-transform">
