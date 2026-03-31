@@ -64,7 +64,7 @@ const BusinessProfilePage = () => {
         const { data: d } = await supabase.from('local_businesses').select('*').eq('id', id).maybeSingle();
         if (d) result = { id: d.id, name: d.name, category: d.category, village: d.village, mobile: d.mobile, description: d.description, photo: d.photo, address: d.address, lat: d.lat, lng: d.lng, created_at: d.created_at };
       } else if (type === 'digital') {
-        const { data: d } = await supabase.from('digital_services').select('*').eq('id', id).single();
+        const { data: d } = await supabase.from('digital_services').select('*').eq('id', id).maybeSingle();
         if (d) result = { id: d.id, name: d.shop_name, category: d.service_type, village: d.village, mobile: d.mobile, description: d.description, photo: d.photo, address: d.address, lat: d.lat, lng: d.lng, created_at: d.created_at };
       } else if (type === 'coaching') {
         const { data: d } = await supabase.from('education_coaching').select('*').eq('id', id).single();
