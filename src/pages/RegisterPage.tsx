@@ -54,6 +54,16 @@ const RegisterPage = () => {
     );
   };
 
+  const handleCategoryChange = (val: string) => {
+    if (val === '__other__') {
+      setUseCustom(true);
+      setCategory('');
+    } else {
+      setCategory(val);
+      setUseCustom(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const finalCategory = useCustom ? customCategory : category;
@@ -74,17 +84,6 @@ const RegisterPage = () => {
     setSubmitting(false);
     if (ok) setSuccess(true);
     else toast.error(t('रजिस्ट्रेशन में समस्या हुई', lang));
-  };
-
-  // Handle "Other" selection in dropdown
-  const handleCategoryChange = (val: string) => {
-    if (val === '__other__') {
-      setUseCustom(true);
-      setCategory('');
-    } else {
-      setCategory(val);
-      setUseCustom(false);
-    }
   };
 
   if (success) {
@@ -112,7 +111,7 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
-        <div className="max-w-lg mx-auto">
+        <div className="max-w-5xl mx-auto">
           <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground/20 px-4 py-2 rounded-xl text-sm font-bold backdrop-blur-sm hover:bg-primary-foreground/30 transition-colors">
             <ArrowLeft size={16} /> {t('होम पेज', lang)}
           </button>
@@ -121,7 +120,7 @@ const RegisterPage = () => {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 -mt-4 relative z-10 pb-8">
+      <div className="max-w-5xl mx-auto px-4 -mt-4 relative z-10 pb-8">
         <div className="lg:grid lg:grid-cols-3 lg:gap-6">
           {/* Main Form */}
           <div className="lg:col-span-2 bg-card rounded-2xl shadow-lg border border-border p-5">
@@ -146,17 +145,15 @@ const RegisterPage = () => {
               <div>
                 <label className="text-xs font-bold text-muted-foreground mb-1 block">{t('कार्य श्रेणी', lang)} *</label>
                 {!useCustom ? (
-                  <>
-                    <select value={category} onChange={(e) => handleCategoryChange(e.target.value)} className={inputClass} required={!useCustom}>
-                      <option value="">{t('श्रेणी चुनें', lang)}</option>
-                      {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-                        <optgroup key={group} label={group}>
-                          {cats.map((c) => <option key={c} value={c}>{c}</option>)}
-                        </optgroup>
-                      ))}
-                      <option value="__other__">--- {t('अन्य (Other)', lang)} ---</option>
-                    </select>
-                  </>
+                  <select value={category} onChange={(e) => handleCategoryChange(e.target.value)} className={inputClass} required={!useCustom}>
+                    <option value="">{t('श्रेणी चुनें', lang)}</option>
+                    {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
+                      <optgroup key={group} label={group}>
+                        {cats.map((c) => <option key={c} value={c}>{c}</option>)}
+                      </optgroup>
+                    ))}
+                    <option value="__other__">--- {t('अन्य (Other)', lang)} ---</option>
+                  </select>
                 ) : (
                   <>
                     <input type="text" value={customCategory} onChange={(e) => setCustomCategory(e.target.value)}

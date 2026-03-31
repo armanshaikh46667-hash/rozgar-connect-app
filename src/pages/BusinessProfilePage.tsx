@@ -61,13 +61,13 @@ const BusinessProfilePage = () => {
       setLoading(true);
       let result: BusinessData | null = null;
       if (type === 'shop') {
-        const { data: d } = await supabase.from('local_businesses').select('*').eq('id', id).single();
+        const { data: d } = await supabase.from('local_businesses').select('*').eq('id', id).maybeSingle();
         if (d) result = { id: d.id, name: d.name, category: d.category, village: d.village, mobile: d.mobile, description: d.description, photo: d.photo, address: d.address, lat: d.lat, lng: d.lng, created_at: d.created_at };
       } else if (type === 'digital') {
-        const { data: d } = await supabase.from('digital_services').select('*').eq('id', id).single();
+        const { data: d } = await supabase.from('digital_services').select('*').eq('id', id).maybeSingle();
         if (d) result = { id: d.id, name: d.shop_name, category: d.service_type, village: d.village, mobile: d.mobile, description: d.description, photo: d.photo, address: d.address, lat: d.lat, lng: d.lng, created_at: d.created_at };
       } else if (type === 'coaching') {
-        const { data: d } = await supabase.from('education_coaching').select('*').eq('id', id).single();
+        const { data: d } = await supabase.from('education_coaching').select('*').eq('id', id).maybeSingle();
         if (d) result = { id: d.id, name: d.institute_name, category: d.course_type, village: d.village, mobile: d.mobile, description: d.description, photo: d.photo, address: d.address, lat: d.lat, lng: d.lng, created_at: d.created_at, timing: d.timing, fees: d.fees };
       }
       setData(result);
@@ -255,11 +255,29 @@ const BusinessProfilePage = () => {
           )}
         </div>
 
+        {/* Google Maps Embed */}
+        {data.lat && data.lng && (
+          <div className="bg-card rounded-2xl border border-border p-4">
+            <h3 className="text-sm font-bold text-foreground mb-3">📍 {lang === 'hi' ? 'लोकेशन' : 'Location'}</h3>
+            <div className="rounded-xl overflow-hidden border border-border mb-3">
+              <iframe
+                src={`https://maps.google.com/maps?q=${data.lat},${data.lng}&z=15&output=embed`}
+                width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <button onClick={openGoogleMaps}
+              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.97] transition-transform">
+              <MapPin size={16} /> {lang === 'hi' ? 'Google Maps में खोलें' : 'Open in Google Maps'}
+            </button>
+          </div>
+        )}
+
         {/* Status */}
         <div className="bg-card rounded-2xl border border-border p-4">
           <h3 className="text-sm font-bold text-foreground mb-2">{lang === 'hi' ? 'स्थिति' : 'Status'}</h3>
-          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold ${isOpen ? 'bg-green-500/10 text-green-700 dark:text-green-400' : 'bg-red-500/10 text-red-700 dark:text-red-400'}`}>
-            <span className={`w-2.5 h-2.5 rounded-full ${isOpen ? 'bg-green-500' : 'bg-red-500'}`} />
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold ${isOpen ? 'bg-primary/10 text-primary' : 'bg-destructive/10 text-destructive'}`}>
+            <span className={`w-2.5 h-2.5 rounded-full ${isOpen ? 'bg-primary' : 'bg-destructive'}`} />
             {isOpen ? (lang === 'hi' ? 'अभी खुला है (8 AM – 8 PM)' : 'Currently Open (8 AM – 8 PM)') : (lang === 'hi' ? 'अभी बंद है' : 'Currently Closed')}
           </div>
         </div>
