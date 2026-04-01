@@ -1,4 +1,4 @@
-import { Search, MapPin, Briefcase, UserPlus, Users, Shield, Heart, Share2, ChevronRight, Zap, Navigation, Map } from 'lucide-react';
+import { Search, MapPin, Briefcase, UserPlus, Users, Shield, Heart, Share2, ChevronRight, Zap, Navigation } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
 

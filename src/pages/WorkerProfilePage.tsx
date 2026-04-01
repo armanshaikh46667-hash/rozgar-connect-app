@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useWorkerStore, getAverageRating, getExperienceBadge } from '@/store/workerStore';
+import { useWorkerStore, getAverageRating, getExperienceBadge, getDistance } from '@/store/workerStore';
 import { useAuthStore } from '@/store/authStore';
 import { Phone, MapPin, Clock, Star, Award, ArrowLeft, Share2, User, IndianRupee, CalendarCheck, Edit, Trash2, Image, Activity } from 'lucide-react';
 import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BookingDialog from '@/components/BookingDialog';
 
 const WhatsAppIcon = ({ size = 16 }: { size?: number }) => (
@@ -25,8 +25,18 @@ const WorkerProfilePage = () => {
   const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showRateReview, setShowRateReview] = useState(false);
+  const [userLat, setUserLat] = useState<number | null>(null);
+  const [userLng, setUserLng] = useState<number | null>(null);
 
   const isOwner = authUser && worker && authUser.mobile === worker.mobile;
+
+  useEffect(() => {
+    navigator.geolocation?.getCurrentPosition(
+      (pos) => { setUserLat(pos.coords.latitude); setUserLng(pos.coords.longitude); },
+      () => {},
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }, []);
 
   if (!worker) {
     return (
@@ -36,6 +46,8 @@ const WorkerProfilePage = () => {
       </div>
     );
   }
+
+  const dist = worker.lat && worker.lng && userLat && userLng ? getDistance(userLat, userLng, worker.lat, worker.lng) : null;
 
   const handleShare = async () => {
     const profileUrl = `${window.location.origin}/worker/${worker.id}`;
@@ -62,6 +74,12 @@ const WorkerProfilePage = () => {
     await toggleStatus(worker.id, worker.pin, newStatus);
   };
 
+  const openGoogleMaps = () => {
+    if (!worker.lat || !worker.lng) return;
+    if (userLat && userLng) window.open(`https://www.google.com/maps/dir/${userLat},${userLng}/${worker.lat},${worker.lng}`, '_blank');
+    else window.open(`https://www.google.com/maps?q=${worker.lat},${worker.lng}`, '_blank');
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-20 text-primary-foreground">
@@ -83,6 +101,9 @@ const WorkerProfilePage = () => {
               <MapPin size={12} className="text-primary-foreground/70" />
               <span className="text-xs text-primary-foreground/70">{worker.village}</span>
             </div>
+            {dist !== null && (
+              <span className="text-[10px] font-bold text-primary-foreground/80 mt-0.5 block">📍 {dist.toFixed(1)} km दूर</span>
+            )}
           </div>
         </div>
       </div>
@@ -113,7 +134,7 @@ const WorkerProfilePage = () => {
           </div>
         </div>
 
-        {/* Rate & Review - visible to all */}
+        {/* Rate & Review */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <button onClick={() => setShowRateReview(!showRateReview)}
             className="flex items-center gap-2 text-sm font-semibold text-foreground w-full">
@@ -192,6 +213,27 @@ const WorkerProfilePage = () => {
           )}
           {worker.about && <p className="text-sm text-muted-foreground leading-relaxed pt-2 border-t border-border">{worker.about}</p>}
         </div>
+
+        {/* Google Maps Embed */}
+        {worker.lat && worker.lng && (
+          <div className="bg-card rounded-2xl border border-border p-4">
+            <h3 className="text-sm font-bold text-foreground mb-3">📍 लोकेशन</h3>
+            <div className="rounded-xl overflow-hidden border border-border mb-3">
+              <iframe
+                src={`https://maps.google.com/maps?q=${worker.lat},${worker.lng}&z=15&output=embed`}
+                width="100%" height="200" style={{ border: 0 }} allowFullScreen loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            {dist !== null && (
+              <p className="text-xs text-primary font-bold mb-2">📍 {dist.toFixed(1)} km दूर</p>
+            )}
+            <button onClick={openGoogleMaps}
+              className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 active:scale-[0.97] transition-transform">
+              <MapPin size={16} /> Google Maps में खोलें
+            </button>
+          </div>
+        )}
 
         {/* Gallery */}
         {worker.gallery.length > 0 && (

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthStore } from '@/store/authStore';
 import { useLanguageStore, t } from '@/store/languageStore';
+import { toast } from 'sonner';
 
 interface Booking {
   id: string;
@@ -27,6 +28,7 @@ const BookingHistoryPage = () => {
   const [submitted, setSubmitted] = useState(!!authUser);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [viewAs, setViewAs] = useState<'customer' | 'worker'>(authUser?.type === 'worker' ? 'worker' : 'customer');
 
   const STATUS_MAP: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
@@ -36,13 +38,50 @@ const BookingHistoryPage = () => {
     completed: { label: t('पूर्ण', lang), icon: <CheckCircle size={14} />, color: 'bg-primary/15 text-primary' },
   };
 
-  useEffect(() => {
-    if (!submitted || mobile.length !== 10) return;
+  const fetchBookings = async () => {
+    if (mobile.length !== 10) return;
     setLoading(true);
     const col = viewAs === 'customer' ? 'customer_mobile' : 'worker_mobile';
-    supabase.from('bookings').select('*').eq(col, mobile).order('created_at', { ascending: false }).limit(100)
-      .then(({ data }) => { setBookings((data as Booking[]) || []); setLoading(false); });
+    const { data } = await supabase.from('bookings').select('*').eq(col, mobile).order('created_at', { ascending: false }).limit(100);
+    setBookings((data as Booking[]) || []);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    if (!submitted || mobile.length !== 10) return;
+    fetchBookings();
   }, [submitted, mobile, viewAs]);
+
+  const handleAcceptReject = async (booking: Booking, newStatus: 'accepted' | 'rejected') => {
+    setActionLoading(booking.id);
+    const { error } = await supabase.from('bookings').update({ status: newStatus }).eq('id', booking.id);
+    if (error) {
+      toast.error(lang === 'hi' ? 'स्थिति अपडेट में समस्या' : 'Failed to update status');
+      setActionLoading(null);
+      return;
+    }
+
+    // Send notification to customer
+    const title = newStatus === 'accepted'
+      ? (lang === 'hi' ? '✅ बुकिंग स्वीकृत!' : '✅ Booking Accepted!')
+      : (lang === 'hi' ? '❌ बुकिंग अस्वीकृत' : '❌ Booking Rejected');
+    const message = newStatus === 'accepted'
+      ? `${booking.worker_name} (${booking.worker_category}) ने आपकी ${booking.booking_date} की बुकिंग स्वीकार कर ली है।`
+      : `${booking.worker_name} (${booking.worker_category}) ने आपकी ${booking.booking_date} की बुकिंग अस्वीकार कर दी है।`;
+
+    await supabase.from('notifications').insert({
+      recipient_mobile: booking.customer_mobile,
+      title,
+      message,
+      type: newStatus,
+      related_booking_id: booking.id,
+    });
+
+    // Update local state
+    setBookings(prev => prev.map(b => b.id === booking.id ? { ...b, status: newStatus } : b));
+    setActionLoading(null);
+    toast.success(newStatus === 'accepted' ? (lang === 'hi' ? 'बुकिंग स्वीकृत!' : 'Booking Accepted!') : (lang === 'hi' ? 'बुकिंग अस्वीकृत' : 'Booking Rejected'));
+  };
 
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
@@ -143,9 +182,29 @@ const BookingHistoryPage = () => {
                       </p>
                       <p className="text-xs text-muted-foreground">📅 {b.booking_date} · ⏰ {b.booking_time}</p>
                       {b.description && <p className="text-xs text-muted-foreground mt-1">📝 {b.description}</p>}
+                      
                       <div className="flex gap-2 mt-3">
+                        {/* Worker view: show accept/reject for pending bookings */}
+                        {viewAs === 'worker' && b.status === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleAcceptReject(b, 'accepted')}
+                              disabled={actionLoading === b.id}
+                              className="flex-1 bg-primary text-primary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 active:scale-[0.97] transition-transform disabled:opacity-50">
+                              {actionLoading === b.id ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                              {lang === 'hi' ? 'स्वीकार करें' : 'Accept'}
+                            </button>
+                            <button
+                              onClick={() => handleAcceptReject(b, 'rejected')}
+                              disabled={actionLoading === b.id}
+                              className="flex-1 bg-destructive text-destructive-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 active:scale-[0.97] transition-transform disabled:opacity-50">
+                              {actionLoading === b.id ? <Loader2 size={12} className="animate-spin" /> : <XCircle size={12} />}
+                              {lang === 'hi' ? 'अस्वीकार करें' : 'Reject'}
+                            </button>
+                          </>
+                        )}
                         <a href={`tel:${viewAs === 'customer' ? b.worker_mobile : b.customer_mobile}`}
-                          className="flex-1 bg-primary text-primary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 active:scale-[0.97] transition-transform">
+                          className={`${viewAs === 'worker' && b.status === 'pending' ? '' : 'flex-1'} bg-primary text-primary-foreground py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 active:scale-[0.97] transition-transform px-4`}>
                           <Phone size={12} /> {t('कॉल करें', lang)}
                         </a>
                       </div>
