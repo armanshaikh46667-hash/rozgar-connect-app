@@ -103,10 +103,10 @@ const HomePage = () => {
               <Navigation size={16} className="text-accent-foreground" />
               <span className="text-[9px] font-medium text-accent-foreground">GPS नज़दीक</span>
             </button>
-            <button onClick={() => navigate('/map')}
+            <button onClick={() => navigate('/bookings')}
               className="flex flex-col items-center gap-1 bg-accent rounded-xl px-2 py-3 text-center active:scale-[0.98] transition-transform">
-              <Map size={16} className="text-accent-foreground" />
-              <span className="text-[9px] font-medium text-accent-foreground">नक्शा</span>
+              <Briefcase size={16} className="text-accent-foreground" />
+              <span className="text-[9px] font-medium text-accent-foreground">बुकिंग</span>
             </button>
           </div>
         </div>
