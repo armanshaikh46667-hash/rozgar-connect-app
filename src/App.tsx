@@ -9,7 +9,7 @@ import SplashScreen from "./components/SplashScreen";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import RegisterPage from "./pages/RegisterPage";
-import MapPage from "./pages/MapPage";
+
 import BookingHistoryPage from "./pages/BookingHistoryPage";
 import LocalBusinessPage from "./pages/LocalBusinessPage";
 import BusinessRegistrationPage from "./pages/BusinessRegistrationPage";
