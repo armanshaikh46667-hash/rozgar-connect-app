@@ -1,9 +1,32 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, User, MapPin, ArrowLeft } from 'lucide-react';
-import { useWorkerStore, CATEGORY_GROUPS, type WorkCategory, type Availability } from '@/store/workerStore';
+import { useWorkerStore, type WorkCategory, type Availability } from '@/store/workerStore';
 import { useLanguageStore, t } from '@/store/languageStore';
 import { toast } from 'sonner';
+
+// Only these 8 categories for worker registration (as per reference image)
+const WORKER_CATEGORIES = [
+  "Plumber",
+  "Electrician",
+  "Rajmistri",
+  "Painter",
+  "Carpenter",
+  "Mobile Repair",
+  "Bike Mechanic",
+  "Domestic Worker",
+] as const;
+
+const CATEGORY_HINDI: Record<string, string> = {
+  "Plumber": "प्लम्बर",
+  "Electrician": "इलेक्ट्रीशियन",
+  "Rajmistri": "राजमिस्त्री",
+  "Painter": "पेंटर",
+  "Carpenter": "कारपेंटर",
+  "Mobile Repair": "मोबाइल रिपेयर",
+  "Bike Mechanic": "बाइक मैकेनिक",
+  "Domestic Worker": "घरेलू सहायक",
+};
 
 const AVAILABILITY_OPTIONS: Availability[] = ['Morning', 'Afternoon', 'Evening', 'Full Day'];
 
@@ -147,10 +170,8 @@ const RegisterPage = () => {
                 {!useCustom ? (
                   <select value={category} onChange={(e) => handleCategoryChange(e.target.value)} className={inputClass} required={!useCustom}>
                     <option value="">{t('श्रेणी चुनें', lang)}</option>
-                    {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-                      <optgroup key={group} label={group}>
-                        {cats.map((c) => <option key={c} value={c}>{c}</option>)}
-                      </optgroup>
+                    {WORKER_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>{lang === 'hi' ? `${CATEGORY_HINDI[c]} (${c})` : c}</option>
                     ))}
                     <option value="__other__">--- {t('अन्य (Other)', lang)} ---</option>
                   </select>

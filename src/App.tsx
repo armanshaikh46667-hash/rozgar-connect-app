@@ -9,7 +9,7 @@ import SplashScreen from "./components/SplashScreen";
 import HomePage from "./pages/HomePage";
 import SearchPage from "./pages/SearchPage";
 import RegisterPage from "./pages/RegisterPage";
-import MapPage from "./pages/MapPage";
+
 import BookingHistoryPage from "./pages/BookingHistoryPage";
 import LocalBusinessPage from "./pages/LocalBusinessPage";
 import BusinessRegistrationPage from "./pages/BusinessRegistrationPage";
@@ -41,7 +41,7 @@ const AnimatedRoutes = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/map" element={<MapPage />} />
+        
         <Route path="/bookings" element={<BookingHistoryPage />} />
         <Route path="/businesses" element={<LocalBusinessPage />} />
         <Route path="/business-register" element={<BusinessRegistrationPage />} />
