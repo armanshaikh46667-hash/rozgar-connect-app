@@ -176,8 +176,8 @@ const AdminPage = () => {
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <div className="max-w-lg mx-auto">
-          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
-            <ArrowLeft size={16} /> होम पेज
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground text-primary px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg hover:shadow-xl active:scale-[0.97] transition-all">
+            <ArrowLeft size={18} /> होम पेज
           </button>
           <h1 className="text-2xl font-bold flex items-center gap-2"><Shield size={24} /> Admin Panel</h1>
           <p className="text-primary-foreground/80 text-sm mt-1">
