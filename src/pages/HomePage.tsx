@@ -125,9 +125,9 @@ const HomePage = () => {
           {HERO_CATEGORIES.map((cat) => (
             <button key={cat.name}
               onClick={() => navigate(`/search?category=${encodeURIComponent(cat.name)}`)}
-              className="flex flex-col items-center gap-1.5 p-3 bg-card rounded-2xl border border-border hover:border-primary/40 hover:shadow-md active:scale-[0.96] transition-all">
-              <span className="text-2xl">{cat.emoji}</span>
-              <span className="text-[10px] font-semibold text-foreground leading-tight text-center">{cat.hindi}</span>
+              className={`flex flex-col items-center gap-2 p-3.5 bg-gradient-to-br ${cat.color} rounded-2xl border border-border hover:border-primary/50 hover:shadow-lg active:scale-[0.95] transition-all group`}>
+              <span className="text-3xl group-hover:scale-110 transition-transform">{cat.emoji}</span>
+              <span className="text-[10px] font-bold text-foreground leading-tight text-center">{cat.hindi}</span>
             </button>
           ))}
         </div>
