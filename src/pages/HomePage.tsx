@@ -157,13 +157,13 @@ const HomePage = () => {
         {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
           <div key={group}>
             <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">{group}</h3>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5">
               {cats.map((cat) => (
                 <button key={cat}
                   onClick={() => navigate(`/search?category=${encodeURIComponent(cat)}`)}
-                  className="bg-card rounded-xl p-3 text-center border border-border hover:border-primary/40 hover:shadow-md active:scale-[0.97] transition-all">
-                  <span className="text-xl block">{categoryEmojis[cat] || '🔧'}</span>
-                  <p className="text-[10px] font-medium text-foreground mt-1.5 leading-tight">{cat}</p>
+                  className="bg-card rounded-xl p-3.5 text-center border border-border hover:border-primary/40 hover:shadow-lg active:scale-[0.96] transition-all group">
+                  <span className="text-2xl block group-hover:scale-110 transition-transform">{categoryEmojis[cat] || '🔧'}</span>
+                  <p className="text-[10px] font-bold text-foreground mt-2 leading-tight">{cat}</p>
                 </button>
               ))}
             </div>
