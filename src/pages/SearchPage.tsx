@@ -449,8 +449,10 @@ const SearchPage = () => {
     return filtered;
   }, [workers, category, village, name, minExp, minRating, nearbyMode, userLat, userLng, maxDistance]);
 
-  // Filter businesses by village/name search
+  // Filter businesses by village/name search — hide when a worker category is selected
   const filteredBusinesses = useMemo(() => {
+    // If a specific worker category is selected, don't show businesses
+    if (category) return [];
     return businesses.filter(b => {
       const matchVillage = !village || b.village.toLowerCase().includes(village.toLowerCase());
       const matchName = !name || b.name.toLowerCase().includes(name.toLowerCase()) || b.category.toLowerCase().includes(name.toLowerCase());
@@ -459,7 +461,7 @@ const SearchPage = () => {
       }
       return matchVillage && matchName;
     });
-  }, [businesses, village, name, nearbyMode, userLat, userLng, maxDistance]);
+  }, [businesses, village, name, category, nearbyMode, userLat, userLng, maxDistance]);
 
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
