@@ -60,8 +60,8 @@ const AboutPage = () => {
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <div className="max-w-4xl mx-auto">
-          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground/20 px-4 py-2 rounded-xl text-sm font-bold backdrop-blur-sm hover:bg-primary-foreground/30 transition-colors">
-            <ArrowLeft size={16} /> {t('होम पेज', lang)}
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground text-primary px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg hover:shadow-xl active:scale-[0.97] transition-all">
+            <ArrowLeft size={18} /> {t('होम पेज', lang)}
           </button>
         </div>
       </div>

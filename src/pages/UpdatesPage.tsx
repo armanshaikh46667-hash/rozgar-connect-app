@@ -27,8 +27,8 @@ const UpdatesPage = () => {
       {/* Header */}
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-8 text-primary-foreground">
         <div className="max-w-lg mx-auto">
-          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1 text-primary-foreground/80 text-xs">
-            <ArrowLeft size={16} /> होम पेज
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground text-primary px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg hover:shadow-xl active:scale-[0.97] transition-all">
+            <ArrowLeft size={18} /> होम पेज
           </button>
           <div className="flex items-center gap-2.5 mb-2">
             <div className="w-9 h-9 rounded-xl bg-primary-foreground/20 flex items-center justify-center">

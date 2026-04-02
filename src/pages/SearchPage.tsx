@@ -449,8 +449,10 @@ const SearchPage = () => {
     return filtered;
   }, [workers, category, village, name, minExp, minRating, nearbyMode, userLat, userLng, maxDistance]);
 
-  // Filter businesses by village/name search
+  // Filter businesses by village/name search — hide when a worker category is selected
   const filteredBusinesses = useMemo(() => {
+    // If a specific worker category is selected, don't show businesses
+    if (category) return [];
     return businesses.filter(b => {
       const matchVillage = !village || b.village.toLowerCase().includes(village.toLowerCase());
       const matchName = !name || b.name.toLowerCase().includes(name.toLowerCase()) || b.category.toLowerCase().includes(name.toLowerCase());
@@ -459,7 +461,7 @@ const SearchPage = () => {
       }
       return matchVillage && matchName;
     });
-  }, [businesses, village, name, nearbyMode, userLat, userLng, maxDistance]);
+  }, [businesses, village, name, category, nearbyMode, userLat, userLng, maxDistance]);
 
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
@@ -467,8 +469,8 @@ const SearchPage = () => {
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <div className="max-w-4xl mx-auto">
-          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-1.5 bg-primary-foreground/20 text-primary-foreground px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-primary-foreground/30 transition-colors w-fit">
-            <ArrowLeft size={16} /> होम पेज
+          <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground text-primary px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg hover:shadow-xl active:scale-[0.97] transition-all w-fit">
+            <ArrowLeft size={18} /> होम पेज
           </button>
           <h1 className="text-2xl font-bold">कामगार खोजें</h1>
           <p className="text-primary-foreground/80 text-sm mt-1">अपने आस-पास कुशल कामगार खोजें</p>

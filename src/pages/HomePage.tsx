@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
 
 const HERO_CATEGORIES = [
-  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन" },
-  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर" },
-  { name: "Carpenter", emoji: "🪚", hindi: "कारपेंटर" },
-  { name: "Painter", emoji: "🎨", hindi: "पेंटर" },
-  { name: "General Labor", emoji: "👷", hindi: "मज़दूर" },
-  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक" },
-  { name: "Domestic Worker", emoji: "🏠", hindi: "घरेलू सहायक" },
-  { name: "Tractor Driver", emoji: "🌾", hindi: "कृषि कामगार" },
+  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन", color: "from-yellow-400/20 to-yellow-500/10" },
+  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर", color: "from-blue-400/20 to-blue-500/10" },
+  { name: "Carpenter", emoji: "🪚", hindi: "कारपेंटर", color: "from-amber-400/20 to-amber-500/10" },
+  { name: "Painter", emoji: "🎨", hindi: "पेंटर", color: "from-pink-400/20 to-pink-500/10" },
+  { name: "General Labor", emoji: "👷", hindi: "मज़दूर", color: "from-orange-400/20 to-orange-500/10" },
+  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक", color: "from-red-400/20 to-red-500/10" },
+  { name: "Domestic Worker", emoji: "🏠", hindi: "घरेलू सहायक", color: "from-teal-400/20 to-teal-500/10" },
+  { name: "Tractor Driver", emoji: "🌾", hindi: "कृषि कामगार", color: "from-green-400/20 to-green-500/10" },
 ];
 
 
@@ -125,9 +125,9 @@ const HomePage = () => {
           {HERO_CATEGORIES.map((cat) => (
             <button key={cat.name}
               onClick={() => navigate(`/search?category=${encodeURIComponent(cat.name)}`)}
-              className="flex flex-col items-center gap-1.5 p-3 bg-card rounded-2xl border border-border hover:border-primary/40 hover:shadow-md active:scale-[0.96] transition-all">
-              <span className="text-2xl">{cat.emoji}</span>
-              <span className="text-[10px] font-semibold text-foreground leading-tight text-center">{cat.hindi}</span>
+              className={`flex flex-col items-center gap-2 p-3.5 bg-gradient-to-br ${cat.color} rounded-2xl border border-border hover:border-primary/50 hover:shadow-lg active:scale-[0.95] transition-all group`}>
+              <span className="text-3xl group-hover:scale-110 transition-transform">{cat.emoji}</span>
+              <span className="text-[10px] font-bold text-foreground leading-tight text-center">{cat.hindi}</span>
             </button>
           ))}
         </div>
@@ -157,13 +157,13 @@ const HomePage = () => {
         {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
           <div key={group}>
             <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">{group}</h3>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5">
               {cats.map((cat) => (
                 <button key={cat}
                   onClick={() => navigate(`/search?category=${encodeURIComponent(cat)}`)}
-                  className="bg-card rounded-xl p-3 text-center border border-border hover:border-primary/40 hover:shadow-md active:scale-[0.97] transition-all">
-                  <span className="text-xl block">{categoryEmojis[cat] || '🔧'}</span>
-                  <p className="text-[10px] font-medium text-foreground mt-1.5 leading-tight">{cat}</p>
+                  className="bg-card rounded-xl p-3.5 text-center border border-border hover:border-primary/40 hover:shadow-lg active:scale-[0.96] transition-all group">
+                  <span className="text-2xl block group-hover:scale-110 transition-transform">{categoryEmojis[cat] || '🔧'}</span>
+                  <p className="text-[10px] font-bold text-foreground mt-2 leading-tight">{cat}</p>
                 </button>
               ))}
             </div>
