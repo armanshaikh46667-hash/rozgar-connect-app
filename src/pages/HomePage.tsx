@@ -3,14 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { CATEGORY_GROUPS, useWorkerStore } from '@/store/workerStore';
 
 const HERO_CATEGORIES = [
-  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन" },
-  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर" },
-  { name: "Carpenter", emoji: "🪚", hindi: "कारपेंटर" },
-  { name: "Painter", emoji: "🎨", hindi: "पेंटर" },
-  { name: "General Labor", emoji: "👷", hindi: "मज़दूर" },
-  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक" },
-  { name: "Domestic Worker", emoji: "🏠", hindi: "घरेलू सहायक" },
-  { name: "Tractor Driver", emoji: "🌾", hindi: "कृषि कामगार" },
+  { name: "Electrician", emoji: "⚡", hindi: "इलेक्ट्रीशियन", color: "from-yellow-400/20 to-yellow-500/10" },
+  { name: "Plumber", emoji: "🔧", hindi: "प्लम्बर", color: "from-blue-400/20 to-blue-500/10" },
+  { name: "Carpenter", emoji: "🪚", hindi: "कारपेंटर", color: "from-amber-400/20 to-amber-500/10" },
+  { name: "Painter", emoji: "🎨", hindi: "पेंटर", color: "from-pink-400/20 to-pink-500/10" },
+  { name: "General Labor", emoji: "👷", hindi: "मज़दूर", color: "from-orange-400/20 to-orange-500/10" },
+  { name: "Bike Mechanic", emoji: "🏍️", hindi: "मैकेनिक", color: "from-red-400/20 to-red-500/10" },
+  { name: "Domestic Worker", emoji: "🏠", hindi: "घरेलू सहायक", color: "from-teal-400/20 to-teal-500/10" },
+  { name: "Tractor Driver", emoji: "🌾", hindi: "कृषि कामगार", color: "from-green-400/20 to-green-500/10" },
 ];
 
 
