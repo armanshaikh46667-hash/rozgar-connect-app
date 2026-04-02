@@ -186,7 +186,7 @@ const AdminPage = () => {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 -mt-4 space-y-4 pb-8">
+      <div className="max-w-5xl mx-auto px-4 -mt-4 space-y-4 pb-8 lg:grid lg:grid-cols-4 lg:gap-6">
         {/* Tabs - scrollable */}
         <div className="bg-card rounded-2xl shadow-lg border border-border p-2 overflow-x-auto">
           <div className="flex gap-1 min-w-max">

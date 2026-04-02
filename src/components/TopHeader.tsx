@@ -14,7 +14,6 @@ const TopHeader = () => {
 
   const publicMenuItems = [
     { label: t('रजिस्टर करें', lang), path: '/business-register' },
-    { label: t('नक्शा', lang), path: '/map' },
     { label: t('काम ढूंढें', lang), path: '/search' },
     { label: t('About Us', lang), path: '/about' },
     { label: t('Admin Panel', lang), path: '/admin' },
