@@ -1,4 +1,4 @@
-import { Search, User, Menu, Briefcase, LogOut, LogIn, Globe, Home, BookOpen, IndianRupee, Shield, MessageCircle, X, ClipboardList } from 'lucide-react';
+import { Search, User, Menu, Briefcase, LogOut, LogIn, Globe, Home, BookOpen, IndianRupee, Shield, Info, ClipboardList, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
@@ -11,7 +11,23 @@ const TopHeader = () => {
   const { lang, toggle } = useLanguageStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const navItems = [
+  const handleNav = (path: string) => { setDrawerOpen(false); navigate(path); };
+  const handleLogout = () => { setDrawerOpen(false); logout(); navigate('/'); };
+  const isActive = (path: string) => location.pathname === path;
+
+  // Desktop right-side nav items (requested order)
+  const desktopRightItems = [
+    { label: t('रजिस्टर करें', lang), path: '/business-register', icon: ClipboardList },
+    ...(user
+      ? [{ label: t('प्रोफ़ाइल', lang), path: user.type === 'worker' ? `/worker/${user.id}` : '/', icon: User }]
+      : [{ label: t('लॉगिन करें', lang), path: '/login', icon: LogIn }]
+    ),
+    { label: t('Admin Panel', lang), path: '/admin', icon: Shield },
+    { label: t('About Us', lang), path: '/about', icon: Info },
+  ];
+
+  // Mobile drawer items
+  const mobileItems = [
     { label: t('होम पेज', lang), path: '/', icon: Home },
     { label: t('काम ढूंढें', lang), path: '/search', icon: Search },
     { label: t('रजिस्टर करें', lang), path: '/business-register', icon: ClipboardList },
@@ -19,69 +35,111 @@ const TopHeader = () => {
       { label: t('बुकिंग', lang), path: '/bookings', icon: BookOpen },
       { label: t('कमाई', lang), path: '/earnings', icon: IndianRupee },
     ] : []),
-    { label: t('About Us', lang), path: '/about', icon: Briefcase },
+    { label: t('About Us', lang), path: '/about', icon: Info },
     { label: t('Admin Panel', lang), path: '/admin', icon: Shield },
   ];
-
-  const handleNav = (path: string) => { setDrawerOpen(false); navigate(path); };
-  const handleLogout = () => { setDrawerOpen(false); logout(); navigate('/'); };
-
-  const isActive = (path: string) => location.pathname === path;
 
   return (
     <>
       <header className="sticky top-0 z-50 bg-card/98 backdrop-blur-xl border-b border-border/60 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-14 lg:h-16 px-4 lg:px-8">
           {/* Logo */}
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group">
+          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group shrink-0">
             <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
               <Briefcase size={18} className="text-primary-foreground" />
             </div>
             <span className="text-base font-extrabold text-foreground tracking-tight">RozgarSewa</span>
           </button>
 
-          {/* Desktop horizontal nav - hidden on mobile */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {navItems.map((item) => (
-              <button
-                key={item.path}
-                onClick={() => navigate(item.path)}
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                  isActive(item.path)
-                    ? 'bg-primary text-primary-foreground shadow-md'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          {/* Desktop: center nav links */}
+          <nav className="hidden lg:flex items-center gap-1 mx-4">
+            {[
+              { label: t('होम पेज', lang), path: '/', icon: Home },
+              { label: t('काम ढूंढें', lang), path: '/search', icon: Search },
+              ...(user ? [
+                { label: t('बुकिंग', lang), path: '/bookings', icon: BookOpen },
+                { label: t('कमाई', lang), path: '/earnings', icon: IndianRupee },
+              ] : []),
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                    isActive(item.path)
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                  }`}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </button>
+              );
+            })}
           </nav>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-1.5">
-            {/* Search - mobile only (desktop has it in nav) */}
+          {/* Desktop: right actions with icons+text */}
+          <div className="hidden lg:flex items-center gap-1 shrink-0">
+            {desktopRightItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                    isActive(item.path)
+                      ? 'bg-primary text-primary-foreground shadow-md'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                  }`}
+                >
+                  <Icon size={16} />
+                  {item.label}
+                </button>
+              );
+            })}
+
+            {/* Language toggle */}
+            <button
+              onClick={toggle}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200 relative"
+              aria-label="Toggle Language"
+            >
+              <Globe size={16} />
+              <span className="text-xs font-bold">{lang === 'hi' ? 'EN' : 'हिंदी'}</span>
+            </button>
+
+            {/* Logout */}
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-destructive hover:bg-destructive/10 transition-all duration-200"
+              >
+                <LogOut size={16} />
+                {t('लॉगआउट', lang)}
+              </button>
+            )}
+          </div>
+
+          {/* Mobile right actions */}
+          <div className="flex lg:hidden items-center gap-1">
             <button
               onClick={() => navigate('/search')}
-              className={`lg:hidden w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
+              className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
                 isActive('/search') ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-secondary'
               }`}
             >
               <Search size={18} />
             </button>
-
-            {/* Language toggle */}
             <button
               onClick={toggle}
               className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors relative"
-              aria-label="Toggle Language"
             >
               <Globe size={18} />
               <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-black bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center leading-none shadow-sm">
                 {lang === 'hi' ? 'EN' : 'हि'}
               </span>
             </button>
-
-            {/* Login / Profile */}
             <button
               onClick={() => {
                 if (user) {
@@ -95,22 +153,9 @@ const TopHeader = () => {
             >
               {user ? <User size={18} /> : <LogIn size={18} />}
             </button>
-
-            {/* Desktop logout */}
-            {user && (
-              <button
-                onClick={handleLogout}
-                className="hidden lg:flex w-10 h-10 rounded-xl items-center justify-center text-destructive hover:bg-destructive/10 transition-colors"
-                title={t('लॉगआउट', lang)}
-              >
-                <LogOut size={18} />
-              </button>
-            )}
-
-            {/* Hamburger - mobile only */}
             <button
               onClick={() => setDrawerOpen(true)}
-              className="lg:hidden w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors"
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors"
             >
               <Menu size={20} />
             </button>
@@ -131,7 +176,6 @@ const TopHeader = () => {
           drawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        {/* Drawer header */}
         <div className="flex items-center justify-between p-5 border-b border-border/50">
           {user ? (
             <div>
@@ -141,17 +185,13 @@ const TopHeader = () => {
           ) : (
             <span className="text-sm font-bold text-foreground">{t('मेनू', lang)}</span>
           )}
-          <button
-            onClick={() => setDrawerOpen(false)}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors"
-          >
+          <button onClick={() => setDrawerOpen(false)} className="w-9 h-9 rounded-xl flex items-center justify-center text-muted-foreground hover:bg-secondary transition-colors">
             <X size={18} />
           </button>
         </div>
 
-        {/* Drawer menu items */}
         <div className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-10rem)]">
-          {navItems.map((item) => {
+          {mobileItems.map((item) => {
             const Icon = item.icon;
             return (
               <button
@@ -170,20 +210,13 @@ const TopHeader = () => {
           })}
         </div>
 
-        {/* Drawer footer */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-border/50 bg-card space-y-1">
           {user ? (
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-destructive hover:bg-destructive/10 transition-colors"
-            >
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-destructive hover:bg-destructive/10 transition-colors">
               <LogOut size={18} /> {t('लॉगआउट', lang)}
             </button>
           ) : (
-            <button
-              onClick={() => handleNav('/login')}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-primary hover:bg-primary/10 transition-colors"
-            >
+            <button onClick={() => handleNav('/login')} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-primary hover:bg-primary/10 transition-colors">
               <LogIn size={18} /> {t('लॉगिन करें', lang)}
             </button>
           )}
