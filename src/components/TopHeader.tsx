@@ -1,4 +1,4 @@
-import { Search, User, Menu, Briefcase, LogOut, LogIn, Globe, Home, BookOpen, IndianRupee, Shield, Info, ClipboardList, X } from 'lucide-react';
+import { Search, UserPlus, LogIn, Globe, Settings, Menu, LogOut, User, Home, BookOpen, IndianRupee, Shield, Info, ClipboardList, X } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
@@ -10,23 +10,20 @@ const TopHeader = () => {
   const { user, logout } = useAuthStore();
   const { lang, toggle } = useLanguageStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleNav = (path: string) => { setDrawerOpen(false); navigate(path); };
   const handleLogout = () => { setDrawerOpen(false); logout(); navigate('/'); };
   const isActive = (path: string) => location.pathname === path;
 
-  // Desktop right-side nav items (requested order)
-  const desktopRightItems = [
-    { label: t('रजिस्टर करें', lang), path: '/business-register', icon: ClipboardList },
-    ...(user
-      ? [{ label: t('प्रोफ़ाइल', lang), path: user.type === 'worker' ? `/worker/${user.id}` : '/', icon: User }]
-      : [{ label: t('लॉगिन करें', lang), path: '/login', icon: LogIn }]
-    ),
-    { label: t('Admin Panel', lang), path: '/admin', icon: Shield },
-    { label: t('About Us', lang), path: '/about', icon: Info },
-  ];
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/search');
+    }
+  };
 
-  // Mobile drawer items
   const mobileItems = [
     { label: t('होम पेज', lang), path: '/', icon: Home },
     { label: t('काम ढूंढें', lang), path: '/search', icon: Search },
@@ -41,88 +38,108 @@ const TopHeader = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-card/98 backdrop-blur-xl border-b border-border/60 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between h-14 lg:h-16 px-4 lg:px-8">
+      <header className="sticky top-0 z-50 bg-background border-b-[3px] border-primary/70 shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center h-16 lg:h-[68px] px-4 lg:px-6 gap-3">
           {/* Logo */}
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 group shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <Briefcase size={18} className="text-primary-foreground" />
+          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 shrink-0 group">
+            <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+              <span className="text-primary-foreground font-black text-xl lg:text-2xl leading-none">R</span>
             </div>
-            <span className="text-base font-extrabold text-foreground tracking-tight">RozgarSewa</span>
+            <span className="text-lg lg:text-xl font-extrabold text-foreground tracking-tight">RozgarSewa</span>
           </button>
 
-          {/* Desktop: center nav links */}
-          <nav className="hidden lg:flex items-center gap-1 mx-4">
-            {[
-              { label: t('होम पेज', lang), path: '/', icon: Home },
-              { label: t('काम ढूंढें', lang), path: '/search', icon: Search },
-              ...(user ? [
-                { label: t('बुकिंग', lang), path: '/bookings', icon: BookOpen },
-                { label: t('कमाई', lang), path: '/earnings', icon: IndianRupee },
-              ] : []),
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                    isActive(item.path)
-                      ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                  }`}
-                >
-                  <Icon size={16} />
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
+          {/* Desktop nav buttons */}
+          <nav className="hidden lg:flex items-center gap-2.5 ml-auto">
+            {/* Register */}
+            <button
+              onClick={() => navigate('/business-register')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${
+                isActive('/business-register')
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50'
+              }`}
+            >
+              <UserPlus size={16} />
+              {t('रजिस्टर करें', lang)}
+            </button>
 
-          {/* Desktop: right actions with icons+text */}
-          <div className="hidden lg:flex items-center gap-1 shrink-0">
-            {desktopRightItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                    isActive(item.path)
-                      ? 'bg-primary text-primary-foreground shadow-md'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                  }`}
-                >
-                  <Icon size={16} />
-                  {item.label}
-                </button>
-              );
-            })}
+            {/* Login / Profile */}
+            {user ? (
+              <button
+                onClick={() => navigate(user.type === 'worker' ? `/worker/${user.id}` : '/')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50`}
+              >
+                <User size={16} />
+                {t('प्रोफ़ाइल', lang)}
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('/login')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${
+                  isActive('/login')
+                    ? 'bg-primary text-primary-foreground border-primary'
+                    : 'bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50'
+                }`}
+              >
+                <LogIn size={16} />
+                {t('लॉगिन करें', lang)}
+              </button>
+            )}
 
-            {/* Language toggle */}
+            {/* Translation */}
             <button
               onClick={toggle}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200 relative"
-              aria-label="Toggle Language"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50"
             >
               <Globe size={16} />
-              <span className="text-xs font-bold">{lang === 'hi' ? 'EN' : 'हिंदी'}</span>
+              {lang === 'hi' ? 'English' : 'हिन्दी'}
             </button>
+
+            {/* Admin Panel */}
+            <button
+              onClick={() => navigate('/admin')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${
+                isActive('/admin')
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50'
+              }`}
+            >
+              <Settings size={16} />
+              {t('Admin Panel', lang)}
+            </button>
+
+            {/* Search bar */}
+            <div className="flex items-center rounded-lg border border-primary/30 shadow-sm overflow-hidden bg-primary/5 ml-1">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                placeholder="Search..."
+                className="px-3 py-2 text-sm bg-transparent outline-none w-32 xl:w-40 text-foreground placeholder:text-muted-foreground"
+              />
+              <button
+                onClick={handleSearch}
+                className="bg-primary text-primary-foreground px-3 py-2 hover:bg-primary/90 transition-colors"
+              >
+                <Search size={16} />
+              </button>
+            </div>
 
             {/* Logout */}
             {user && (
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-destructive hover:bg-destructive/10 transition-all duration-200"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive/30 text-sm font-semibold text-destructive hover:bg-destructive/10 transition-all duration-200 shadow-sm hover:shadow-md"
               >
                 <LogOut size={16} />
                 {t('लॉगआउट', lang)}
               </button>
             )}
-          </div>
+          </nav>
 
           {/* Mobile right actions */}
-          <div className="flex lg:hidden items-center gap-1">
+          <div className="flex lg:hidden items-center gap-1 ml-auto">
             <button
               onClick={() => navigate('/search')}
               className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${
