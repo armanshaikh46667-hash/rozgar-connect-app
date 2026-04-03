@@ -1,4 +1,4 @@
-import { Search, UserPlus, LogIn, Globe, Settings, Menu, LogOut, User, Home, BookOpen, IndianRupee, Shield, Info, ClipboardList, X } from 'lucide-react';
+import { Search, UserPlus, LogIn, Globe, LogOut, User, Home, BookOpen, IndianRupee, Shield, Info, ClipboardList, X, Menu, ShieldCheck } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
@@ -36,52 +36,73 @@ const TopHeader = () => {
     { label: t('Admin Panel', lang), path: '/admin', icon: Shield },
   ];
 
+  // Desktop nav button base classes
+  const btnBase = "flex items-center gap-2 px-5 py-2.5 rounded-[14px] text-sm font-semibold transition-all duration-200 border active:scale-[0.97]";
+
   return (
     <>
-      <header className="sticky top-0 z-50 bg-background border-b-[3px] border-primary/70 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center h-16 lg:h-[68px] px-4 lg:px-6 gap-3">
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl border-b-[3px] border-primary/60 shadow-[0_2px_16px_-4px_hsl(var(--primary)/0.12)]">
+        <div className="max-w-[1400px] mx-auto flex items-center h-[68px] px-5 xl:px-8 gap-4">
           {/* Logo */}
-          <button onClick={() => navigate('/')} className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-primary flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <span className="text-primary-foreground font-black text-xl lg:text-2xl leading-none">R</span>
+          <button onClick={() => navigate('/')} className="flex items-center gap-3 shrink-0 group">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+              <span className="text-primary-foreground font-black text-2xl leading-none drop-shadow-sm">R</span>
             </div>
-            <span className="text-lg lg:text-xl font-extrabold text-foreground tracking-tight">RozgarSewa</span>
+            <span className="text-xl font-extrabold text-foreground tracking-tight">RozgarSewa</span>
           </button>
 
-          {/* Desktop nav buttons */}
-          <nav className="hidden lg:flex items-center gap-2.5 ml-auto">
-            {/* Register */}
+          {/* Desktop nav — hidden on mobile, visible on lg+ */}
+          <nav className="hidden lg:flex items-center gap-3 ml-auto">
+            {/* Search bar */}
+            <div className="flex items-center rounded-[14px] border border-primary/25 shadow-sm overflow-hidden bg-card hover:border-primary/40 transition-colors">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                placeholder={t('Search...', lang)}
+                className="px-4 py-2.5 text-sm bg-transparent outline-none w-36 xl:w-44 text-foreground placeholder:text-muted-foreground"
+              />
+              <button
+                onClick={handleSearch}
+                className="bg-primary text-primary-foreground px-3.5 py-2.5 hover:bg-primary/90 transition-colors"
+              >
+                <Search size={16} />
+              </button>
+            </div>
+
+            {/* Register — Primary highlighted */}
             <button
               onClick={() => navigate('/business-register')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${
+              className={`${btnBase} shadow-md hover:shadow-lg ${
                 isActive('/business-register')
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50'
+                  ? 'bg-primary text-primary-foreground border-primary shadow-lg'
+                  : 'bg-primary text-primary-foreground border-primary/80 hover:bg-primary/90'
               }`}
             >
-              <UserPlus size={16} />
+              <UserPlus size={17} />
               {t('रजिस्टर करें', lang)}
             </button>
 
-            {/* Login / Profile */}
+            {/* Login / Profile — Secondary outlined */}
             {user ? (
               <button
                 onClick={() => navigate(user.type === 'worker' ? `/worker/${user.id}` : '/')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50`}
+                className={`${btnBase} bg-card text-primary border-primary/30 shadow-sm hover:shadow-md hover:bg-accent hover:border-primary/50`}
               >
-                <User size={16} />
+                <User size={17} />
                 {t('प्रोफ़ाइल', lang)}
               </button>
             ) : (
               <button
                 onClick={() => navigate('/login')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${
+                className={`${btnBase} shadow-sm hover:shadow-md ${
                   isActive('/login')
                     ? 'bg-primary text-primary-foreground border-primary'
-                    : 'bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50'
+                    : 'bg-card text-primary border-primary/30 hover:bg-accent hover:border-primary/50'
                 }`}
               >
-                <LogIn size={16} />
+                <LogIn size={17} />
                 {t('लॉगिन करें', lang)}
               </button>
             )}
@@ -89,50 +110,45 @@ const TopHeader = () => {
             {/* Translation */}
             <button
               onClick={toggle}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50"
+              className={`${btnBase} bg-card text-foreground border-border hover:bg-accent hover:border-primary/40 shadow-sm hover:shadow-md`}
             >
-              <Globe size={16} />
+              <Globe size={17} className="text-primary" />
               {lang === 'hi' ? 'English' : 'हिन्दी'}
             </button>
 
             {/* Admin Panel */}
             <button
               onClick={() => navigate('/admin')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${
+              className={`${btnBase} shadow-sm hover:shadow-md ${
                 isActive('/admin')
                   ? 'bg-primary text-primary-foreground border-primary'
-                  : 'bg-primary/5 text-primary border-primary/30 hover:bg-primary/10 hover:border-primary/50'
+                  : 'bg-card text-foreground border-border hover:bg-accent hover:border-primary/40'
               }`}
             >
-              <Settings size={16} />
+              <ShieldCheck size={17} className={isActive('/admin') ? '' : 'text-primary'} />
               {t('Admin Panel', lang)}
             </button>
 
-            {/* Search bar */}
-            <div className="flex items-center rounded-lg border border-primary/30 shadow-sm overflow-hidden bg-primary/5 ml-1">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Search..."
-                className="px-3 py-2 text-sm bg-transparent outline-none w-32 xl:w-40 text-foreground placeholder:text-muted-foreground"
-              />
-              <button
-                onClick={handleSearch}
-                className="bg-primary text-primary-foreground px-3 py-2 hover:bg-primary/90 transition-colors"
-              >
-                <Search size={16} />
-              </button>
-            </div>
+            {/* About Us */}
+            <button
+              onClick={() => navigate('/about')}
+              className={`${btnBase} shadow-sm hover:shadow-md ${
+                isActive('/about')
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-card text-foreground border-border hover:bg-accent hover:border-primary/40'
+              }`}
+            >
+              <Info size={17} className={isActive('/about') ? '' : 'text-primary'} />
+              {t('About Us', lang)}
+            </button>
 
             {/* Logout */}
             {user && (
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-destructive/30 text-sm font-semibold text-destructive hover:bg-destructive/10 transition-all duration-200 shadow-sm hover:shadow-md"
+                className={`${btnBase} border-destructive/30 text-destructive bg-card hover:bg-destructive/10 shadow-sm hover:shadow-md`}
               >
-                <LogOut size={16} />
+                <LogOut size={17} />
                 {t('लॉगआउट', lang)}
               </button>
             )}
