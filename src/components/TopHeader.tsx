@@ -111,6 +111,19 @@ const TopHeader = () => {
               {t('Admin Panel', lang)}
             </button>
 
+            {/* About Us */}
+            <button
+              onClick={() => navigate('/about')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 active:scale-[0.97] ${
+                isActive('/about')
+                  ? 'bg-primary text-primary-foreground border-primary shadow-md'
+                  : 'border-border bg-card text-foreground hover:bg-accent hover:border-primary/30 shadow-sm hover:shadow-md'
+              }`}
+            >
+              <Info size={16} className={isActive('/about') ? '' : 'text-primary'} />
+              {t('About Us', lang)}
+            </button>
+
             {/* Search bar */}
             <div className="flex items-center rounded-xl border border-primary/25 shadow-sm overflow-hidden bg-primary/5 hover:border-primary/40 transition-colors ml-1">
               <input
