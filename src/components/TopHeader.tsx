@@ -39,7 +39,7 @@ const TopHeader = () => {
   return (
     <>
       <header className="sticky top-0 z-50 bg-background border-b-[3px] border-primary/50 shadow-[0_2px_12px_-4px_hsl(var(--primary)/0.10)]">
-        <div className="max-w-[1400px] mx-auto flex items-center h-[60px] px-4 xl:px-6">
+        <div className="max-w-7xl mx-auto flex items-center h-[60px] px-4 xl:px-6">
           
           {/* Logo — always visible */}
           <button onClick={() => navigate('/')} className="flex items-center gap-2.5 shrink-0 group mr-auto lg:mr-0">
