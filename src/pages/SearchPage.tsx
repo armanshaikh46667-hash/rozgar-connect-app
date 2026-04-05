@@ -449,17 +449,16 @@ const SearchPage = () => {
     return filtered;
   }, [workers, category, village, name, minExp, minRating, nearbyMode, userLat, userLng, maxDistance]);
 
-  // Filter businesses by village/name search — hide when a worker category is selected
+  // Filter businesses — show matching businesses when their category is selected
   const filteredBusinesses = useMemo(() => {
-    // If a specific worker category is selected, don't show businesses
-    if (category) return [];
     return businesses.filter(b => {
+      const matchCategory = !category || b.category === category;
       const matchVillage = !village || b.village.toLowerCase().includes(village.toLowerCase());
       const matchName = !name || b.name.toLowerCase().includes(name.toLowerCase()) || b.category.toLowerCase().includes(name.toLowerCase());
       if (nearbyMode && userLat && userLng && b.lat && b.lng) {
-        return matchVillage && matchName && getDistance(userLat, userLng, b.lat, b.lng) <= parseInt(maxDistance);
+        return matchCategory && matchVillage && matchName && getDistance(userLat, userLng, b.lat, b.lng) <= parseInt(maxDistance);
       }
-      return matchVillage && matchName;
+      return matchCategory && matchVillage && matchName;
     });
   }, [businesses, village, name, category, nearbyMode, userLat, userLng, maxDistance]);
 
