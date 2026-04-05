@@ -558,50 +558,50 @@ const SearchPage = () => {
           <>
             {/* Workers Section */}
             <p className="text-sm text-muted-foreground font-medium">{results.length} कामगार · {filteredBusinesses.length} सेवा प्रदाता</p>
-            {results.map((w) => {
-              const statusCfg = STATUS_CONFIG[w.status];
-              const dist = 'distance' in w ? (w as any).distance : null;
-              return (
-                <button key={w.id} onClick={() => navigate(`/worker/${w.id}`)}
-                  className="w-full bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow text-left">
-                  <div className="flex items-start gap-3">
-                    <div className="w-14 h-14 rounded-2xl bg-secondary border border-border overflow-hidden shrink-0 flex items-center justify-center relative">
-                      {w.photo ? <img src={w.photo} alt={w.name} className="w-full h-full object-cover" /> : <User size={24} className="text-muted-foreground" />}
-                      <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full border-2 border-card ${statusCfg.dot}`} />
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                        <span className="font-bold text-foreground text-sm truncate">{w.name}</span>
-                        <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${statusCfg.bg}`}>
-                          {statusCfg.label}
-                        </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+              {results.map((w) => {
+                const statusCfg = STATUS_CONFIG[w.status];
+                const dist = 'distance' in w ? (w as any).distance : null;
+                return (
+                  <button key={w.id} onClick={() => navigate(`/worker/${w.id}`)}
+                    className="w-full bg-card rounded-2xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow text-left">
+                    <div className="flex items-start gap-3">
+                      <div className="w-14 h-14 rounded-2xl bg-secondary border border-border overflow-hidden shrink-0 flex items-center justify-center relative">
+                        {w.photo ? <img src={w.photo} alt={w.name} className="w-full h-full object-cover" /> : <User size={24} className="text-muted-foreground" />}
+                        <span className={`absolute bottom-0.5 right-0.5 w-3 h-3 rounded-full border-2 border-card ${statusCfg.dot}`} />
                       </div>
-                      <p className="text-xs text-muted-foreground">{w.category} · {w.village}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <RatingDisplay ratings={w.ratings} />
-                        {dist !== null && (
-                          <span className="text-[10px] bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full font-semibold">
-                            📍 {dist.toFixed(1)} km
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                          <span className="font-bold text-foreground text-sm truncate">{w.name}</span>
+                          <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${statusCfg.bg}`}>
+                            {statusCfg.label}
                           </span>
-                        )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">{w.category} · {w.village}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <RatingDisplay ratings={w.ratings} />
+                          {dist !== null && (
+                            <span className="text-[10px] bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full font-semibold">
+                              📍 {dist.toFixed(1)} km
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                        <a href={`https://wa.me/91${w.mobile}`} target="_blank" rel="noopener noreferrer"
+                          className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground active:scale-[0.95] transition-transform">
+                          <WhatsAppIcon size={18} />
+                        </a>
+                        <a href={`tel:${w.mobile}`}
+                          className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground active:scale-[0.95] transition-transform">
+                          <Phone size={18} />
+                        </a>
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-                      <a href={`https://wa.me/91${w.mobile}`} target="_blank" rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-accent-foreground active:scale-[0.95] transition-transform">
-                        <WhatsAppIcon size={18} />
-                      </a>
-                      <a href={`tel:${w.mobile}`}
-                        className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground active:scale-[0.95] transition-transform">
-                        <Phone size={18} />
-                      </a>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
 
             {/* Businesses Section */}
             {filteredBusinesses.length > 0 && (
@@ -610,9 +610,11 @@ const SearchPage = () => {
                   <Store size={16} className="text-primary" />
                   <h3 className="text-sm font-bold text-foreground">🏪 दुकानें, डिजिटल सेवाएँ, शिक्षा</h3>
                 </div>
-                {filteredBusinesses.map((b) => (
-                  <BusinessCard key={`${b.type}-${b.id}`} entity={b} userLat={userLat} userLng={userLng} />
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                  {filteredBusinesses.map((b) => (
+                    <BusinessCard key={`${b.type}-${b.id}`} entity={b} userLat={userLat} userLng={userLng} />
+                  ))}
+                </div>
               </>
             )}
 
