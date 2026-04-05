@@ -54,7 +54,7 @@ const HomePage = () => {
           <div className="absolute top-4 right-4 w-32 h-32 rounded-full bg-primary-foreground/20 blur-3xl" />
           <div className="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-primary-foreground/15 blur-2xl" />
         </div>
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
               <Briefcase size={22} className="text-primary-foreground" />
@@ -81,7 +81,7 @@ const HomePage = () => {
       </div>
 
       {/* Quick Search */}
-      <div className="max-w-4xl mx-auto px-4 -mt-6 relative z-20">
+      <div className="max-w-7xl mx-auto px-4 -mt-6 relative z-20">
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4">
           <div className="flex items-center gap-2 mb-3">
             <Search size={16} className="text-muted-foreground" />
@@ -114,7 +114,7 @@ const HomePage = () => {
 
 
       {/* Popular Categories */}
-      <div className="max-w-4xl mx-auto px-4 mt-8">
+      <div className="max-w-7xl mx-auto px-4 mt-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-base font-bold text-foreground">लोकप्रिय सेवाएँ</h2>
           <button onClick={() => navigate('/search')} className="text-xs text-primary font-semibold flex items-center gap-1">
@@ -134,7 +134,7 @@ const HomePage = () => {
       </div>
 
       {/* Stats */}
-      <div className="max-w-4xl mx-auto px-4 mt-8">
+      <div className="max-w-7xl mx-auto px-4 mt-8">
         <div className="bg-gradient-to-r from-primary/10 to-accent rounded-2xl p-5 grid grid-cols-3 gap-4 text-center">
           <div>
             <p className="text-xl font-extrabold text-primary">{Object.values(CATEGORY_GROUPS).flat().length}+</p>
@@ -152,7 +152,7 @@ const HomePage = () => {
       </div>
 
       {/* All Categories */}
-      <div className="max-w-4xl mx-auto px-4 mt-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 mt-8 space-y-6">
         <h2 className="text-base font-bold text-foreground">सभी श्रेणियाँ</h2>
         {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
           <div key={group}>
@@ -172,7 +172,7 @@ const HomePage = () => {
       </div>
 
       {/* CTA */}
-      <div className="max-w-4xl mx-auto px-4 mt-8">
+      <div className="max-w-7xl mx-auto px-4 mt-8">
         <div className="bg-gradient-to-br from-primary to-accent-foreground rounded-2xl p-6 text-primary-foreground text-center">
           <Zap size={28} className="mx-auto mb-2 opacity-80" />
           <h3 className="text-lg font-bold mb-1">क्या आप कामगार हैं?</h3>
@@ -185,7 +185,7 @@ const HomePage = () => {
       </div>
 
       {/* Trust */}
-      <div className="max-w-4xl mx-auto px-4 mt-8">
+      <div className="max-w-7xl mx-auto px-4 mt-8">
         <h2 className="text-base font-bold text-foreground mb-4 text-center">हम पर भरोसा करें</h2>
         <div className="grid grid-cols-3 gap-3">
           <div className="bg-card rounded-2xl border border-border p-4 text-center">
@@ -207,7 +207,7 @@ const HomePage = () => {
       </div>
 
       {/* Share */}
-      <div className="max-w-4xl mx-auto px-4 mt-8">
+      <div className="max-w-7xl mx-auto px-4 mt-8">
         <button onClick={handleShare}
           className="w-full bg-secondary rounded-2xl p-4 flex items-center justify-center gap-3 active:scale-[0.98] transition-transform border border-border">
           <Share2 size={20} className="text-primary" />
@@ -216,7 +216,7 @@ const HomePage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="max-w-4xl mx-auto px-4 mt-10 pb-4">
+      <footer className="max-w-7xl mx-auto px-4 mt-10 pb-4">
         <div className="border-t border-border pt-6">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Briefcase size={18} className="text-primary" />
