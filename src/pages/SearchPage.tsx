@@ -467,7 +467,7 @@ const SearchPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[120rem] mx-auto">
           <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground text-primary px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg hover:shadow-xl active:scale-[0.97] transition-all w-fit">
             <ArrowLeft size={18} /> होम पेज
           </button>
@@ -476,7 +476,7 @@ const SearchPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-4">
+      <div className="max-w-[120rem] mx-auto px-4 -mt-4">
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4 space-y-3">
           <div className="flex items-center gap-2">
             <button onClick={() => setNearbyMode(!nearbyMode)}
@@ -513,10 +513,18 @@ const SearchPage = () => {
               className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
           </div>
 
-          <button onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 text-xs text-primary font-semibold">
-            <Filter size={14} /> {showFilters ? 'फ़िल्टर बंद करें' : 'अधिक फ़िल्टर'}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 text-xs text-primary font-semibold">
+              <Filter size={14} /> {showFilters ? 'फ़िल्टर बंद करें' : 'अधिक फ़िल्टर'}
+            </button>
+            {(category || village || name || minExp || minRating) && (
+              <button onClick={() => { setCategory(''); setVillage(''); setName(''); setMinExp(''); setMinRating(''); setNearbyMode(false); }}
+                className="flex items-center gap-1 text-xs text-destructive font-semibold bg-destructive/10 px-3 py-1.5 rounded-xl border border-destructive/20 hover:bg-destructive/20 transition-colors">
+                <X size={12} /> Reset
+              </button>
+            )}
+          </div>
 
           {showFilters && (
             <div className="grid grid-cols-2 gap-2 animate-fade-in">
@@ -544,9 +552,9 @@ const SearchPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 mt-6 space-y-3">
+      <div className="max-w-[120rem] mx-auto px-4 mt-6 space-y-3">
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
             <CardSkeleton />
             <CardSkeleton />
             <CardSkeleton />
@@ -558,7 +566,7 @@ const SearchPage = () => {
           <>
             {/* Workers Section */}
             <p className="text-sm text-muted-foreground font-medium">{results.length} कामगार · {filteredBusinesses.length} सेवा प्रदाता</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
               {results.map((w) => {
                 const statusCfg = STATUS_CONFIG[w.status];
                 const dist = 'distance' in w ? (w as any).distance : null;
@@ -610,7 +618,7 @@ const SearchPage = () => {
                   <Store size={16} className="text-primary" />
                   <h3 className="text-sm font-bold text-foreground">🏪 दुकानें, डिजिटल सेवाएँ, शिक्षा</h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
                   {filteredBusinesses.map((b) => (
                     <BusinessCard key={`${b.type}-${b.id}`} entity={b} userLat={userLat} userLng={userLng} />
                   ))}

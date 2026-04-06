@@ -122,6 +122,26 @@ const translations: Record<string, Record<Lang, string>> = {
   'पूर्ण': { hi: 'पूर्ण', en: 'Done' },
   'लंबित': { hi: 'लंबित', en: 'Pending' },
   'रद्द': { hi: 'रद्द', en: 'Cancelled' },
+  // Search page
+  'कामगार खोजें': { hi: 'कामगार खोजें', en: 'Find Workers' },
+  'अपने आस-पास कुशल कामगार खोजें': { hi: 'अपने आस-पास कुशल कामगार खोजें', en: 'Find skilled workers near you' },
+  'गाँव से खोजें...': { hi: 'गाँव से खोजें...', en: 'Search by village...' },
+  'नाम से खोजें...': { hi: 'नाम से खोजें...', en: 'Search by name...' },
+  'अधिक फ़िल्टर': { hi: 'अधिक फ़िल्टर', en: 'More Filters' },
+  'फ़िल्टर बंद करें': { hi: 'फ़िल्टर बंद करें', en: 'Close Filters' },
+  'कोई परिणाम नहीं मिला': { hi: 'कोई परिणाम नहीं मिला', en: 'No results found' },
+  'अलग फ़िल्टर आज़माएं या खोज बदलें': { hi: 'अलग फ़िल्टर आज़माएं या खोज बदलें', en: 'Try different filters or change search' },
+  'दुकानें, डिजिटल सेवाएँ, शिक्षा': { hi: 'दुकानें, डिजिटल सेवाएँ, शिक्षा', en: 'Shops, Digital Services, Education' },
+  'सेवा प्रदाता': { hi: 'सेवा प्रदाता', en: 'Service Providers' },
+  // Location labels
+  'गाँव': { hi: 'गाँव', en: 'Village' },
+  'स्थान': { hi: 'स्थान', en: 'Location' },
+  'शहर': { hi: 'शहर', en: 'City' },
+  'दूर': { hi: 'दूर', en: 'away' },
+  'दुकान सेवा': { hi: 'दुकान', en: 'Shop' },
+  'डिजिटल सेवा': { hi: 'डिजिटल सेवा', en: 'Digital Service' },
+  'शिक्षा': { hi: 'शिक्षा', en: 'Education' },
+  'Reset': { hi: 'रीसेट', en: 'Reset' },
 };
 
 export const t = (key: string, lang: Lang): string => {
