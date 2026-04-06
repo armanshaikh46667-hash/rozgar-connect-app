@@ -513,10 +513,18 @@ const SearchPage = () => {
               className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
           </div>
 
-          <button onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 text-xs text-primary font-semibold">
-            <Filter size={14} /> {showFilters ? 'फ़िल्टर बंद करें' : 'अधिक फ़िल्टर'}
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 text-xs text-primary font-semibold">
+              <Filter size={14} /> {showFilters ? 'फ़िल्टर बंद करें' : 'अधिक फ़िल्टर'}
+            </button>
+            {(category || village || name || minExp || minRating) && (
+              <button onClick={() => { setCategory(''); setVillage(''); setName(''); setMinExp(''); setMinRating(''); setNearbyMode(false); }}
+                className="flex items-center gap-1 text-xs text-destructive font-semibold bg-destructive/10 px-3 py-1.5 rounded-xl border border-destructive/20 hover:bg-destructive/20 transition-colors">
+                <X size={12} /> Reset
+              </button>
+            )}
+          </div>
 
           {showFilters && (
             <div className="grid grid-cols-2 gap-2 animate-fade-in">
