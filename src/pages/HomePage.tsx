@@ -157,7 +157,7 @@ const HomePage = () => {
         {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
           <div key={group}>
             <h3 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wide">{group}</h3>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 3xl:grid-cols-10 gap-2.5">
               {cats.map((cat) => (
                 <button key={cat}
                   onClick={() => navigate(`/search?category=${encodeURIComponent(cat)}`)}
