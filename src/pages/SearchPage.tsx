@@ -476,7 +476,7 @@ const SearchPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 -mt-4">
+      <div className="max-w-[120rem] mx-auto px-4 -mt-4">
         <div className="bg-card rounded-2xl shadow-lg border border-border p-4 space-y-3">
           <div className="flex items-center gap-2">
             <button onClick={() => setNearbyMode(!nearbyMode)}
