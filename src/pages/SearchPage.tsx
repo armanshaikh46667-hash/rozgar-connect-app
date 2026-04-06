@@ -566,7 +566,7 @@ const SearchPage = () => {
           <>
             {/* Workers Section */}
             <p className="text-sm text-muted-foreground font-medium">{results.length} कामगार · {filteredBusinesses.length} सेवा प्रदाता</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
               {results.map((w) => {
                 const statusCfg = STATUS_CONFIG[w.status];
                 const dist = 'distance' in w ? (w as any).distance : null;
