@@ -214,7 +214,7 @@ const EditProfileDialog = ({ workerId, onClose }: { workerId: string; onClose: (
             {AVAILABILITY_OPTIONS.map((opt) => (
               <button key={opt} type="button" onClick={() => setAvailability(opt)}
                 className={`rounded-xl px-3 py-2 text-xs border transition-colors ${availability === opt ? 'bg-primary text-primary-foreground border-primary' : 'bg-secondary text-secondary-foreground border-border'}`}>
-                {AVAILABILITY_HINDI[opt]}
+                {translate(opt, useLanguageStore.getState().lang)}
               </button>
             ))}
           </div>
