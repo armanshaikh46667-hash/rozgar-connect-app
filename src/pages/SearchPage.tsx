@@ -7,15 +7,18 @@ import BookingDialog from '@/components/BookingDialog';
 import ForgotPinDialog from '@/components/ForgotPinDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useT, useLanguageStore, t as translate } from '@/store/languageStore';
 
-const AVAILABILITY_HINDI: Record<string, string> = {
-  'Morning': 'सुबह', 'Afternoon': 'दोपहर', 'Evening': 'शाम', 'Full Day': 'पूरा दिन',
-};
 const AVAILABILITY_OPTIONS: Availability[] = ['Morning', 'Afternoon', 'Evening', 'Full Day'];
-const STATUS_CONFIG: Record<WorkerStatus, { label: string; dot: string; bg: string }> = {
-  available: { label: '🟢 Available', dot: 'bg-green-500', bg: 'bg-green-500/15 text-green-700' },
-  busy: { label: '🟡 Busy', dot: 'bg-yellow-500', bg: 'bg-yellow-500/15 text-yellow-700' },
-  offline: { label: '🔴 Offline', dot: 'bg-red-500', bg: 'bg-red-500/15 text-red-700' },
+const STATUS_KEY: Record<WorkerStatus, string> = {
+  available: '🟢 Available',
+  busy: '🟡 Busy',
+  offline: '🔴 Offline',
+};
+const STATUS_STYLE: Record<WorkerStatus, { dot: string; bg: string }> = {
+  available: { dot: 'bg-green-500', bg: 'bg-green-500/15 text-green-700' },
+  busy: { dot: 'bg-yellow-500', bg: 'bg-yellow-500/15 text-yellow-700' },
+  offline: { dot: 'bg-red-500', bg: 'bg-red-500/15 text-red-700' },
 };
 
 const WhatsAppIcon = ({ size = 18 }: { size?: number }) => (
