@@ -568,10 +568,11 @@ const SearchPage = () => {
         ) : (
           <>
             {/* Workers Section */}
-            <p className="text-sm text-muted-foreground font-medium">{results.length} कामगार · {filteredBusinesses.length} सेवा प्रदाता</p>
+            <p className="text-sm text-muted-foreground font-medium">{results.length} {t('कामगार')} · {filteredBusinesses.length} {t('सेवा प्रदाता')}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
               {results.map((w) => {
-                const statusCfg = STATUS_CONFIG[w.status];
+                const statusCfg = STATUS_STYLE[w.status];
+                const statusLabel = t(STATUS_KEY[w.status]);
                 const dist = 'distance' in w ? (w as any).distance : null;
                 return (
                   <button key={w.id} onClick={() => navigate(`/worker/${w.id}`)}
@@ -585,10 +586,10 @@ const SearchPage = () => {
                         <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                           <span className="font-bold text-foreground text-sm truncate">{w.name}</span>
                           <span className={`shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${statusCfg.bg}`}>
-                            {statusCfg.label}
+                            {statusLabel}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground">{w.category} · {w.village}</p>
+                        <p className="text-xs text-muted-foreground">{t(w.category)} · {w.village}</p>
                         <div className="flex items-center gap-2 mt-1">
                           <RatingDisplay ratings={w.ratings} />
                           {dist !== null && (
