@@ -349,6 +349,8 @@ const SearchPage = () => {
   const navigate = useNavigate();
   const workers = useWorkerStore((s) => s.workers);
   const loading = useWorkerStore((s) => s.loading);
+  const t = useT();
+  const lang = useLanguageStore((s) => s.lang);
 
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [village, setVillage] = useState('');
