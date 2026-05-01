@@ -71,19 +71,19 @@ const StatusToggleDialog = ({ workerId, onClose }: { workerId: string; onClose: 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-card rounded-2xl shadow-xl w-full max-w-sm p-5 animate-fade-in" onClick={(e) => e.stopPropagation()}>
-        <h3 className="font-bold text-foreground mb-3">स्थिति बदलें</h3>
+        <h3 className="font-bold text-foreground mb-3">{useLanguageStore.getState().lang === 'hi' ? 'स्थिति बदलें' : 'Change Status'}</h3>
         <div className="grid grid-cols-3 gap-2 mb-4">
-          {(Object.keys(STATUS_CONFIG) as WorkerStatus[]).map((s) => (
+          {(Object.keys(STATUS_KEY) as WorkerStatus[]).map((s) => (
             <button key={s} onClick={() => setSelectedStatus(s)}
               className={`rounded-xl px-2 py-2.5 text-xs font-semibold border transition-colors ${selectedStatus === s ? 'bg-primary text-primary-foreground border-primary' : 'bg-secondary text-secondary-foreground border-border'}`}>
-              {STATUS_CONFIG[s].label}
+              {translate(STATUS_KEY[s], useLanguageStore.getState().lang)}
             </button>
           ))}
         </div>
         <input type="password" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 4))}
-          placeholder="🔒 PIN डालें" className={inputClass} maxLength={4} inputMode="numeric" />
+          placeholder="🔒 PIN" className={inputClass} maxLength={4} inputMode="numeric" />
         <button onClick={handleSave} disabled={saving} className="w-full bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-bold mt-3 disabled:opacity-60">
-          {saving ? 'सेव हो रहा...' : 'सेव करें'}
+          {saving ? translate('सेव हो रहा...', useLanguageStore.getState().lang) : translate('सेव करें', useLanguageStore.getState().lang)}
         </button>
       </div>
     </div>
