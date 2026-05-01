@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { Briefcase, Phone, Lock, LogIn, ChevronLeft } from 'lucide-react';
+import { useT } from '@/store/languageStore';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login, loading } = useAuthStore();
+  const t = useT();
   const [mobile, setMobile] = useState('');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
