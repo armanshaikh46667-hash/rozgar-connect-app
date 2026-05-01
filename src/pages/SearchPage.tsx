@@ -302,10 +302,10 @@ const BusinessCard = ({ entity, userLat, userLng }: { entity: BusinessEntity; us
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-foreground text-sm truncate">{entity.name}</h3>
-          <p className="text-xs text-muted-foreground truncate">{entity.category} · {entity.village}</p>
+          <p className="text-xs text-muted-foreground truncate">{translate(entity.category, useLanguageStore.getState().lang)} · {entity.village}</p>
           {dist !== null && (
             <span className="inline-flex items-center text-[10px] text-primary font-semibold mt-0.5">
-              📍 {dist.toFixed(1)} km दूर
+              📍 {dist.toFixed(1)} km {translate('दूर', useLanguageStore.getState().lang)}
             </span>
           )}
         </div>
