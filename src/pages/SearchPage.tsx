@@ -474,10 +474,10 @@ const SearchPage = () => {
       <div className="bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-8 pb-6 text-primary-foreground">
         <div className="max-w-[120rem] mx-auto">
           <button onClick={() => navigate('/')} className="mb-3 flex items-center gap-2 bg-primary-foreground text-primary px-5 py-2.5 rounded-xl text-sm font-extrabold shadow-lg hover:shadow-xl active:scale-[0.97] transition-all w-fit">
-            <ArrowLeft size={18} /> होम पेज
+            <ArrowLeft size={18} /> {t('होम पेज')}
           </button>
-          <h1 className="text-2xl font-bold">कामगार खोजें</h1>
-          <p className="text-primary-foreground/80 text-sm mt-1">अपने आस-पास कुशल कामगार खोजें</p>
+          <h1 className="text-2xl font-bold">{t('कामगार खोजें')}</h1>
+          <p className="text-primary-foreground/80 text-sm mt-1">{t('अपने आस-पास कुशल कामगार खोजें')}</p>
         </div>
       </div>
 
@@ -486,7 +486,7 @@ const SearchPage = () => {
           <div className="flex items-center gap-2">
             <button onClick={() => setNearbyMode(!nearbyMode)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-colors ${nearbyMode ? 'bg-primary text-primary-foreground border-primary' : 'bg-secondary text-secondary-foreground border-border'}`}>
-              <Navigation size={14} /> {gpsLoading ? 'GPS...' : nearbyMode ? '📍 GPS Active' : '📍 GPS नज़दीक'}
+              <Navigation size={14} /> {gpsLoading ? 'GPS...' : nearbyMode ? `📍 ${t('GPS Active')}` : `📍 ${t('GPS नज़दीक')}`}
             </button>
             {nearbyMode && (
               <select value={maxDistance} onChange={e => setMaxDistance(e.target.value)}
@@ -500,33 +500,33 @@ const SearchPage = () => {
           </div>
 
           <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputClass}>
-            <option value="">सभी श्रेणियाँ</option>
+            <option value="">{t('सभी श्रेणियाँ')}</option>
             {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-              <optgroup key={group} label={group}>
-                {cats.map((c) => <option key={c} value={c}>{c}</option>)}
+              <optgroup key={group} label={t(group)}>
+                {cats.map((c) => <option key={c} value={c}>{t(c)}</option>)}
               </optgroup>
             ))}
           </select>
           <div className="relative">
             <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-            <input type="text" placeholder="गाँव से खोजें..." value={village} onChange={(e) => setVillage(e.target.value)}
+            <input type="text" placeholder={t('गाँव से खोजें...')} value={village} onChange={(e) => setVillage(e.target.value)}
               className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
           </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-            <input type="text" placeholder="नाम से खोजें..." value={name} onChange={(e) => setName(e.target.value)}
+            <input type="text" placeholder={t('नाम से खोजें...')} value={name} onChange={(e) => setName(e.target.value)}
               className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
           </div>
 
           <div className="flex items-center gap-2">
             <button onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 text-xs text-primary font-semibold">
-              <Filter size={14} /> {showFilters ? 'फ़िल्टर बंद करें' : 'अधिक फ़िल्टर'}
+              <Filter size={14} /> {showFilters ? t('फ़िल्टर बंद करें') : t('अधिक फ़िल्टर')}
             </button>
             {(category || village || name || minExp || minRating) && (
               <button onClick={() => { setCategory(''); setVillage(''); setName(''); setMinExp(''); setMinRating(''); setNearbyMode(false); }}
                 className="flex items-center gap-1 text-xs text-destructive font-semibold bg-destructive/10 px-3 py-1.5 rounded-xl border border-destructive/20 hover:bg-destructive/20 transition-colors">
-                <X size={12} /> Reset
+                <X size={12} /> {t('Reset')}
               </button>
             )}
           </div>
@@ -534,19 +534,19 @@ const SearchPage = () => {
           {showFilters && (
             <div className="grid grid-cols-2 gap-2 animate-fade-in">
               <div>
-                <label className="text-[10px] text-muted-foreground mb-1 block">न्यूनतम अनुभव (वर्ष)</label>
+                <label className="text-[10px] text-muted-foreground mb-1 block">{t('न्यूनतम अनुभव (वर्ष)')}</label>
                 <select value={minExp} onChange={(e) => setMinExp(e.target.value)} className={inputClass}>
-                  <option value="">सभी</option>
-                  <option value="1">1+ वर्ष</option>
-                  <option value="3">3+ वर्ष</option>
-                  <option value="5">5+ वर्ष</option>
-                  <option value="10">10+ वर्ष</option>
+                  <option value="">{t('सभी')}</option>
+                  <option value="1">{t('1+ वर्ष')}</option>
+                  <option value="3">{t('3+ वर्ष')}</option>
+                  <option value="5">{t('5+ वर्ष')}</option>
+                  <option value="10">{t('10+ वर्ष')}</option>
                 </select>
               </div>
               <div>
-                <label className="text-[10px] text-muted-foreground mb-1 block">न्यूनतम रेटिंग</label>
+                <label className="text-[10px] text-muted-foreground mb-1 block">{t('न्यूनतम रेटिंग')}</label>
                 <select value={minRating} onChange={(e) => setMinRating(e.target.value)} className={inputClass}>
-                  <option value="">सभी</option>
+                  <option value="">{t('सभी')}</option>
                   <option value="3">3+ ⭐</option>
                   <option value="4">4+ ⭐</option>
                   <option value="5">5 ⭐</option>
