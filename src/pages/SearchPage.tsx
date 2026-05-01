@@ -622,7 +622,7 @@ const SearchPage = () => {
               <>
                 <div className="flex items-center gap-2 pt-4">
                   <Store size={16} className="text-primary" />
-                  <h3 className="text-sm font-bold text-foreground">🏪 दुकानें, डिजिटल सेवाएँ, शिक्षा</h3>
+                  <h3 className="text-sm font-bold text-foreground">🏪 {t('दुकानें, डिजिटल सेवाएँ, शिक्षा')}</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 5xl:grid-cols-5 gap-3">
                   {filteredBusinesses.map((b) => (
@@ -637,8 +637,8 @@ const SearchPage = () => {
                 <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
                   <Search className="text-muted-foreground" size={32} />
                 </div>
-                <p className="text-foreground font-semibold mb-1">कोई परिणाम नहीं मिला</p>
-                <p className="text-muted-foreground text-sm">अलग फ़िल्टर आज़माएं या खोज बदलें</p>
+                <p className="text-foreground font-semibold mb-1">{t('कोई परिणाम नहीं मिला')}</p>
+                <p className="text-muted-foreground text-sm">{t('अलग फ़िल्टर आज़माएं या खोज बदलें')}</p>
               </div>
             )}
           </>
