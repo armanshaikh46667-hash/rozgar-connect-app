@@ -58,7 +58,7 @@ const TopHeader = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97] ${
                 isActive('/business-register')
                   ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30'
-                  : 'bg-white/5 text-white border-white/20 hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/30'
+                  : 'bg-secondary text-foreground border-border hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/30'
               }`}
             >
               <UserPlus size={16} />
