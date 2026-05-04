@@ -38,7 +38,7 @@ const TopHeader = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-secondary text-secondary-foreground border-b border-secondary/40 shadow-[0_4px_20px_-6px_hsl(224_64%_33%/0.35)] backdrop-blur-md">
+      <header className="sticky top-0 z-50 bg-primary text-primary-foreground border-b border-primary/40 shadow-[0_4px_20px_-6px_hsl(var(--primary)/0.35)] backdrop-blur-md">
         <div className="max-w-[120rem] mx-auto flex items-center h-[64px] px-4 xl:px-8">
           
           {/* Logo — always visible */}
