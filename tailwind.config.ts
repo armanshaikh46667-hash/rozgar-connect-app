@@ -123,7 +123,7 @@ export default {
       },
       boxShadow: {
         "elegant": "0 10px 30px -10px hsl(142 71% 37% / 0.25)",
-        "card-hover": "0 12px 28px -8px hsl(142 71% 37% / 0.22), 0 4px 12px -4px hsl(224 64% 33% / 0.15)",
+        "card-hover": "0 12px 28px -8px hsl(142 71% 37% / 0.22), 0 4px 12px -4px hsl(142 71% 37% / 0.15)",
       },
     },
   },
