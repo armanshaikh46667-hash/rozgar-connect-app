@@ -159,14 +159,14 @@ const TopHeader = () => {
             <button
               onClick={() => navigate('/search')}
               className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                isActive('/search') ? 'bg-primary text-primary-foreground' : 'text-white/90 hover:bg-white/10'
+                isActive('/search') ? 'bg-primary text-primary-foreground' : 'text-foreground/80 hover:bg-muted'
               }`}
             >
               <Search size={18} />
             </button>
             <button
               onClick={toggle}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-white/90 hover:bg-white/10 transition-colors relative"
+              className="w-9 h-9 rounded-lg flex items-center justify-center text-foreground/80 hover:bg-muted transition-colors relative"
             >
               <span className="text-base">🌐</span>
               <span className="absolute -bottom-0.5 -right-0.5 text-[7px] font-black bg-primary text-primary-foreground rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none shadow-sm">
@@ -181,14 +181,14 @@ const TopHeader = () => {
                 } else navigate('/login');
               }}
               className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                user ? 'bg-primary text-primary-foreground' : 'text-white/90 hover:bg-white/10'
+                user ? 'bg-primary text-primary-foreground' : 'text-foreground/80 hover:bg-muted'
               }`}
             >
               {user ? <User size={18} /> : <LogIn size={18} />}
             </button>
             <button
               onClick={() => setDrawerOpen(true)}
-              className="w-9 h-9 rounded-lg flex items-center justify-center text-white/90 hover:bg-white/10 transition-colors"
+              className="w-9 h-9 rounded-lg flex items-center justify-center text-foreground/80 hover:bg-muted transition-colors"
             >
               <Menu size={20} />
             </button>
