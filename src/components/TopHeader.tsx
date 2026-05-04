@@ -69,7 +69,7 @@ const TopHeader = () => {
             {user ? (
               <button
                 onClick={() => navigate(user.type === 'worker' ? `/worker/${user.id}` : '/')}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-white/20 bg-white/5 text-white hover:bg-primary hover:border-primary hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200 active:scale-[0.97]"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-border bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30 transition-all duration-200 active:scale-[0.97]"
               >
                 <User size={16} />
                 {t('प्रोफ़ाइल', lang)}
@@ -80,7 +80,7 @@ const TopHeader = () => {
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97] ${
                   isActive('/login')
                     ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30'
-                    : 'bg-white/5 text-white border-white/20 hover:bg-primary hover:border-primary hover:shadow-lg hover:shadow-primary/30'
+                    : 'bg-secondary text-foreground border-border hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-lg hover:shadow-primary/30'
                 }`}
               >
                 <LogIn size={16} />
@@ -91,11 +91,11 @@ const TopHeader = () => {
             {/* Language */}
             <button
               onClick={toggle}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40 hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border border-border bg-secondary text-foreground hover:bg-muted hover:border-border/80 hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
             >
               <span className="text-base leading-none">🇮🇳</span>
               <span>{lang === 'hi' ? 'हिन्दी' : 'English'}</span>
-              <ChevronDown size={14} className="text-white/70" />
+              <ChevronDown size={14} className="text-muted-foreground" />
             </button>
 
             {/* Admin Panel */}
@@ -104,7 +104,7 @@ const TopHeader = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97] ${
                 isActive('/admin')
                   ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30'
-                  : 'border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40'
+                  : 'border-border bg-secondary text-foreground hover:bg-muted hover:border-border/80'
               }`}
             >
               <Settings size={16} />
@@ -117,7 +117,7 @@ const TopHeader = () => {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.97] ${
                 isActive('/about')
                   ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/30'
-                  : 'border-white/20 bg-white/5 text-white hover:bg-white/10 hover:border-white/40'
+                  : 'border-border bg-secondary text-foreground hover:bg-muted hover:border-border/80'
               }`}
             >
               <Info size={16} />
@@ -125,14 +125,14 @@ const TopHeader = () => {
             </button>
 
             {/* Search bar */}
-            <div className="flex items-center rounded-xl border border-white/20 overflow-hidden bg-white/10 hover:border-primary/60 focus-within:border-primary focus-within:shadow-[0_0_0_3px_hsl(var(--primary)/0.25)] transition-all ml-1">
+            <div className="flex items-center rounded-xl border border-border overflow-hidden bg-muted hover:border-primary/60 focus-within:border-primary focus-within:shadow-[0_0_0_3px_hsl(var(--primary)/0.25)] transition-all ml-1">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder={t('Search...', lang)}
-                className="px-3.5 py-2 text-sm bg-transparent outline-none w-32 xl:w-44 text-white placeholder:text-white/60"
+                className="px-3.5 py-2 text-sm bg-transparent outline-none w-32 xl:w-44 text-foreground placeholder:text-muted-foreground"
               />
               <button
                 onClick={handleSearch}
@@ -146,7 +146,7 @@ const TopHeader = () => {
             {user && (
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-destructive/40 text-white bg-destructive/20 hover:bg-destructive hover:border-destructive hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-destructive/40 text-destructive bg-destructive/10 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive hover:-translate-y-0.5 transition-all duration-200 active:scale-[0.97]"
               >
                 <LogOut size={16} />
                 {t('लॉगआउट', lang)}
