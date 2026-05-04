@@ -43,8 +43,8 @@ const TopHeader = () => {
           
           {/* Logo — always visible */}
           <button onClick={() => navigate('/')} className="flex items-center gap-2.5 shrink-0 group mr-auto lg:mr-0">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg group-hover:shadow-primary/40 transition-all duration-200 group-hover:scale-105">
-              <span className="text-primary-foreground font-black text-xl leading-none">R</span>
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg group-hover:shadow-white/40 transition-all duration-200 group-hover:scale-105">
+              <span className="text-primary font-black text-xl leading-none">R</span>
             </div>
             <span className="text-lg font-extrabold tracking-tight text-white">RozgarSewa</span>
           </button>
