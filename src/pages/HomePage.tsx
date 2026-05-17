@@ -64,6 +64,24 @@ const HomePage = () => {
             </div>
             <span className="text-lg font-bold tracking-tight">RozgarSewa</span>
           </div>
+
+          {/* Animated Welcome Hero — language-aware */}
+          <div key={lang} className="mb-4 animate-fade-in-up">
+            {lang === 'hi' ? (
+              <h2 className="welcome-hero welcome-hero--hi font-extrabold leading-tight"
+                  style={{ fontSize: 'clamp(1.5rem, 1rem + 3.5vw, 4.5rem)' }}>
+                <span className="welcome-glow">रोजगार कनेक्ट</span>{' '}
+                <span className="opacity-90">में आपका स्वागत है</span>
+              </h2>
+            ) : (
+              <h2 className="welcome-hero welcome-hero--en font-extrabold uppercase tracking-wider leading-tight"
+                  style={{ fontSize: 'clamp(1.4rem, 0.9rem + 3.4vw, 4.5rem)' }}>
+                <span className="opacity-90">Welcome to</span>{' '}
+                <span className="welcome-glow">Rozgar Connect</span>
+              </h2>
+            )}
+          </div>
+
           <h1 className="text-2xl font-extrabold leading-tight mb-2">
             {t('गांव में रोजगार पाएं – Rozgar Sewa के साथ')}
           </h1>
