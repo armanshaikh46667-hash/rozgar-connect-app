@@ -51,52 +51,47 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-12 pb-16 text-primary-foreground">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-4 right-4 w-32 h-32 rounded-full bg-primary-foreground/20 blur-3xl" />
-          <div className="absolute bottom-4 left-4 w-24 h-24 rounded-full bg-primary-foreground/15 blur-2xl" />
+      {/* Hero — Cinematic Welcome */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-accent-foreground px-6 pt-14 pb-20 text-primary-foreground">
+        {/* Radial light + ambient blurs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute top-6 right-6 w-40 h-40 rounded-full bg-primary-foreground/20 blur-3xl animate-pulse" />
+          <div className="absolute bottom-6 left-6 w-32 h-32 rounded-full bg-primary-foreground/15 blur-2xl animate-pulse" />
         </div>
-        <div className="max-w-[120rem] mx-auto relative z-10">
-          <div className="flex items-center gap-2 mb-4">
+        {/* Floating glow particles */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <span className="particle particle--1" />
+          <span className="particle particle--2" />
+          <span className="particle particle--3" />
+          <span className="particle particle--4" />
+          <span className="particle particle--5" />
+          <span className="particle particle--6" />
+        </div>
+
+        <div className="max-w-[120rem] mx-auto relative z-10 flex flex-col items-center justify-center text-center min-h-[40vh] md:min-h-[55vh]">
+          <div className="flex items-center gap-2 mb-6 opacity-90">
             <div className="w-10 h-10 rounded-xl bg-primary-foreground/20 flex items-center justify-center">
               <Briefcase size={22} className="text-primary-foreground" />
             </div>
             <span className="text-lg font-bold tracking-tight">RozgarSewa</span>
           </div>
 
-          {/* Animated Welcome Hero — language-aware */}
-          <div key={lang} className="mb-4 animate-fade-in-up">
+          {/* Animated Welcome Hero — language-aware, centered, cinematic */}
+          <div key={lang} className="animate-fade-in-up">
             {lang === 'hi' ? (
-              <h2 className="welcome-hero welcome-hero--hi font-extrabold leading-tight"
-                  style={{ fontSize: 'clamp(1.5rem, 1rem + 3.5vw, 4.5rem)' }}>
-                <span className="welcome-glow">रोजगार कनेक्ट</span>{' '}
-                <span className="opacity-90">में आपका स्वागत है</span>
-              </h2>
+              <h1 className="welcome-hero welcome-hero--hi font-extrabold leading-[1.15] text-center"
+                  style={{ fontSize: 'clamp(1.9rem, 1.1rem + 5vw, 6.5rem)' }}>
+                <span className="welcome-glow welcome-flicker block">रोजगार कनेक्ट में</span>
+                <span className="welcome-white block mt-2">आपका स्वागत है</span>
+              </h1>
             ) : (
-              <h2 className="welcome-hero welcome-hero--en font-extrabold uppercase tracking-wider leading-tight"
-                  style={{ fontSize: 'clamp(1.4rem, 0.9rem + 3.4vw, 4.5rem)' }}>
-                <span className="opacity-90">Welcome to</span>{' '}
-                <span className="welcome-glow">Rozgar Connect</span>
-              </h2>
+              <h1 className="welcome-hero welcome-hero--en font-extrabold uppercase tracking-wider leading-[1.05] text-center"
+                  style={{ fontSize: 'clamp(2rem, 1rem + 5.5vw, 7rem)' }}>
+                <span className="welcome-white block">Welcome to</span>
+                <span className="welcome-glow welcome-flicker block mt-2">Rozgar Connect</span>
+              </h1>
             )}
-          </div>
-
-          <h1 className="text-2xl font-extrabold leading-tight mb-2">
-            {t('गांव में रोजगार पाएं – Rozgar Sewa के साथ')}
-          </h1>
-          <p className="text-primary-foreground/80 text-sm leading-relaxed mb-6">
-            {t('मजदूर और काम देने वाले अब सीधे जुड़ें')}
-          </p>
-          <div className="flex gap-3">
-            <button onClick={() => navigate('/search')}
-              className="flex-1 bg-primary-foreground text-primary py-3.5 rounded-xl text-sm font-bold shadow-lg active:scale-[0.97] transition-transform flex items-center justify-center gap-2">
-              <Search size={18} /> {t('काम ढूंढें')}
-            </button>
-            <button onClick={() => navigate('/business-register')}
-              className="flex-1 bg-primary-foreground/15 border border-primary-foreground/30 text-primary-foreground py-3.5 rounded-xl text-sm font-bold active:scale-[0.97] transition-transform flex items-center justify-center gap-2">
-              <UserPlus size={18} /> {t('रजिस्टर करें')}
-            </button>
           </div>
         </div>
       </div>
