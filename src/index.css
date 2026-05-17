@@ -233,6 +233,46 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ===== Animated Welcome Hero ===== */
+@keyframes welcome-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+@keyframes welcome-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 8px hsl(0 0% 100% / 0.85),
+      0 0 20px hsl(140 100% 70% / 0.55),
+      0 0 40px hsl(140 100% 60% / 0.35);
+  }
+  50% {
+    text-shadow:
+      0 0 14px hsl(0 0% 100% / 1),
+      0 0 32px hsl(140 100% 75% / 0.85),
+      0 0 64px hsl(140 100% 65% / 0.55);
+  }
+}
+
+.welcome-hero {
+  display: inline-block;
+  color: hsl(0 0% 100%);
+  animation: welcome-float 4s ease-in-out infinite;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.welcome-hero:hover {
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.1);
+}
+.welcome-glow {
+  background: linear-gradient(90deg, #ffffff 0%, #d6ffe4 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: welcome-pulse 2.6s ease-in-out infinite;
+}
+.welcome-hero--en { letter-spacing: 0.04em; }
+.welcome-hero--hi { letter-spacing: 0.005em; }
+
 /* Ultra-wide screens — keep content premium and balanced */
 /* Ultra-wide screens — keep content premium and balanced */
 @media (min-width: 2560px) {
