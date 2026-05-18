@@ -74,68 +74,68 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Poppins', sans-serif;
-    font-size: 18px;
+    font-size: 22px;
     line-height: 1.7;
   }
 
-  /* Pixel-based responsive typography */
-  h1 { font-size: 48px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
-  h2 { font-size: 36px; line-height: 1.2; font-weight: 700; letter-spacing: -0.015em; }
-  h3 { font-size: 30px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
-  h4 { font-size: 26px; line-height: 1.3; font-weight: 600; }
-  p  { font-size: 18px; line-height: 1.7; }
-  label  { font-size: 20px; font-weight: 500; }
-  button { font-size: 20px; font-weight: 600; }
-  input, textarea, select { font-size: 20px; }
+  /* Pixel-based extra-large typography */
+  h1 { font-size: 64px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+  h2 { font-size: 44px; line-height: 1.18; font-weight: 700; letter-spacing: -0.015em; }
+  h3 { font-size: 38px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+  h4 { font-size: 32px; line-height: 1.3; font-weight: 600; }
+  p  { font-size: 22px; line-height: 1.7; }
+  label  { font-size: 26px; font-weight: 500; }
+  button { font-size: 24px; font-weight: 600; }
+  input, textarea, select { font-size: 24px; }
 
   @media (min-width: 768px) {
-    body { font-size: 22px; }
-    h1 { font-size: 72px; }
-    h2 { font-size: 52px; }
-    h3 { font-size: 36px; }
-    h4 { font-size: 30px; }
-    p  { font-size: 22px; }
-    label  { font-size: 24px; }
-    button { font-size: 24px; }
-    input, textarea, select { font-size: 24px; }
+    body { font-size: 26px; }
+    h1 { font-size: 90px; }
+    h2 { font-size: 62px; }
+    h3 { font-size: 44px; }
+    h4 { font-size: 36px; }
+    p  { font-size: 26px; }
+    label  { font-size: 30px; }
+    button { font-size: 28px; }
+    input, textarea, select { font-size: 28px; }
   }
 
   @media (min-width: 1024px) {
-    body { font-size: 24px; line-height: 1.75; }
-    h1 { font-size: 96px; }
-    h2 { font-size: 64px; }
-    h3 { font-size: 44px; }
-    h4 { font-size: 36px; }
-    p  { font-size: 24px; }
-    label  { font-size: 28px; }
-    button { font-size: 28px; }
-    input, textarea, select { font-size: 26px; }
+    body { font-size: 28px; line-height: 1.75; }
+    h1 { font-size: 120px; }
+    h2 { font-size: 78px; }
+    h3 { font-size: 52px; }
+    h4 { font-size: 42px; }
+    p  { font-size: 28px; }
+    label  { font-size: 34px; }
+    button { font-size: 32px; }
+    input, textarea, select { font-size: 30px; }
   }
 
   @media (min-width: 1440px) {
-    h1 { font-size: 110px; }
-    h2 { font-size: 72px; }
-    h3 { font-size: 48px; }
-  }
-
-  @media (min-width: 2560px) {
-    body { font-size: 30px; }
     h1 { font-size: 140px; }
     h2 { font-size: 90px; }
     h3 { font-size: 60px; }
-    h4 { font-size: 46px; }
-    p  { font-size: 30px; }
-    label, button, input, textarea, select { font-size: 32px; }
+  }
+
+  @media (min-width: 2560px) {
+    body { font-size: 36px; }
+    h1 { font-size: 180px; }
+    h2 { font-size: 120px; }
+    h3 { font-size: 76px; }
+    h4 { font-size: 56px; }
+    p  { font-size: 36px; }
+    label, button, input, textarea, select { font-size: 40px; }
   }
 
   @media (min-width: 3840px) {
-    body { font-size: 38px; }
-    h1 { font-size: 160px; }
-    h2 { font-size: 110px; }
-    h3 { font-size: 72px; }
-    h4 { font-size: 56px; }
-    p  { font-size: 38px; }
-    label, button, input, textarea, select { font-size: 40px; }
+    body { font-size: 46px; }
+    h1 { font-size: 220px; }
+    h2 { font-size: 150px; }
+    h3 { font-size: 96px; }
+    h4 { font-size: 72px; }
+    p  { font-size: 46px; }
+    label, button, input, textarea, select { font-size: 52px; }
   }
 
   /* Smooth focus rings on all interactive controls */
@@ -323,3 +323,89 @@
 /* Ultra-wide screens — keep content premium and balanced */
 /* Ultra-wide screens — keep content premium and balanced */
 /* Ultra-wide overrides now handled in base typography above */
+
+/* ===== Pixel Red Double Effect ===== */
+:root {
+  --pixel-red: 348 100% 50%;        /* #ff003c */
+  --pixel-red-glow: 348 100% 65%;   /* #ff4d6d */
+  --pixel-brown: 0 24% 24%;         /* #4b2e2e */
+}
+
+@keyframes pixel-red-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 6px hsl(var(--pixel-red) / 0.85),
+      0 0 18px hsl(var(--pixel-red-glow) / 0.7),
+      0 0 36px hsl(var(--pixel-red) / 0.45),
+      2px 2px 0 hsl(var(--pixel-brown) / 0.6);
+  }
+  50% {
+    text-shadow:
+      0 0 10px hsl(var(--pixel-red) / 1),
+      0 0 28px hsl(var(--pixel-red-glow) / 0.95),
+      0 0 60px hsl(var(--pixel-red) / 0.7),
+      3px 3px 0 hsl(var(--pixel-brown) / 0.75);
+  }
+}
+
+@keyframes pixel-red-shimmer {
+  0%   { background-position: -200% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes pixel-red-border-pulse {
+  0%, 100% { box-shadow: 0 0 12px hsl(var(--pixel-red) / 0.55), 0 0 28px hsl(var(--pixel-red-glow) / 0.35); }
+  50%      { box-shadow: 0 0 22px hsl(var(--pixel-red) / 0.85), 0 0 52px hsl(var(--pixel-red-glow) / 0.6); }
+}
+
+/* Headings & nav text: cinematic red double glow */
+h1, h2, h3,
+nav a, nav button,
+.menu-text, .nav-text {
+  text-shadow:
+    0 0 4px hsl(var(--pixel-red) / 0.45),
+    0 0 14px hsl(var(--pixel-red-glow) / 0.35),
+    1px 1px 0 hsl(var(--pixel-brown) / 0.5);
+}
+
+/* Strong red neon text utility */
+.text-pixel-red {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--pixel-red)) 0%,
+    hsl(var(--pixel-red-glow)) 25%,
+    hsl(0 0% 100%) 50%,
+    hsl(var(--pixel-red-glow)) 75%,
+    hsl(var(--pixel-red)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: pixel-red-shimmer 3.5s linear infinite, pixel-red-pulse 2.4s ease-in-out infinite;
+}
+
+/* Floating + cinematic shine for hero */
+.pixel-red-hero {
+  animation: welcome-float 4s ease-in-out infinite, pixel-red-pulse 2.6s ease-in-out infinite;
+}
+
+/* Glassmorphism card with red hover border */
+.pixel-red-card {
+  background: hsl(0 0% 100% / 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid hsl(var(--pixel-red) / 0.35);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.pixel-red-card:hover {
+  border-color: hsl(var(--pixel-red));
+  transform: translateY(-4px);
+  animation: pixel-red-border-pulse 1.8s ease-in-out infinite;
+}
+
+/* Button hover: red gradient border */
+button:hover, .btn-pixel-red {
+  /* keep base bg; layer subtle red glow on hover */
+  box-shadow: 0 0 0 1px hsl(var(--pixel-red) / 0.45), 0 8px 24px -6px hsl(var(--pixel-red-glow) / 0.45);
+}
