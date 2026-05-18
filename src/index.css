@@ -322,12 +322,4 @@
 
 /* Ultra-wide screens — keep content premium and balanced */
 /* Ultra-wide screens — keep content premium and balanced */
-@media (min-width: 2560px) {
-  body { font-size: 1.3rem; line-height: 1.7; }
-}
-@media (min-width: 3840px) {
-  body { font-size: 1.55rem; line-height: 1.75; }
-}
-@media (min-width: 5120px) {
-  body { font-size: 1.85rem; line-height: 1.8; }
-}
+/* Ultra-wide overrides now handled in base typography above */
