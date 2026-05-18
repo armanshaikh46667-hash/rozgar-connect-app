@@ -74,68 +74,68 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Poppins', sans-serif;
-    font-size: 18px;
+    font-size: 22px;
     line-height: 1.7;
   }
 
-  /* Pixel-based responsive typography */
-  h1 { font-size: 48px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
-  h2 { font-size: 36px; line-height: 1.2; font-weight: 700; letter-spacing: -0.015em; }
-  h3 { font-size: 30px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
-  h4 { font-size: 26px; line-height: 1.3; font-weight: 600; }
-  p  { font-size: 18px; line-height: 1.7; }
-  label  { font-size: 20px; font-weight: 500; }
-  button { font-size: 20px; font-weight: 600; }
-  input, textarea, select { font-size: 20px; }
+  /* Pixel-based extra-large typography */
+  h1 { font-size: 64px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+  h2 { font-size: 44px; line-height: 1.18; font-weight: 700; letter-spacing: -0.015em; }
+  h3 { font-size: 38px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+  h4 { font-size: 32px; line-height: 1.3; font-weight: 600; }
+  p  { font-size: 22px; line-height: 1.7; }
+  label  { font-size: 26px; font-weight: 500; }
+  button { font-size: 24px; font-weight: 600; }
+  input, textarea, select { font-size: 24px; }
 
   @media (min-width: 768px) {
-    body { font-size: 22px; }
-    h1 { font-size: 72px; }
-    h2 { font-size: 52px; }
-    h3 { font-size: 36px; }
-    h4 { font-size: 30px; }
-    p  { font-size: 22px; }
-    label  { font-size: 24px; }
-    button { font-size: 24px; }
-    input, textarea, select { font-size: 24px; }
+    body { font-size: 26px; }
+    h1 { font-size: 90px; }
+    h2 { font-size: 62px; }
+    h3 { font-size: 44px; }
+    h4 { font-size: 36px; }
+    p  { font-size: 26px; }
+    label  { font-size: 30px; }
+    button { font-size: 28px; }
+    input, textarea, select { font-size: 28px; }
   }
 
   @media (min-width: 1024px) {
-    body { font-size: 24px; line-height: 1.75; }
-    h1 { font-size: 96px; }
-    h2 { font-size: 64px; }
-    h3 { font-size: 44px; }
-    h4 { font-size: 36px; }
-    p  { font-size: 24px; }
-    label  { font-size: 28px; }
-    button { font-size: 28px; }
-    input, textarea, select { font-size: 26px; }
+    body { font-size: 28px; line-height: 1.75; }
+    h1 { font-size: 120px; }
+    h2 { font-size: 78px; }
+    h3 { font-size: 52px; }
+    h4 { font-size: 42px; }
+    p  { font-size: 28px; }
+    label  { font-size: 34px; }
+    button { font-size: 32px; }
+    input, textarea, select { font-size: 30px; }
   }
 
   @media (min-width: 1440px) {
-    h1 { font-size: 110px; }
-    h2 { font-size: 72px; }
-    h3 { font-size: 48px; }
-  }
-
-  @media (min-width: 2560px) {
-    body { font-size: 30px; }
     h1 { font-size: 140px; }
     h2 { font-size: 90px; }
     h3 { font-size: 60px; }
-    h4 { font-size: 46px; }
-    p  { font-size: 30px; }
-    label, button, input, textarea, select { font-size: 32px; }
+  }
+
+  @media (min-width: 2560px) {
+    body { font-size: 36px; }
+    h1 { font-size: 180px; }
+    h2 { font-size: 120px; }
+    h3 { font-size: 76px; }
+    h4 { font-size: 56px; }
+    p  { font-size: 36px; }
+    label, button, input, textarea, select { font-size: 40px; }
   }
 
   @media (min-width: 3840px) {
-    body { font-size: 38px; }
-    h1 { font-size: 160px; }
-    h2 { font-size: 110px; }
-    h3 { font-size: 72px; }
-    h4 { font-size: 56px; }
-    p  { font-size: 38px; }
-    label, button, input, textarea, select { font-size: 40px; }
+    body { font-size: 46px; }
+    h1 { font-size: 220px; }
+    h2 { font-size: 150px; }
+    h3 { font-size: 96px; }
+    h4 { font-size: 72px; }
+    p  { font-size: 46px; }
+    label, button, input, textarea, select { font-size: 52px; }
   }
 
   /* Smooth focus rings on all interactive controls */
