@@ -74,48 +74,68 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Poppins', sans-serif;
-    font-size: clamp(0.9rem, 0.75rem + 0.7vw, 1.375rem);
+    font-size: 18px;
     line-height: 1.7;
   }
 
-  /* Fluid responsive typography — mobile compact, desktop ~2× larger */
-  h1 {
-    font-size: clamp(1.75rem, 1rem + 4.5vw, 6rem);
-    line-height: 1.1;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+  /* Pixel-based responsive typography */
+  h1 { font-size: 48px; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
+  h2 { font-size: 36px; line-height: 1.2; font-weight: 700; letter-spacing: -0.015em; }
+  h3 { font-size: 30px; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+  h4 { font-size: 26px; line-height: 1.3; font-weight: 600; }
+  p  { font-size: 18px; line-height: 1.7; }
+  label  { font-size: 20px; font-weight: 500; }
+  button { font-size: 20px; font-weight: 600; }
+  input, textarea, select { font-size: 20px; }
+
+  @media (min-width: 768px) {
+    body { font-size: 22px; }
+    h1 { font-size: 72px; }
+    h2 { font-size: 52px; }
+    h3 { font-size: 36px; }
+    h4 { font-size: 30px; }
+    p  { font-size: 22px; }
+    label  { font-size: 24px; }
+    button { font-size: 24px; }
+    input, textarea, select { font-size: 24px; }
   }
-  h2 {
-    font-size: clamp(1.375rem, 0.85rem + 3.4vw, 4.5rem);
-    line-height: 1.18;
-    font-weight: 700;
-    letter-spacing: -0.015em;
+
+  @media (min-width: 1024px) {
+    body { font-size: 24px; line-height: 1.75; }
+    h1 { font-size: 96px; }
+    h2 { font-size: 64px; }
+    h3 { font-size: 44px; }
+    h4 { font-size: 36px; }
+    p  { font-size: 24px; }
+    label  { font-size: 28px; }
+    button { font-size: 28px; }
+    input, textarea, select { font-size: 26px; }
   }
-  h3 {
-    font-size: clamp(1.125rem, 0.8rem + 2.2vw, 3.25rem);
-    line-height: 1.25;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+
+  @media (min-width: 1440px) {
+    h1 { font-size: 110px; }
+    h2 { font-size: 72px; }
+    h3 { font-size: 48px; }
   }
-  h4 {
-    font-size: clamp(1rem, 0.78rem + 1.5vw, 2.5rem);
-    line-height: 1.3;
-    font-weight: 600;
+
+  @media (min-width: 2560px) {
+    body { font-size: 30px; }
+    h1 { font-size: 140px; }
+    h2 { font-size: 90px; }
+    h3 { font-size: 60px; }
+    h4 { font-size: 46px; }
+    p  { font-size: 30px; }
+    label, button, input, textarea, select { font-size: 32px; }
   }
-  p {
-    font-size: clamp(0.9rem, 0.78rem + 0.65vw, 1.375rem);
-    line-height: 1.7;
-  }
-  label {
-    font-size: clamp(0.8125rem, 0.7rem + 0.55vw, 1.25rem);
-    font-weight: 500;
-  }
-  button {
-    font-size: clamp(0.875rem, 0.75rem + 0.6vw, 1.3125rem);
-    font-weight: 600;
-  }
-  input, textarea, select {
-    font-size: clamp(0.9rem, 0.78rem + 0.6vw, 1.3125rem);
+
+  @media (min-width: 3840px) {
+    body { font-size: 38px; }
+    h1 { font-size: 160px; }
+    h2 { font-size: 110px; }
+    h3 { font-size: 72px; }
+    h4 { font-size: 56px; }
+    p  { font-size: 38px; }
+    label, button, input, textarea, select { font-size: 40px; }
   }
 
   /* Smooth focus rings on all interactive controls */
@@ -302,12 +322,4 @@
 
 /* Ultra-wide screens — keep content premium and balanced */
 /* Ultra-wide screens — keep content premium and balanced */
-@media (min-width: 2560px) {
-  body { font-size: 1.3rem; line-height: 1.7; }
-}
-@media (min-width: 3840px) {
-  body { font-size: 1.55rem; line-height: 1.75; }
-}
-@media (min-width: 5120px) {
-  body { font-size: 1.85rem; line-height: 1.8; }
-}
+/* Ultra-wide overrides now handled in base typography above */
