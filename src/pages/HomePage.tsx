@@ -82,14 +82,14 @@ const HomePage = () => {
             {lang === 'hi' ? (
               <h1 className="welcome-hero welcome-hero--hi font-extrabold leading-[1.15] text-center"
                   style={{ fontSize: 'clamp(1.9rem, 1.1rem + 5vw, 6.5rem)' }}>
-                <span className="welcome-glow welcome-flicker block">रोजगार कनेक्ट में</span>
+                <span className="welcome-glow welcome-flicker block">रोजगार सेवा में</span>
                 <span className="welcome-white block mt-2">आपका स्वागत है</span>
               </h1>
             ) : (
               <h1 className="welcome-hero welcome-hero--en font-extrabold uppercase tracking-wider leading-[1.05] text-center"
                   style={{ fontSize: 'clamp(2rem, 1rem + 5.5vw, 7rem)' }}>
                 <span className="welcome-white block">Welcome to</span>
-                <span className="welcome-glow welcome-flicker block mt-2">Rozgar Connect</span>
+                <span className="welcome-glow welcome-flicker block mt-2">रोजगार सेवा</span>
               </h1>
             )}
           </div>
