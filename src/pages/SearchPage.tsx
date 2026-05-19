@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound, Store, Laptop, GraduationCap, ChevronRight, ArrowLeft } from 'lucide-react';
+import VoiceMic from '@/components/VoiceMic';
 import { useWorkerStore, CATEGORY_GROUPS, getAverageRating, getExperienceBadge, getDistance, type WorkCategory, type Availability, type WorkerStatus } from '@/store/workerStore';
 import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import BookingDialog from '@/components/BookingDialog';
@@ -515,7 +516,12 @@ const SearchPage = () => {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
             <input type="text" placeholder={t('नाम से खोजें...')} value={name} onChange={(e) => setName(e.target.value)}
-              className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
+              className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-12 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
+            <VoiceMic
+              size={16}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9"
+              onResult={(text) => setName(text)}
+            />
           </div>
 
           <div className="flex items-center gap-2">
