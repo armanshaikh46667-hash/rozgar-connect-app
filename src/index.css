@@ -358,15 +358,7 @@
   50%      { box-shadow: 0 0 22px hsl(var(--pixel-red) / 0.85), 0 0 52px hsl(var(--pixel-red-glow) / 0.6); }
 }
 
-/* Headings & nav text: cinematic red double glow */
-h1, h2, h3,
-nav a, nav button,
-.menu-text, .nav-text {
-  text-shadow:
-    0 0 4px hsl(var(--pixel-red) / 0.45),
-    0 0 14px hsl(var(--pixel-red-glow) / 0.35),
-    1px 1px 0 hsl(var(--pixel-brown) / 0.5);
-}
+/* Red glow removed from global text per user request — keep .text-pixel-red utility opt-in only */
 
 /* Strong red neon text utility */
 .text-pixel-red {

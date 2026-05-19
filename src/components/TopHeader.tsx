@@ -1,4 +1,5 @@
 import { Search, UserPlus, LogIn, LogOut, User, Home, BookOpen, IndianRupee, Shield, Info, ClipboardList, X, Menu, Settings, ChevronDown } from 'lucide-react';
+import VoiceMic from '@/components/VoiceMic';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuthStore } from '@/store/authStore';
@@ -124,7 +125,7 @@ const TopHeader = () => {
               {t('About Us', lang)}
             </button>
 
-            {/* Search bar */}
+            {/* Search bar with voice */}
             <div className="flex items-center rounded-xl border border-border overflow-hidden bg-muted hover:border-primary/60 focus-within:border-primary focus-within:shadow-[0_0_0_3px_hsl(var(--primary)/0.25)] transition-all ml-1">
               <input
                 type="text"
@@ -133,6 +134,11 @@ const TopHeader = () => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder={t('Search...', lang)}
                 className="px-3.5 py-2 text-sm bg-transparent outline-none w-32 xl:w-44 text-foreground placeholder:text-muted-foreground"
+              />
+              <VoiceMic
+                size={16}
+                className="!rounded-none px-2 py-2 bg-transparent hover:bg-primary/10 hover:text-primary"
+                onResult={(text) => { setSearchQuery(text); navigate(`/search?q=${encodeURIComponent(text)}`); }}
               />
               <button
                 onClick={handleSearch}
@@ -158,11 +164,11 @@ const TopHeader = () => {
           <div className="flex lg:hidden items-center gap-1">
             <button
               onClick={() => navigate('/search')}
-              className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
-                isActive('/search') ? 'bg-primary text-primary-foreground' : 'text-foreground/80 hover:bg-muted'
+              className={`h-9 px-3 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-colors ${
+                isActive('/search') ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground'
               }`}
             >
-              <Search size={18} />
+              {t('Search', lang)}
             </button>
             <button
               onClick={toggle}
