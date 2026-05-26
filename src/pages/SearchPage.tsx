@@ -440,40 +440,14 @@ const SearchPage = () => {
   }, [nearbyMode]);
 
   const results = useMemo(() => {
-    let filtered = workers.filter((w) => {
-      const matchCategory = !category || w.category === category;
-      const matchVillage = !village || w.village.toLowerCase().includes(village.toLowerCase());
-      const matchName = !name || w.name.toLowerCase().includes(name.toLowerCase());
-      const matchExp = !minExp || w.experience >= parseInt(minExp);
-      const avg = getAverageRating(w.ratings);
-      const matchRating = !minRating || avg >= parseInt(minRating);
-      return matchCategory && matchVillage && matchName && matchExp && matchRating;
-    });
+    if (!searched) return [];
+    return workers.filter((w) => !activeCategory || w.category === activeCategory);
+  }, [workers, activeCategory, searched]);
 
-    if (nearbyMode && userLat && userLng) {
-      const maxDist = parseInt(maxDistance);
-      filtered = filtered
-        .filter(w => w.lat && w.lng)
-        .map(w => ({ ...w, distance: getDistance(userLat, userLng, w.lat!, w.lng!) }))
-        .filter(w => w.distance <= maxDist)
-        .sort((a, b) => a.distance - b.distance);
-    }
-
-    return filtered;
-  }, [workers, category, village, name, minExp, minRating, nearbyMode, userLat, userLng, maxDistance]);
-
-  // Filter businesses — show matching businesses when their category is selected
   const filteredBusinesses = useMemo(() => {
-    return businesses.filter(b => {
-      const matchCategory = !category || b.category === category;
-      const matchVillage = !village || b.village.toLowerCase().includes(village.toLowerCase());
-      const matchName = !name || b.name.toLowerCase().includes(name.toLowerCase()) || b.category.toLowerCase().includes(name.toLowerCase());
-      if (nearbyMode && userLat && userLng && b.lat && b.lng) {
-        return matchCategory && matchVillage && matchName && getDistance(userLat, userLng, b.lat, b.lng) <= parseInt(maxDistance);
-      }
-      return matchCategory && matchVillage && matchName;
-    });
-  }, [businesses, village, name, category, nearbyMode, userLat, userLng, maxDistance]);
+    if (!searched) return [];
+    return businesses.filter((b) => !activeCategory || b.category === activeCategory);
+  }, [businesses, activeCategory, searched]);
 
   const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
 
