@@ -354,11 +354,6 @@ const SearchPage = () => {
   const lang = useLanguageStore((s) => s.lang);
 
   const [category, setCategory] = useState(searchParams.get('category') || '');
-  const [village, setVillage] = useState('');
-  const [name, setName] = useState('');
-  const [minExp, setMinExp] = useState('');
-  const [minRating, setMinRating] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
   const [ratingOpenId, setRatingOpenId] = useState<string | null>(null);
   const [editOpenId, setEditOpenId] = useState<string | null>(null);
   const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
@@ -366,12 +361,10 @@ const SearchPage = () => {
   const [galleryOpenId, setGalleryOpenId] = useState<string | null>(null);
   const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
   const [showForgotPin, setShowForgotPin] = useState(false);
-  const [searched, setSearched] = useState(!!searchParams.get('category'));
   const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || '');
 
   const handleSearch = () => {
     setActiveCategory(category);
-    setSearched(true);
   };
 
   // Business entities
@@ -424,18 +417,13 @@ const SearchPage = () => {
   const userLat: number | null = null;
   const userLng: number | null = null;
 
-
   const results = useMemo(() => {
-    if (!searched) return [];
     return workers.filter((w) => !activeCategory || w.category === activeCategory);
-  }, [workers, activeCategory, searched]);
+  }, [workers, activeCategory]);
 
   const filteredBusinesses = useMemo(() => {
-    if (!searched) return [];
     return businesses.filter((b) => !activeCategory || b.category === activeCategory);
-  }, [businesses, activeCategory, searched]);
-
-  const inputClass = "w-full bg-secondary text-secondary-foreground rounded-xl px-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
+  }, [businesses, activeCategory]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -450,12 +438,13 @@ const SearchPage = () => {
       </div>
 
       <div className="max-w-[120rem] mx-auto px-4 -mt-4">
-        <div className="bg-card rounded-2xl shadow-xl border border-border p-4 md:p-5">
-          <div className="flex flex-col md:flex-row gap-3">
+        <div className="bg-card rounded-2xl shadow-xl border border-border p-4 md:p-6">
+          <div className="flex flex-col md:flex-row items-stretch gap-3 md:gap-5">
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="flex-1 bg-secondary text-secondary-foreground rounded-xl px-4 py-3 text-sm md:text-base font-medium border border-border focus:outline-none focus:ring-2 focus:ring-primary transition-all hover:shadow-md"
+              className="flex-1 bg-secondary text-secondary-foreground rounded-2xl px-4 md:px-5 py-3 md:py-3.5 text-base md:text-lg font-semibold border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:shadow-md hover:border-primary/50 appearance-none cursor-pointer"
+              style={{ backgroundImage: 'none' }}
             >
               <option value="">{t('श्रेणी चुनें')}</option>
               {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
@@ -466,9 +455,9 @@ const SearchPage = () => {
             </select>
             <button
               onClick={handleSearch}
-              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:shadow-primary/40 hover:brightness-110 active:scale-[0.97] transition-all md:min-w-[140px]"
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold px-5 md:px-6 py-3 rounded-2xl shadow-md hover:shadow-lg hover:shadow-primary/40 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97] transition-all md:min-w-[130px] md:ml-2 text-base md:text-lg"
             >
-              <Search size={18} /> {t('खोजें')}
+              <Search size={20} /> {t('खोजें')}
             </button>
           </div>
         </div>
