@@ -464,85 +464,30 @@ const SearchPage = () => {
       </div>
 
       <div className="max-w-[120rem] mx-auto px-4 -mt-4">
-        <div className="bg-card rounded-2xl shadow-lg border border-border p-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <button onClick={() => setNearbyMode(!nearbyMode)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold border transition-colors ${nearbyMode ? 'bg-primary text-primary-foreground border-primary' : 'bg-secondary text-secondary-foreground border-border'}`}>
-              <Navigation size={14} /> {gpsLoading ? 'GPS...' : nearbyMode ? `📍 ${t('GPS Active')}` : `📍 ${t('GPS नज़दीक')}`}
+        <div className="bg-card rounded-2xl shadow-xl border border-border p-4 md:p-5">
+          <div className="flex flex-col md:flex-row gap-3">
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="flex-1 bg-secondary text-secondary-foreground rounded-xl px-4 py-3 text-sm md:text-base font-medium border border-border focus:outline-none focus:ring-2 focus:ring-primary transition-all hover:shadow-md"
+            >
+              <option value="">{t('श्रेणी चुनें')}</option>
+              {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
+                <optgroup key={group} label={t(group)}>
+                  {cats.map((c) => <option key={c} value={c}>{t(c)}</option>)}
+                </optgroup>
+              ))}
+            </select>
+            <button
+              onClick={handleSearch}
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold px-6 py-3 rounded-xl shadow-md hover:shadow-lg hover:shadow-primary/40 hover:brightness-110 active:scale-[0.97] transition-all md:min-w-[140px]"
+            >
+              <Search size={18} /> {t('खोजें')}
             </button>
-            {nearbyMode && (
-              <select value={maxDistance} onChange={e => setMaxDistance(e.target.value)}
-                className="bg-secondary text-secondary-foreground rounded-xl px-2 py-2 text-xs border border-border">
-                <option value="2">2 km</option>
-                <option value="5">5 km</option>
-                <option value="10">10 km</option>
-                <option value="25">25 km</option>
-              </select>
-            )}
           </div>
-
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className={inputClass}>
-            <option value="">{t('सभी श्रेणियाँ')}</option>
-            {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-              <optgroup key={group} label={t(group)}>
-                {cats.map((c) => <option key={c} value={c}>{t(c)}</option>)}
-              </optgroup>
-            ))}
-          </select>
-          <div className="relative">
-            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-            <input type="text" placeholder={t('गाँव से खोजें...')} value={village} onChange={(e) => setVillage(e.target.value)}
-              className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-3 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
-          </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-            <input type="text" placeholder={t('नाम से खोजें...')} value={name} onChange={(e) => setName(e.target.value)}
-              className="w-full bg-secondary text-secondary-foreground rounded-xl pl-9 pr-12 py-2.5 text-sm border border-border focus:outline-none focus:ring-2 focus:ring-ring placeholder:text-muted-foreground" />
-            <VoiceMic
-              size={16}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9"
-              onResult={(text) => setName(text)}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 text-xs text-primary font-semibold">
-              <Filter size={14} /> {showFilters ? t('फ़िल्टर बंद करें') : t('अधिक फ़िल्टर')}
-            </button>
-            {(category || village || name || minExp || minRating) && (
-              <button onClick={() => { setCategory(''); setVillage(''); setName(''); setMinExp(''); setMinRating(''); setNearbyMode(false); }}
-                className="flex items-center gap-1 text-xs text-destructive font-semibold bg-destructive/10 px-3 py-1.5 rounded-xl border border-destructive/20 hover:bg-destructive/20 transition-colors">
-                <X size={12} /> {t('Reset')}
-              </button>
-            )}
-          </div>
-
-          {showFilters && (
-            <div className="grid grid-cols-2 gap-2 animate-fade-in">
-              <div>
-                <label className="text-[10px] text-muted-foreground mb-1 block">{t('न्यूनतम अनुभव (वर्ष)')}</label>
-                <select value={minExp} onChange={(e) => setMinExp(e.target.value)} className={inputClass}>
-                  <option value="">{t('सभी')}</option>
-                  <option value="1">{t('1+ वर्ष')}</option>
-                  <option value="3">{t('3+ वर्ष')}</option>
-                  <option value="5">{t('5+ वर्ष')}</option>
-                  <option value="10">{t('10+ वर्ष')}</option>
-                </select>
-              </div>
-              <div>
-                <label className="text-[10px] text-muted-foreground mb-1 block">{t('न्यूनतम रेटिंग')}</label>
-                <select value={minRating} onChange={(e) => setMinRating(e.target.value)} className={inputClass}>
-                  <option value="">{t('सभी')}</option>
-                  <option value="3">3+ ⭐</option>
-                  <option value="4">4+ ⭐</option>
-                  <option value="5">5 ⭐</option>
-                </select>
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
 
       <div className="max-w-[120rem] mx-auto px-4 mt-6 space-y-3">
         {loading ? (
