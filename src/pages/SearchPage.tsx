@@ -421,23 +421,9 @@ const SearchPage = () => {
     } catch { /* cancelled */ }
   };
 
-  // GPS Nearby
-  const [nearbyMode, setNearbyMode] = useState(searchParams.get('nearby') === 'true');
-  const [userLat, setUserLat] = useState<number | null>(null);
-  const [userLng, setUserLng] = useState<number | null>(null);
-  const [maxDistance, setMaxDistance] = useState('5');
-  const [gpsLoading, setGpsLoading] = useState(false);
+  const userLat: number | null = null;
+  const userLng: number | null = null;
 
-  useEffect(() => {
-    if (nearbyMode && !userLat) {
-      setGpsLoading(true);
-      navigator.geolocation?.getCurrentPosition(
-        (pos) => { setUserLat(pos.coords.latitude); setUserLng(pos.coords.longitude); setGpsLoading(false); },
-        () => { setGpsLoading(false); toast.error('लोकेशन नहीं मिली'); setNearbyMode(false); },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    }
-  }, [nearbyMode]);
 
   const results = useMemo(() => {
     if (!searched) return [];
