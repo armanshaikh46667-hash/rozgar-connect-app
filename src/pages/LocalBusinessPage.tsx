@@ -113,7 +113,7 @@ const LocalBusinessPage = () => {
               <div className="space-y-3">
                 <input value={fName} onChange={e => setFName(e.target.value)} placeholder="दुकान का नाम *" className={inputClass} />
                 <select value={fCategory} onChange={e => setFCategory(e.target.value)} className={inputClass}>
-                  <option value="">{t('श्रेणी खोजें', lang)}</option>
+                  <option value="">श्रेणी खोजें *</option>
                   {BUSINESS_CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.emoji} {c.hindi} ({c.name})</option>)}
                 </select>
                 <input type="tel" value={fMobile} onChange={e => setFMobile(e.target.value.replace(/\D/g, '').slice(0, 10))} placeholder="मोबाइल नंबर *" className={inputClass} />
