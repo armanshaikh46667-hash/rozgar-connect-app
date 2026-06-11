@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound, Store, Laptop, GraduationCap, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound, Store, Laptop, GraduationCap, ChevronRight, ArrowLeft, ChevronDown } from 'lucide-react';
 import { useWorkerStore, CATEGORY_GROUPS, getAverageRating, getExperienceBadge, getDistance, type WorkCategory, type Availability, type WorkerStatus } from '@/store/workerStore';
 import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import BookingDialog from '@/components/BookingDialog';
@@ -354,17 +354,6 @@ const SearchPage = () => {
 
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [ratingOpenId, setRatingOpenId] = useState<string | null>(null);
-  const [editOpenId, setEditOpenId] = useState<string | null>(null);
-  const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
-  const [statusOpenId, setStatusOpenId] = useState<string | null>(null);
-  const [galleryOpenId, setGalleryOpenId] = useState<string | null>(null);
-  const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
-  const [showForgotPin, setShowForgotPin] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || '');
-
-  const handleSearch = () => {
-    setActiveCategory(category);
-  };
 
   // Business entities
   const [businesses, setBusinesses] = useState<BusinessEntity[]>([]);
