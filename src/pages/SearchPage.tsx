@@ -354,6 +354,12 @@ const SearchPage = () => {
 
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [ratingOpenId, setRatingOpenId] = useState<string | null>(null);
+  const [editOpenId, setEditOpenId] = useState<string | null>(null);
+  const [deleteOpenId, setDeleteOpenId] = useState<string | null>(null);
+  const [statusOpenId, setStatusOpenId] = useState<string | null>(null);
+  const [galleryOpenId, setGalleryOpenId] = useState<string | null>(null);
+  const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
+  const [showForgotPin, setShowForgotPin] = useState(false);
 
   // Business entities
   const [businesses, setBusinesses] = useState<BusinessEntity[]>([]);
