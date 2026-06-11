@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound, Store, Laptop, GraduationCap, ChevronRight, ArrowLeft } from 'lucide-react';
+import { Search, Phone, MapPin, Briefcase, Clock, Star, IndianRupee, Award, MessageSquare, Pencil, Trash2, User, X, Camera, CalendarCheck, CheckCircle, Filter, Image, Navigation, Loader2, Share2, KeyRound, Store, Laptop, GraduationCap, ChevronRight, ArrowLeft, ChevronDown } from 'lucide-react';
 import { useWorkerStore, CATEGORY_GROUPS, getAverageRating, getExperienceBadge, getDistance, type WorkCategory, type Availability, type WorkerStatus } from '@/store/workerStore';
 import { RatingDisplay, RateReviewInput } from '@/components/RatingStars';
 import BookingDialog from '@/components/BookingDialog';
@@ -360,11 +360,6 @@ const SearchPage = () => {
   const [galleryOpenId, setGalleryOpenId] = useState<string | null>(null);
   const [bookingWorker, setBookingWorker] = useState<{ name: string; mobile: string; category: string } | null>(null);
   const [showForgotPin, setShowForgotPin] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(searchParams.get('category') || '');
-
-  const handleSearch = () => {
-    setActiveCategory(category);
-  };
 
   // Business entities
   const [businesses, setBusinesses] = useState<BusinessEntity[]>([]);
@@ -417,12 +412,12 @@ const SearchPage = () => {
   const userLng: number | null = null;
 
   const results = useMemo(() => {
-    return workers.filter((w) => !activeCategory || w.category === activeCategory);
-  }, [workers, activeCategory]);
+    return workers.filter((w) => !category || w.category === category);
+  }, [workers, category]);
 
   const filteredBusinesses = useMemo(() => {
-    return businesses.filter((b) => !activeCategory || b.category === activeCategory);
-  }, [businesses, activeCategory]);
+    return businesses.filter((b) => !category || b.category === category);
+  }, [businesses, category]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -437,12 +432,12 @@ const SearchPage = () => {
       </div>
 
       <div className="max-w-[120rem] mx-auto px-4 -mt-4">
-        <div className="bg-card rounded-2xl shadow-xl border border-border p-4 md:p-6">
-          <div className="flex flex-col md:flex-row items-stretch gap-3 md:gap-5">
+        <div className="bg-card rounded-2xl shadow-xl border border-border p-4 md:p-6 flex justify-center">
+          <div className="relative w-full max-w-xl">
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="flex-1 bg-secondary text-secondary-foreground rounded-2xl px-4 md:px-5 py-3 md:py-3.5 text-base md:text-lg font-semibold border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:shadow-md hover:border-primary/50 appearance-none cursor-pointer"
+              className="w-full bg-secondary text-secondary-foreground rounded-2xl px-4 md:px-6 py-3.5 md:py-4 pr-12 text-base md:text-lg font-semibold border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:shadow-md hover:border-primary/50 hover:shadow-primary/20 appearance-none cursor-pointer text-center"
               style={{ backgroundImage: 'none' }}
             >
               <option value="">{t('श्रेणी चुनें')}</option>
@@ -452,12 +447,7 @@ const SearchPage = () => {
                 </optgroup>
               ))}
             </select>
-            <button
-              onClick={handleSearch}
-              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground font-bold px-5 md:px-6 py-3 rounded-2xl shadow-md hover:shadow-lg hover:shadow-primary/40 hover:brightness-110 hover:scale-[1.02] active:scale-[0.97] transition-all md:min-w-[130px] md:ml-2 text-base md:text-lg"
-            >
-              <Search size={20} /> {t('खोजें')}
-            </button>
+            <ChevronDown className="absolute right-4 md:right-5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" size={24} />
           </div>
         </div>
       </div>
