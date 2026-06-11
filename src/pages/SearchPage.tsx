@@ -440,7 +440,7 @@ const SearchPage = () => {
               className="w-full bg-secondary text-secondary-foreground rounded-2xl px-4 md:px-6 py-3.5 md:py-4 pr-12 text-base md:text-lg font-semibold border border-border focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:shadow-md hover:border-primary/50 hover:shadow-primary/20 appearance-none cursor-pointer text-center"
               style={{ backgroundImage: 'none' }}
             >
-              <option value="">{t('श्रेणी चुनें')}</option>
+              <option value="">{t('श्रेणी खोजें')}</option>
               {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
                 <optgroup key={group} label={t(group)}>
                   {cats.map((c) => <option key={c} value={c}>{t(c)}</option>)}
