@@ -125,7 +125,7 @@ const ShopRegistrationPage = () => {
                 <label className="text-xs font-bold text-muted-foreground mb-1 block">{t('दुकान श्रेणी', lang)} *</label>
                 {!useCustom ? (
                   <select value={category} onChange={e => handleCategoryChange(e.target.value)} className={inputClass} required={!useCustom}>
-                    <option value="">{t('श्रेणी चुनें', lang)}</option>
+                    <option value="">{t('श्रेणी खोजें', lang)}</option>
                     {SHOP_CATEGORIES.map(s => <option key={s} value={s}>{s}</option>)}
                     <option value="__other__">--- {t('अन्य (Other)', lang)} ---</option>
                   </select>

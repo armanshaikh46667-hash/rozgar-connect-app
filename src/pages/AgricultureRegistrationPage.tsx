@@ -137,7 +137,7 @@ const AgricultureRegistrationPage = () => {
                 <label className="text-xs font-bold text-muted-foreground mb-1 block">{t('कार्य श्रेणी', lang)} *</label>
                 {!useCustom ? (
                   <select value={category} onChange={(e) => handleCategoryChange(e.target.value)} className={inputClass} required={!useCustom}>
-                    <option value="">{t('श्रेणी चुनें', lang)}</option>
+                    <option value="">{t('श्रेणी खोजें', lang)}</option>
                     {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     <option value="__other__">--- {t('अन्य (Other)', lang)} ---</option>
                   </select>
