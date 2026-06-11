@@ -140,6 +140,7 @@ const dict: Record<string, { hi: string; en: string }> = {
   'कार्य श्रेणी': { hi: 'कार्य श्रेणी', en: 'Work Category' },
   'श्रेणी': { hi: 'श्रेणी', en: 'Category' },
   'श्रेणी चुनें': { hi: 'श्रेणी चुनें', en: 'Select Category' },
+  'श्रेणी खोजें': { hi: 'श्रेणी खोजें', en: 'Search Category' },
   'सबमिट': { hi: 'सबमिट', en: 'Submit' },
   'सेव करें': { hi: 'सेव करें', en: 'Save' },
   'सेव हो रहा...': { hi: 'सेव हो रहा...', en: 'Saving...' },
