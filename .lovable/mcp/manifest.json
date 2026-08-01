@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "remix-of-rozgar-sewa-connect",
+      "version": "0.1.0",
+      "title": "Remix of Rozgar sewa  Connect"
+    },
+    "tools": [
+      {
+        "name": "list_categories",
+        "title": "List categories",
+        "description": "List the work and business categories that currently have listings on RozgarSewa, with a count for each.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "kind": {
+              "description": "Which listings to summarise: workers, businesses, or all (default).",
+              "type": "string",
+              "enum": [
+                "workers",
+                "businesses",
+                "all"
+              ]
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_workers",
+        "title": "Search workers",
+        "description": "Search RozgarSewa workers (plumbers, electricians, carpenters, etc.) by category, village, or name. Returns public listing details only.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "description": "Work category, e.g. Plumber, Electrician, Painter.",
+              "type": "string"
+            },
+            "village": {
+              "description": "Village or town name to filter by.",
+              "type": "string"
+            },
+            "name": {
+              "description": "Partial worker name to search for.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Maximum number of workers to return (default 20, max 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_worker",
+        "title": "Get worker profile",
+        "description": "Get the full public profile of one RozgarSewa worker by id, including experience, pricing, availability, ratings and reviews.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The worker's id (uuid) from search_workers."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_businesses",
+        "title": "Search local businesses",
+        "description": "Search public RozgarSewa local business listings (shops, construction, agriculture, vehicle and home services) by category or village.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "category": {
+              "description": "Business category to filter by, e.g. Shop, Construction.",
+              "type": "string"
+            },
+            "village": {
+              "description": "Village or town name to filter by.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Maximum number of businesses to return (default 20, max 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_digital_services",
+        "title": "Search digital service centres",
+        "description": "Search public RozgarSewa digital service listings (online forms, printing, Aadhaar/PAN work) by service type or village.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "service_type": {
+              "description": "Service type to filter by, e.g. Printing, Online Form.",
+              "type": "string"
+            },
+            "village": {
+              "description": "Village or town name to filter by.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Maximum number of listings to return (default 20, max 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_coaching_centres",
+        "title": "Search coaching centres",
+        "description": "Search public RozgarSewa education and coaching listings by course type or village, including fees and timings.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "course_type": {
+              "description": "Course type to filter by, e.g. Computer, Maths, Spoken English.",
+              "type": "string"
+            },
+            "village": {
+              "description": "Village or town name to filter by.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Maximum number of listings to return (default 20, max 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
