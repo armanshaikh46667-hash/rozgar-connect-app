@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguageStore, t } from '@/store/languageStore';
 import { toast } from 'sonner';
+import { isMobileRegistered, duplicateMobileMessage } from '@/lib/mobileCheck';
 
 const DIGITAL_SERVICES = [
   'Aadhaar Update', 'PAN Card Apply', 'Online Form Filling',
@@ -67,6 +68,11 @@ const DigitalServiceRegistrationPage = () => {
     if (pin !== confirmPin) { setPinError(t('PIN मेल नहीं खाता', lang)); return; }
     setPinError('');
     setSubmitting(true);
+    if (await isMobileRegistered(mobile)) {
+      setSubmitting(false);
+      toast.error(duplicateMobileMessage(lang));
+      return;
+    }
     const { error } = await supabase.from('digital_services').insert({
       owner_name: name, shop_name: name, mobile,
       service_type: finalService, village, address: address || null,

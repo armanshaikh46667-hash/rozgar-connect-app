@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguageStore, t } from '@/store/languageStore';
 import { toast } from 'sonner';
+import { isMobileRegistered, duplicateMobileMessage } from '@/lib/mobileCheck';
 
 const COURSE_TYPES = [
   'Computer Class', 'Competitive Exam Coaching', 'Spoken English',
@@ -69,6 +70,11 @@ const CoachingRegistrationPage = () => {
     if (pin !== confirmPin) { setPinError(t('PIN मेल नहीं खाता', lang)); return; }
     setPinError('');
     setSubmitting(true);
+    if (await isMobileRegistered(mobile)) {
+      setSubmitting(false);
+      toast.error(duplicateMobileMessage(lang));
+      return;
+    }
     const { error } = await supabase.from('education_coaching').insert({
       owner_name: name, institute_name: instituteName, mobile,
       course_type: finalCourse, village, address: address || null,
