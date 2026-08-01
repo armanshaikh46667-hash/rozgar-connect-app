@@ -164,12 +164,14 @@ const TopHeader = () => {
           <div className="flex lg:hidden items-center gap-1">
             <button
               onClick={() => navigate('/search')}
-              className={`h-9 px-3 rounded-lg flex items-center gap-1.5 text-xs font-bold transition-colors ${
-                isActive('/search') ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground'
+              aria-label={t('Search', lang)}
+              className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
+                isActive('/search') ? 'bg-primary text-primary-foreground' : 'text-foreground/80 hover:bg-muted'
               }`}
             >
-              {t('Search', lang)}
+              <Search size={18} />
             </button>
+
             <button
               onClick={toggle}
               className="w-9 h-9 rounded-lg flex items-center justify-center text-foreground/80 hover:bg-muted transition-colors relative"
