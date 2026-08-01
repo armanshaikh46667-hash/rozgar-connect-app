@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useLanguageStore, t } from '@/store/languageStore';
 import { toast } from 'sonner';
+import { isMobileRegistered, duplicateMobileMessage } from '@/lib/mobileCheck';
 
 const SHOP_CATEGORIES = [
   'Kirana Store', 'Hardware Shop', 'Medical Store', 'Cement Supplier',
@@ -67,6 +68,11 @@ const ShopRegistrationPage = () => {
     if (pin !== confirmPin) { setPinError(t('PIN मेल नहीं खाता', lang)); return; }
     setPinError('');
     setSubmitting(true);
+    if (await isMobileRegistered(mobile)) {
+      setSubmitting(false);
+      toast.error(duplicateMobileMessage(lang));
+      return;
+    }
     const { error } = await supabase.from('local_businesses').insert({
       name: shopName, category: finalCategory, mobile, village,
       address: address || null, description: description || null,

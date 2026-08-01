@@ -4,6 +4,7 @@ import { CheckCircle, User, MapPin, ArrowLeft, Leaf } from 'lucide-react';
 import { useWorkerStore, type WorkCategory, type Availability } from '@/store/workerStore';
 import { useLanguageStore, t } from '@/store/languageStore';
 import { toast } from 'sonner';
+import { isMobileRegistered, duplicateMobileMessage } from '@/lib/mobileCheck';
 
 const CATEGORIES: WorkCategory[] = [
   "Tractor Driver", "Harvester / Thresher Service", "Field Ploughing Service",
@@ -76,6 +77,11 @@ const AgricultureRegistrationPage = () => {
     if (pin !== confirmPin) { setPinError(t('PIN मेल नहीं खाता', lang)); return; }
     setPinError('');
     setSubmitting(true);
+    if (await isMobileRegistered(mobile)) {
+      setSubmitting(false);
+      toast.error(duplicateMobileMessage(lang));
+      return;
+    }
     const ok = await addWorker({
       name, mobile, village, category: finalCategory as WorkCategory,
       experience: parseInt(experience), about, photo,

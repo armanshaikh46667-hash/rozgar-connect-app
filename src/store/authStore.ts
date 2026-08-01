@@ -15,85 +15,91 @@ interface AuthStore {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => {
-  // Restore session from localStorage
-  const stored = localStorage.getItem('rozgar_auth');
-  const initialUser = stored ? JSON.parse(stored) : null;
+const STORAGE_KEY = 'rozgar_auth';
 
-  return {
-    user: initialUser,
-    loading: false,
+// Session-scoped storage: closing the browser/app clears it -> auto logout.
+const readStored = (): AuthUser | null => {
+  try {
+    // migrate away from any old persistent session
+    localStorage.removeItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
 
-    login: async (mobile, pin) => {
-      set({ loading: true });
+export const useAuthStore = create<AuthStore>((set) => ({
+  user: readStored(),
+  loading: false,
 
-      // Check workers table
-      const { data: worker } = await supabase
+  login: async (mobile, pin) => {
+    set({ loading: true });
+    const m = mobile.trim();
+    const p = pin.trim();
+
+    const finish = (user: AuthUser) => {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      set({ user, loading: false });
+      return { success: true };
+    };
+
+    try {
+      const { data: workers } = await supabase
         .from('workers')
         .select('id, name, mobile, pin')
-        .eq('mobile', mobile)
-        .eq('pin', pin)
-        .maybeSingle();
-
-      if (worker) {
-        const user: AuthUser = { mobile: worker.mobile, name: worker.name, type: 'worker', id: worker.id };
-        localStorage.setItem('rozgar_auth', JSON.stringify(user));
-        set({ user, loading: false });
-        return { success: true };
+        .eq('mobile', m)
+        .eq('pin', p)
+        .limit(1);
+      if (workers?.length) {
+        const w = workers[0];
+        return finish({ mobile: w.mobile, name: w.name, type: 'worker', id: w.id });
       }
 
-      // Check local_businesses
-      const { data: biz } = await supabase
+      const { data: bizs } = await supabase
         .from('local_businesses')
         .select('id, name, mobile, pin')
-        .eq('mobile', mobile)
-        .eq('pin', pin)
-        .maybeSingle();
-
-      if (biz) {
-        const user: AuthUser = { mobile: biz.mobile, name: biz.name, type: 'business', id: biz.id };
-        localStorage.setItem('rozgar_auth', JSON.stringify(user));
-        set({ user, loading: false });
-        return { success: true };
+        .eq('mobile', m)
+        .eq('pin', p)
+        .limit(1);
+      if (bizs?.length) {
+        const b = bizs[0];
+        return finish({ mobile: b.mobile, name: b.name, type: 'business', id: b.id });
       }
 
-      // Check digital_services
-      const { data: ds } = await supabase
+      const { data: dss } = await supabase
         .from('digital_services')
         .select('id, owner_name, mobile, pin')
-        .eq('mobile', mobile)
-        .eq('pin', pin)
-        .maybeSingle();
-
-      if (ds) {
-        const user: AuthUser = { mobile: ds.mobile, name: ds.owner_name, type: 'digital', id: ds.id };
-        localStorage.setItem('rozgar_auth', JSON.stringify(user));
-        set({ user, loading: false });
-        return { success: true };
+        .eq('mobile', m)
+        .eq('pin', p)
+        .limit(1);
+      if (dss?.length) {
+        const d = dss[0];
+        return finish({ mobile: d.mobile, name: d.owner_name, type: 'digital', id: d.id });
       }
 
-      // Check education_coaching
-      const { data: ec } = await supabase
+      const { data: ecs } = await supabase
         .from('education_coaching')
         .select('id, owner_name, mobile, pin')
-        .eq('mobile', mobile)
-        .eq('pin', pin)
-        .maybeSingle();
-
-      if (ec) {
-        const user: AuthUser = { mobile: ec.mobile, name: ec.owner_name, type: 'coaching', id: ec.id };
-        localStorage.setItem('rozgar_auth', JSON.stringify(user));
-        set({ user, loading: false });
-        return { success: true };
+        .eq('mobile', m)
+        .eq('pin', p)
+        .limit(1);
+      if (ecs?.length) {
+        const e = ecs[0];
+        return finish({ mobile: e.mobile, name: e.owner_name, type: 'coaching', id: e.id });
       }
-
+    } catch {
       set({ loading: false });
-      return { success: false, error: 'गलत मोबाइल नंबर या PIN' };
-    },
+      return { success: false, error: 'नेटवर्क समस्या, दोबारा कोशिश करें' };
+    }
 
-    logout: () => {
-      localStorage.removeItem('rozgar_auth');
-      set({ user: null });
-    },
-  };
-});
+    set({ loading: false });
+    return { success: false, error: 'गलत मोबाइल नंबर या PIN' };
+  },
+
+  logout: () => {
+    sessionStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_KEY);
+    set({ user: null });
+  },
+}));
