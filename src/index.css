@@ -496,3 +496,23 @@ button:hover, .btn-pixel-red {
   .text-5xl  { font-size: 286px !important; }
   .text-6xl  { font-size: 346px !important; }
 }
+
+/* Very small arbitrary sizes — scale up on large screens only */
+@media (min-width: 1024px) {
+  .text-\[7px\] { font-size: 15px !important; line-height: 1.5 !important; }
+  .text-\[8px\] { font-size: 17px !important; line-height: 1.5 !important; }
+  .text-\[9px\] { font-size: 19px !important; line-height: 1.5 !important; }
+}
+@media (min-width: 2560px) {
+  .text-\[7px\] { font-size: 24px !important; }
+  .text-\[8px\] { font-size: 26px !important; }
+  .text-\[9px\] { font-size: 28px !important; }
+}
+@media (min-width: 3840px) {
+  .text-\[7px\] { font-size: 34px !important; }
+  .text-\[8px\] { font-size: 36px !important; }
+  .text-\[9px\] { font-size: 38px !important; }
+}
+@media (min-width: 7680px) {
+  .text-\[7px\], .text-\[8px\], .text-\[9px\] { font-size: 66px !important; }
+}
