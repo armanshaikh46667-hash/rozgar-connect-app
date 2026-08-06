@@ -424,6 +424,3 @@ button:hover, .btn-pixel-red {
   .text-6xl  { font-size: calc(70px * var(--ts)) !important; line-height: 1.1 !important; }
   .text-7xl  { font-size: calc(90px * var(--ts)) !important; line-height: 1.05 !important; }
 }
-
-  .text-\[7px\], .text-\[8px\], .text-\[9px\] { font-size: 66px !important; }
-}
